@@ -45,6 +45,30 @@ body::before {
   opacity: 0.4;
 }
 
+/* ── SCROLL ARROWS ── */
+.hero-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.big-arrow {
+  font-size: 3.2rem;
+  color: rgba(99,102,241,0.7);
+  animation: bigBounce 1.3s ease-in-out infinite;
+  line-height: 1;
+  transition: opacity 0.5s ease;
+  user-select: none;
+  text-shadow: 0 0 20px rgba(99,102,241,0.4);
+}
+.big-arrow-right { animation-delay: 0.15s; }
+.big-arrow.hidden { opacity: 0; }
+@keyframes bigBounce {
+  0%,100% { transform: translateY(0px); }
+  50%     { transform: translateY(10px); }
+}
+@media (max-width: 480px) { .big-arrow { font-size: 2rem; } .hero-cta-row { gap: 16px; } }
+
 /* ── HERO ── */
 .hero {
   min-height: 100vh;
@@ -527,29 +551,18 @@ footer {
   section { padding: 4rem 1.5rem; }
 }
 
-
 /* ═══ TRANSITION ═══ */
-#landing-page { transition: opacity .35s ease; }
-#landing-page.hidden { opacity: 0; pointer-events: none; }
-#app-shell {
-  display: none; visibility: hidden; pointer-events: none;
-  position: fixed; inset: 0; z-index: 10000;
-  background: #020617; opacity: 0;
-  flex-direction: row; overflow: hidden;
-}
-#app-shell.visible { display: flex; visibility: visible; pointer-events: all; opacity: 1; }
-#launch-overlay {
-  position: fixed; inset: 0; background: #020617; z-index: 9999;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-  opacity: 0; pointer-events: none; transition: opacity .3s ease;
-}
-#launch-overlay.show { opacity: 1; pointer-events: all; }
-.launch-logo { font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800; letter-spacing:-.05em;
-  background:linear-gradient(135deg,#6366f1,#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-.launch-bar-wrap { width:200px; height:3px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
-.launch-bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4); border-radius:3px; transition:width .6s cubic-bezier(.4,0,.2,1); }
-.launch-label { font-size:.68rem; color:#475569; font-family:'DM Mono',monospace; letter-spacing:.14em; text-transform:uppercase; }
-#app-shell { font-family: 'Plus Jakarta Sans', sans-serif; }
+#landing-page{transition:opacity .35s ease}
+#landing-page.hidden{opacity:0;pointer-events:none}
+#app-shell{display:none;visibility:hidden;pointer-events:none;position:fixed;inset:0;z-index:10000;background:#020617;opacity:0;flex-direction:row;overflow:hidden}
+#app-shell.visible{display:flex;visibility:visible;pointer-events:all;opacity:1}
+#launch-overlay{position:fixed;inset:0;background:#020617;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;opacity:0;pointer-events:none;transition:opacity .3s ease}
+#launch-overlay.show{opacity:1;pointer-events:all}
+.launch-logo{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;letter-spacing:-.05em;background:linear-gradient(135deg,#6366f1,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.launch-bar-wrap{width:200px;height:3px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.launch-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4);border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.launch-label{font-size:.68rem;color:#475569;font-family:'DM Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
+#app-shell{font-family:'Plus Jakarta Sans',sans-serif}
 
         :root{
             --bg: #020617; --surface-1: #0f172a; --surface-2: #1e293b;
@@ -2041,7 +2054,6 @@ footer {
 </style>
 </head>
 <body>
-
 <div id="landing-page">
 <!-- HERO -->
 <div class="hero">
@@ -2058,9 +2070,14 @@ footer {
   <p class="hero-sub">
     <strong>JEE.COMMAND</strong> is the all-in-one study tracker built for JEE 2026 aspirants — syllabus tracking, AI planning, community doubts, live leaderboards, and more. <em>All in one file.</em>
   </p>
-  <button class="hero-cta" onclick="launchApp()">
-    Open the Tracker →
-  </button>
+  <div class="hero-cta-row" id="hero-cta-row">
+    <div class="big-arrow big-arrow-left">&#8595;</div>
+    <button class="hero-cta" onclick="launchApp()">
+      Open the Tracker →
+    </button>
+    <div class="big-arrow big-arrow-right">&#8595;</div>
+  </div>
+
   <div class="hero-stats">
     <div>
       <div class="hero-stat-val" style="color:#6366f1">200+</div>
@@ -2411,13 +2428,11 @@ footer {
   </p>
 </footer>
 </div>
-
 <div id="launch-overlay">
   <div class="launch-logo">JEE.COMMAND</div>
   <div class="launch-bar-wrap"><div class="launch-bar-fill" id="launch-bar"></div></div>
   <div class="launch-label" id="launch-label">Loading your tracker…</div>
 </div>
-
 <div id="app-shell">
 <body>
 
@@ -3026,7 +3041,6 @@ footer {
         </div>
     </div>
 </div>
-
 <script type="module" id="firebase-script">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -3043,7 +3057,6 @@ window._db = db;
 window._fsOps = { collection, addDoc, onSnapshot, query, orderBy, where, getDocs, updateDoc, deleteDoc, serverTimestamp, doc, setDoc: setDoc, getDoc, getCountFromServer };
 window.saveToFirebase = async function () { if (!window.currentUser) return; await setDoc(doc(db, "users", window.currentUser.uid), { store: store, tests: tests }); };
 </script>
-
 <script>
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
@@ -3052,6 +3065,18 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 document.querySelectorAll('.feat-grid,.big-grid').forEach(grid => {
   [...grid.children].forEach((c,i) => { c.style.transitionDelay=(i*.07)+'s'; c.classList.add('reveal'); observer.observe(c); });
 });
+
+// Hide arrows after scrolling ~2-3 lines (roughly 80px)
+(function() {
+  var hidden = false;
+  window.addEventListener('scroll', function() {
+    if (hidden) return;
+    if (window.scrollY > 80) {
+      hidden = true;
+      document.querySelectorAll('.big-arrow').forEach(function(a) { a.classList.add('hidden'); });
+    }
+  }, { passive: true });
+})();
 
 function launchApp() {
   document.getElementById('landing-page').style.display = 'none';
@@ -3068,7 +3093,6 @@ document.querySelectorAll('.hero-cta,[data-launch]').forEach(btn => {
   btn.addEventListener('click', launchApp);
 });
 </script>
-
 <script>
 
     const DATA = {
@@ -5013,7 +5037,7 @@ const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleane
 
     function mobClose(){const a=document.querySelector('#app-shell aside');if(a)a.classList.remove('mob-open');const ov=document.getElementById('mob-overlay');if(ov)ov.classList.remove('open');}
     window._attachMobListeners=function(){document.querySelectorAll('#app-shell .nav-link').forEach(l=>{l.addEventListener('click',()=>{if(window.innerWidth<=768)mobClose();});});};
-    window.mobToggle=mobToggle; window.mobClose=mobClose;
+    window.mobToggle=mobToggle;window.mobClose=mobClose;
 </script>
 </body>
 </html>
