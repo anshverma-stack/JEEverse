@@ -549,8 +549,6 @@ footer {
 .launch-bar-wrap { width:200px; height:3px; background:rgba(255,255,255,.07); border-radius:3px; overflow:hidden; }
 .launch-bar-fill { height:100%; width:0%; background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4); border-radius:3px; transition:width .6s cubic-bezier(.4,0,.2,1); }
 .launch-label { font-size:.68rem; color:#475569; font-family:'DM Mono',monospace; letter-spacing:.14em; text-transform:uppercase; }
-
-/* ═══ TRACKER ═══ */
 #app-shell { font-family: 'Plus Jakarta Sans', sans-serif; }
 
         :root{
@@ -1632,6 +1630,99 @@ footer {
 
         #app-shell .ai-key-btn.key-set{ background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.3); color:#10b981; }
 
+
+        /* ── CHATBOT ── */
+        #app-shell #chat-bubble{ position:fixed; bottom:88px; right:24px; width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#6366f1,#3b82f6); border:none; cursor:pointer; z-index:499; display:flex; align-items:center; justify-content:center; font-size:1.3rem; box-shadow:0 4px 20px rgba(99,102,241,0.5); transition:transform 0.2s,box-shadow 0.2s; }
+
+        #app-shell #chat-bubble:hover{ transform:scale(1.1); box-shadow:0 6px 28px rgba(99,102,241,0.65); }
+
+        #app-shell #chat-bubble.open{ background:linear-gradient(135deg,#475569,#334155); box-shadow:0 4px 16px rgba(0,0,0,0.4); }
+
+        #app-shell #chat-panel{ position:fixed; bottom:148px; right:24px; width:360px; max-height:520px; background:#0d1117; border:1px solid rgba(99,102,241,0.3); border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,0.6); z-index:499; display:none; flex-direction:column; overflow:hidden; transition:opacity 0.2s,transform 0.2s; opacity:0; transform:translateY(10px) scale(0.97); }
+
+        #app-shell #chat-panel.open{ display:flex; opacity:1; transform:translateY(0) scale(1); }
+
+        #app-shell .chat-header{ display:flex; align-items:center; gap:10px; padding:12px 14px; background:rgba(99,102,241,0.08); border-bottom:1px solid rgba(99,102,241,0.15); flex-shrink:0; }
+
+        #app-shell .chat-header-title{ font-size:0.85rem; font-weight:800; color:var(--text-primary); flex:1; }
+
+        #app-shell .chat-model-sel{ background:#1e293b; border:1px solid rgba(255,255,255,0.1); color:var(--text-primary); font-size:0.68rem; font-weight:600; padding:4px 8px; border-radius:8px; font-family:inherit; cursor:pointer; max-width:130px; outline:none; }
+
+        #app-shell .chat-close-btn{ background:transparent; border:1px solid rgba(255,255,255,0.1); color:var(--text-secondary); width:26px; height:26px; border-radius:7px; cursor:pointer; font-size:0.8rem; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
+
+        #app-shell .chat-close-btn:hover{ border-color:rgba(239,68,68,0.4); color:#ef4444; }
+
+        #app-shell .chat-messages{ flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:10px; min-height:0; }
+
+        #app-shell .chat-messages::-webkit-scrollbar{ width:4px; }
+
+        #app-shell .chat-messages::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.08); border-radius:4px; }
+
+        #app-shell .chat-msg{ display:flex; flex-direction:column; max-width:85%; }
+
+        #app-shell .chat-msg.user{ align-self:flex-end; align-items:flex-end; }
+
+        #app-shell .chat-msg.assistant{ align-self:flex-start; align-items:flex-start; }
+
+        #app-shell .chat-bubble-text{ padding:9px 13px; border-radius:14px; font-size:0.8rem; line-height:1.55; word-break:break-word; }
+
+        #app-shell .chat-msg.user .chat-bubble-text{ background:linear-gradient(135deg,#6366f1,#3b82f6); color:white; border-radius:14px 14px 4px 14px; }
+
+        #app-shell .chat-msg.assistant .chat-bubble-text{ background:#1e293b; color:var(--text-primary); border:1px solid rgba(255,255,255,0.07); border-radius:14px 14px 14px 4px; }
+
+        #app-shell .chat-bubble-text pre{ background:rgba(0,0,0,0.3); border-radius:8px; padding:8px 10px; overflow-x:auto; font-size:0.72rem; margin-top:6px; }
+
+        #app-shell .chat-bubble-text code{ background:rgba(0,0,0,0.25); padding:1px 5px; border-radius:4px; font-size:0.75rem; }
+
+        #app-shell .chat-bubble-text img{ max-width:100%; border-radius:8px; margin-top:6px; display:block; }
+
+        #app-shell .chat-img-preview{ display:flex; align-items:center; gap:6px; padding:6px 10px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.2); border-radius:10px; margin:0 12px 6px; font-size:0.72rem; color:#a5b4fc; flex-shrink:0; }
+
+        #app-shell .chat-img-preview img{ width:32px; height:32px; object-fit:cover; border-radius:6px; }
+
+        #app-shell .chat-img-remove{ background:transparent; border:none; color:#94a3b8; cursor:pointer; font-size:0.8rem; margin-left:auto; }
+
+        #app-shell .chat-input-area{ border-top:1px solid rgba(255,255,255,0.06); padding:10px 12px; display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+
+        #app-shell .chat-input-row{ display:flex; gap:8px; align-items:flex-end; }
+
+        #app-shell .chat-textarea{ flex:1; background:#1e293b; border:1px solid rgba(255,255,255,0.08); border-radius:12px; color:var(--text-primary); font-size:0.82rem; padding:9px 12px; font-family:inherit; resize:none; outline:none; max-height:100px; line-height:1.45; transition:border-color 0.15s; }
+
+        #app-shell .chat-textarea:focus{ border-color:rgba(99,102,241,0.4); }
+
+        #app-shell .chat-send-btn{ background:linear-gradient(135deg,#6366f1,#3b82f6); color:white; border:none; border-radius:10px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.9rem; flex-shrink:0; transition:all 0.15s; }
+
+        #app-shell .chat-send-btn:hover{ transform:scale(1.05); }
+
+        #app-shell .chat-send-btn:disabled{ opacity:0.5; cursor:not-allowed; transform:none; }
+
+        #app-shell .chat-img-btn{ background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); color:#a5b4fc; border-radius:10px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.9rem; flex-shrink:0; transition:all 0.15s; }
+
+        #app-shell .chat-img-btn:hover{ background:rgba(99,102,241,0.2); }
+
+        #app-shell .chat-typing{ display:flex; gap:4px; align-items:center; padding:10px 13px; }
+
+        #app-shell .chat-typing span{ width:6px; height:6px; background:#6366f1; border-radius:50%; animation:chatDot 1.2s ease infinite; }
+
+        #app-shell .chat-typing span:nth-child(2){ animation-delay:0.2s; }
+
+        #app-shell .chat-typing span:nth-child(3){ animation-delay:0.4s; }
+
+        @keyframes chatDot { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-5px);opacity:1} }
+        #app-shell .chat-setup-msg{ padding:16px; text-align:center; color:var(--text-secondary); font-size:0.8rem; line-height:1.7; }
+
+        #app-shell .chat-setup-msg strong{ color:var(--text-primary); }
+
+        #app-shell .chat-setup-btn{ display:inline-block; margin-top:10px; padding:8px 18px; background:linear-gradient(135deg,#6366f1,#3b82f6); color:white; border:none; border-radius:10px; font-size:0.78rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.15s; }
+
+        #app-shell .chat-setup-btn:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(99,102,241,0.4); }
+
+        @media (max-width:768px) {
+            #app-shell #chat-panel{ width:calc(100vw - 20px); right:10px; bottom:140px; max-height:60vh; }
+
+            #app-shell #chat-bubble{ bottom:82px; right:10px; }
+
+        }
         #app-shell .spin{ display: inline-block; animation: spin 1s linear infinite; font-size: 1.4rem; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -2014,8 +2105,8 @@ footer {
     <div class="feat-card" style="--card-glow: radial-gradient(circle at 100% 0, rgba(245,158,11,0.06), transparent 60%)">
       <span class="feat-icon">🧠</span>
       <div class="feat-name">AI Study Planner</div>
-      <div class="feat-desc">Claude AI scans your entire backlog and builds a personalised study plan for the day — with time blocks, priorities and tips.</div>
-      <span class="feat-tag" style="background:rgba(245,158,11,0.1);color:#fcd34d;">Powered by Claude AI</span>
+      <div class="feat-desc">AI scans your entire backlog and builds a personalised study plan for the day — with time blocks, priorities and tips. Bring your own free OpenRouter API key.</div>
+      <span class="feat-tag" style="background:rgba(245,158,11,0.1);color:#fcd34d;">Powered by OpenRouter AI</span>
     </div>
     <div class="feat-card" style="--card-glow: radial-gradient(circle at 0 100%, rgba(232,121,249,0.06), transparent 60%)">
       <span class="feat-icon">🔥</span>
@@ -2346,15 +2437,15 @@ footer {
             <div class="nav-link" onclick="switchTab('chemistry', this)"><span>CHEMISTRY</span></div>
             <div class="nav-link" onclick="switchTab('mathematics', this)"><span>MATHEMATICS</span></div>
         </div>
+        <div class="nav-label">Community</div>
+        <div class="nav-link" onclick="switchTab('community', this)"><span>&#128101; DOUBTS FORUM</span></div>
+        <div class="nav-link" onclick="switchTab('groups', this)"><span>&#128101; STUDY GROUPS</span></div>
+        <div class="nav-link" onclick="switchTab('friends', this)"><span>&#128101; FRIENDS</span></div>
         <div class="nav-label">Study Vault</div>
         <div class="nav-link" onclick="switchTab('vault', this)"><span>NOTES &amp; QUESTIONS</span></div>
         <div class="nav-link" onclick="switchTab('backlog', this)"><span>BACKLOG</span><span class="nav-ai-badge">AI</span></div>
         <div class="nav-label">Focus</div>
         <div class="nav-link" onclick="switchTab('pomodoro', this)"><span>&#9201; POMODORO</span></div>
-        <div class="nav-label">Community</div>
-        <div class="nav-link" onclick="switchTab('community', this)"><span>&#128101; DOUBTS FORUM</span></div>
-        <div class="nav-link" onclick="switchTab('groups', this)"><span>&#128101; STUDY GROUPS</span></div>
-        <div class="nav-link" onclick="switchTab('friends', this)"><span>&#128101; FRIENDS</span></div>
         <div class="nav-label">Tests</div>
         <div class="nav-link" onclick="switchTab('mains', this)"><span>JEE MAINS</span></div>
         <div class="nav-link" onclick="switchTab('advanced', this)"><span>JEE ADVANCED</span></div>
@@ -2483,10 +2574,10 @@ footer {
         <div id="ai-coverage-panel">
             <div class="ai-hours-card">
                 <div class="ai-hours-title"><span>Smart Study Planner</span><span class="ai-badge-large">AI</span></div>
-                <p class="ai-hours-subtitle">Tell the AI how many free hours you have today. It will scan your entire backlog and build the most effective study plan, chapter by chapter, with time estimates.</p>
+                <p class="ai-hours-subtitle">Tell the AI how many free hours you have today. It will scan your backlog and build the most effective study plan with time estimates. <strong style="color:var(--text-primary);">First time?</strong> Click <strong style="color:#a5b4fc;">⚙️ API Key</strong> — get a free key from <a href="https://openrouter.ai" target="_blank" style="color:#3b82f6;">openrouter.ai</a> in 1 minute. You only need to do this once — your key unlocks all AI models listed in the dropdown, forever.</p>
                 <div class="ai-input-row">
                     <div class="ai-input-group"><label>Free hours today</label><input type="number" id="ai-hours-input" class="ai-hours-input" min="0.5" max="16" step="0.5" value="4" placeholder="e.g. 5"></div>
-                    <div class="ai-input-group"><label>Class filter</label><select id="ai-class-select" class="ai-focus-select"><option value="both">&#128218; Both Class 11 &amp; 12</option><option value="11">&#49;&#49; Class 11 only</option><option value="12">&#49;&#50; Class 12 only</option></select></div>
+                    <div class="ai-input-group"><label>Class filter</label><select id="ai-class-select" class="ai-focus-select"><option value="both">&#128218; Both Class 11 &amp; 12</option><option value="11">Class 11 only</option><option value="12">Class 12 only</option></select></div>
                     <div class="ai-input-group"><label>Focus priority</label><select id="ai-priority-select" class="ai-focus-select"><option value="balanced">&#9878;&#65039; Balanced (all subjects)</option><option value="physics">&#9889; Physics first</option><option value="chemistry">&#129514; Chemistry first</option><option value="mathematics">&#128208; Mathematics first</option><option value="weakest">&#127919; Weakest chapters first</option><option value="mains">&#128221; Mains PYQ focus</option><option value="advanced">&#127942; Advanced PYQ focus</option></select></div>
                     <div class="ai-input-group"><label>Target stage</label><select id="ai-stage-select" class="ai-focus-select"><option value="next">&#11014;&#65039; Move to next stage</option><option value="Theory">&#128218; Theory</option><option value="Examples">&#128161; Examples</option><option value="Exercise">&#9999;&#65039; Exercise</option><option value="Mains PYQ">&#128221; Mains PYQ</option><option value="Advance PYQ">&#127942; Advance PYQ</option></select></div>
                     <button class="ai-key-btn" id="ai-key-btn" onclick="openAISettings()">⚙️ API Key</button>
@@ -2810,16 +2901,16 @@ footer {
 </main>
 
 <div id="targets-panel">
-    <div id="targets-panel-header" onclick="mobileTargetsToggle()">
-        <!-- Icon-only (mobile collapsed) -->
-        <div class="tp-icon" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:1px;">
+    <div id="targets-panel-header">
+        <!-- Icon-only shown on mobile when collapsed (clicking expands) -->
+        <div class="tp-icon" style="display:none;flex-direction:column;align-items:center;justify-content:center;gap:1px;width:100%;cursor:pointer;" onclick="mobileTargetsExpand()">
             <span style="font-size:1.2rem">&#127919;</span>
             <span id="targets-done-badge-mini" style="font-size:0.55rem;font-weight:800;color:#10b981;line-height:1;">0/0</span>
         </div>
-        <!-- Full header (desktop + mobile expanded) -->
+        <!-- Full header shown on desktop + mobile when expanded -->
         <div class="tp-full" style="display:flex;align-items:center;justify-content:space-between;width:100%;">
             <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:1rem">&#127919;</span><span id="targets-panel-title">Today's Targets</span><span id="targets-done-badge">0/0</span></div>
-        <button id="targets-collapse-btn" onclick="toggleTargetsPanel()" title="Collapse/Expand">&#9660;</button>
+            <button id="targets-collapse-btn" onclick="toggleTargetsPanel()" title="Collapse/Expand">&#9660;</button>
         </div>
     </div>
     <div id="targets-panel-body">
@@ -2894,6 +2985,46 @@ footer {
             <div id="ai-key-status" style="margin-top:12px;font-size:0.75rem;text-align:center;"></div>
         </div>
     </div>
+
+    <!-- ── CHATBOT ── -->
+    <button id="chat-bubble" onclick="chatToggle()" title="AI Chat">💬</button>
+
+    <div id="chat-panel">
+        <div class="chat-header">
+            <div style="font-size:1rem;">🤖</div>
+            <div class="chat-header-title">AI Assistant</div>
+            <select class="chat-model-sel" id="chat-model-sel">
+                <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash ⚡</option>
+                <option value="google/gemini-flash-1.5-8b">Gemini Flash 1.5 8B</option>
+                <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B</option>
+                <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B</option>
+                <option value="deepseek/deepseek-r1:free">DeepSeek R1</option>
+                <option value="mistralai/mistral-7b-instruct:free">Mistral 7B</option>
+                <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku</option>
+                <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+                <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+                <option value="openai/gpt-4o">GPT-4o</option>
+            </select>
+            <button class="chat-close-btn" onclick="chatToggle()">✕</button>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-img-preview" id="chat-img-preview" style="display:none">
+            <img id="chat-img-thumb" src="" alt="">
+            <span id="chat-img-name" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+            <button class="chat-img-remove" onclick="chatClearImg()">✕</button>
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-row">
+                <label class="chat-img-btn" for="chat-img-input" title="Attach image">🖼️</label>
+                <input type="file" id="chat-img-input" accept="image/*" style="display:none" onchange="chatHandleImg(this)">
+                <textarea class="chat-textarea" id="chat-input" placeholder="Ask anything about JEE…" rows="1"
+                    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chatSend();}"
+                    oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+                <button class="chat-send-btn" id="chat-send-btn" onclick="chatSend()">➤</button>
+            </div>
+            <div style="font-size:0.6rem;color:var(--text-secondary);text-align:center;">Shift+Enter for new line · Images supported on vision models</div>
+        </div>
+    </div>
 </div>
 
 <script type="module" id="firebase-script">
@@ -2925,16 +3056,13 @@ document.querySelectorAll('.feat-grid,.big-grid').forEach(grid => {
 function launchApp() {
   document.getElementById('landing-page').style.display = 'none';
   const app = document.getElementById('app-shell');
-  app.style.display = 'flex';
-  app.style.visibility = 'visible';
-  app.style.pointerEvents = 'all';
-  app.style.opacity = '1';
+  app.style.display = 'flex'; app.style.visibility = 'visible';
+  app.style.pointerEvents = 'all'; app.style.opacity = '1';
   app.style.flexDirection = 'row';
   if (typeof init === 'function') init();
   if (typeof window._attachMobListeners === 'function') window._attachMobListeners();
 }
 window.launchApp = launchApp;
-
 document.querySelectorAll('.hero-cta,[data-launch]').forEach(btn => {
   btn.removeAttribute('href');
   btn.addEventListener('click', launchApp);
@@ -3379,11 +3507,16 @@ document.querySelectorAll('.hero-cta,[data-launch]').forEach(btn => {
     function renderBacklog(){const list=document.getElementById('backlog-list');const chipsEl=document.getElementById('backlog-summary-chips');const sel=document.getElementById('backlog-filter-select');const filterVal=sel?sel.value:'Theory';const stageOrder=['Pending','Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];const isBehind=(stage,filter)=>{if(filter==='Mastery')return stage!=='Advance PYQ';const fi=stageOrder.indexOf(filter);const si=stageOrder.indexOf(stage===undefined?'Pending':stage);return si<fi;};const subColor={physics:'#60a5fa',chemistry:'#34d399',mathematics:'#f59e0b'};const subIcon={physics:'⚡',chemistry:'🧪',mathematics:'📐'};const groups={};let totalBehind=0,phyBehind=0,chemBehind=0,mathBehind=0;Object.keys(DATA).forEach(sub=>{['11','12'].forEach(cls=>{Object.entries(DATA[sub][cls]).forEach(([unit,chapters])=>{chapters.forEach(ch=>{const id=`${sub}-${ch.s}`;const stage=store[id]?.stage||'Pending';if(!isBehind(stage,filterVal))return;totalBehind++;if(sub==='physics')phyBehind++;if(sub==='chemistry')chemBehind++;if(sub==='mathematics')mathBehind++;if(!groups[`${sub}__${cls}__${unit}`])groups[`${sub}__${cls}__${unit}`]={sub,cls,unit,items:[]};groups[`${sub}__${cls}__${unit}`].items.push({ch,stage});});});});});const filterLabel={Theory:'Theory',Examples:'Examples',Exercise:'Exercise','Mains PYQ':'Mains PYQ','Advance PYQ':'Advance PYQ',Mastery:'Mastery'}[filterVal];if(chipsEl){chipsEl.innerHTML=[{label:'Total Behind',val:totalBehind,color:'#94a3b8'},{label:'⚡ Physics',val:phyBehind,color:'#60a5fa'},{label:'🧪 Chemistry',val:chemBehind,color:'#34d399'},{label:'📐 Maths',val:mathBehind,color:'#f59e0b'}].map(c=>`<div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:14px 18px;text-align:center;"><div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-secondary);font-weight:800;margin-bottom:5px;">${c.label}</div><div style="font-size:1.8rem;font-weight:800;color:${c.color}">${c.val}</div></div>`).join('');}if(totalBehind===0){list.innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--text-secondary)"><div style="font-size:2.5rem;margin-bottom:12px">🎉</div><div style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:6px">No backlog for ${filterLabel}!</div><div style="font-size:0.82rem">All chapters have reached this stage. Keep it up!</div></div>`;return;}const sortedKeys=Object.keys(groups).sort((a,b)=>{const[subA,clsA]=a.split('__');const[subB,clsB]=b.split('__');const subOrder=['physics','chemistry','mathematics'];if(subA!==subB)return subOrder.indexOf(subA)-subOrder.indexOf(subB);return clsA.localeCompare(clsB);});let html='',lastSubCls='';sortedKeys.forEach(key=>{const grp=groups[key];if(!grp.items.length)return;const subClsKey=`${grp.sub}__${grp.cls}`;if(subClsKey!==lastSubCls){lastSubCls=subClsKey;html+=`<div style="display:flex;align-items:center;gap:10px;padding:14px 20px 10px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;backdrop-filter:blur(8px);"><span style="font-size:1rem">${subIcon[grp.sub]}</span><span style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:${subColor[grp.sub]}">${grp.sub} · Class ${grp.cls}</span></div>`;}html+=`<div style="padding:6px 20px 2px;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary);margin-top:8px;">${grp.unit}</div>`;grp.items.forEach(({ch,stage})=>{const stageColor={Pending:'#475569',Theory:'#3b82f6',Examples:'#6366f1',Exercise:'#10b981','Mains PYQ':'#f59e0b','Advance PYQ':'#3b82f6'}[stage]||'#475569';html+=`<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;" onmouseenter="this.style.background='rgba(255,255,255,0.03)'" onmouseleave="this.style.background='transparent'"><span style="font-size:0.88rem;font-weight:600;color:var(--text-primary)">${ch.n}</span><span style="font-size:0.65rem;font-weight:800;padding:3px 10px;border-radius:20px;background:${stageColor}22;color:${stageColor};border:1px solid ${stageColor}44;white-space:nowrap;flex-shrink:0;">${stage}</span></div>`;});});list.innerHTML=html;}
 
     let panelCollapsed=JSON.parse(localStorage.getItem('targets_collapsed')||'false');
+    function mobileTargetsExpand(){
+        if(window.innerWidth>768) return;
+        const panel=document.getElementById('targets-panel');
+        panel.classList.add('expanded-mobile');
+    }
     function mobileTargetsToggle(){
-    if(window.innerWidth>768){toggleTargetsPanel();return;}
-    const panel=document.getElementById('targets-panel');
-    panel.classList.toggle('expanded-mobile');
-}
+        if(window.innerWidth>768){toggleTargetsPanel();return;}
+        const panel=document.getElementById('targets-panel');
+        panel.classList.toggle('expanded-mobile');
+    }
 function toggleTargetsPanel(){panelCollapsed=!panelCollapsed;document.getElementById('targets-panel').classList.toggle('collapsed',panelCollapsed);localStorage.setItem('targets_collapsed',panelCollapsed);}
     function renderTargets(){const list=document.getElementById('targets-list');const badge=document.getElementById('targets-done-badge');const mini=document.getElementById('targets-done-badge-mini');const done=targets.filter(t=>t.checked).length;badge.textContent=done+'/'+targets.length;if(mini)mini.textContent=done+'/'+targets.length;if(!targets.length){list.innerHTML='<div class="t-empty">No targets yet. Add one below!</div>';return;}list.innerHTML=targets.map((t,i)=>`<div class="t-item ${t.checked?'done':''}"><div class="t-check ${t.checked?'checked':''}" onclick="toggleTarget(${i})">${t.checked?'&#10003;':''}</div><span class="t-text">${t.text}</span><button class="t-del" onclick="removeTarget(${i})" title="Remove">&#10005;</button></div>`).join('');document.getElementById('targets-panel').classList.toggle('collapsed',panelCollapsed);}
     function addTarget(){const input=document.getElementById('new-target');const val=input.value.trim();if(val){targets.push({text:val,checked:false});input.value='';renderTargets();saveTargets();}}
@@ -4104,7 +4237,7 @@ if(!response.ok){
 }
 const data=await response.json();
 if(data.error){throw new Error('OpenRouter: '+( data.error.message||JSON.stringify(data.error)));}
-const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleaned=rawText.replace(/```json|```/g,'').trim();tasks=JSON.parse(cleaned);}catch(e){throw new Error('AI returned unexpected format. Please try again.');}if(!Array.isArray(tasks)||tasks.length===0){throw new Error('No tasks returned. Try adjusting your hours or priority.');}const totalMins=tasks.reduce((a,t)=>a+(t.timeMinutes||0),0);const stageColors={'Theory':{bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.3)',text:'#60a5fa'},'Examples':{bg:'rgba(99,102,241,0.15)',border:'rgba(99,102,241,0.3)',text:'#818cf8'},'Exercise':{bg:'rgba(16,185,129,0.15)',border:'rgba(16,185,129,0.3)',text:'#34d399'},'Mains PYQ':{bg:'rgba(245,158,11,0.15)',border:'rgba(245,158,11,0.3)',text:'#fbbf24'},'Advance PYQ':{bg:'rgba(239,68,68,0.15)',border:'rgba(239,68,68,0.3)',text:'#f87171'}};const subjectColors={Physics:'#60a5fa',Chemistry:'#34d399',Mathematics:'#f59e0b'};const priorityColors={high:'#ef4444',medium:'#f59e0b',low:'#94a3b8'};let html=`<div class="ai-plan-header"><div class="ai-plan-title">✅ Your ${hours}h Study Plan<span class="ai-badge-large">AI</span></div><div class="ai-plan-meta">${tasks.length} tasks · ${totalMins} min total · Generated by Claude</div></div><div class="ai-total-bar"><div><div style="font-size:0.68rem;color:var(--text-secondary);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px">Time Allocation</div><div style="display:flex;height:8px;border-radius:6px;overflow:hidden;width:300px;background:rgba(255,255,255,0.06);margin-top:6px;">${tasks.map(t=>{const c=stageColors[t.targetStage]||stageColors['Theory'];const pct=((t.timeMinutes/totalMins)*100).toFixed(1);return`<div style="width:${pct}%;background:${c.text};opacity:0.8;" title="${t.chapterName}: ${t.timeMinutes}min"></div>`;}).join('')}</div></div><div style="text-align:right"><div class="ai-total-label">Total study time</div><div class="ai-total-val">${Math.floor(totalMins/60)}h ${totalMins%60}m</div></div></div>`;tasks.forEach((t,i)=>{const sc=stageColors[t.targetStage]||stageColors['Theory'];const subColor=subjectColors[t.subject]||'#94a3b8';const pColor=priorityColors[t.priority]||'#94a3b8';html+=`<div class="ai-task-card" style="animation-delay:${i*0.07}s"><div class="ai-task-header"><div class="ai-task-num">${t.taskNumber||i+1}</div><div class="ai-task-info"><div class="ai-task-name">${t.chapterName}</div><div class="ai-task-sub"><span style="color:${subColor};font-weight:700">${t.subject}</span> &nbsp;·&nbsp; Class ${t.class} &nbsp;·&nbsp; ${t.unit}</div></div><div class="ai-task-time">⏱ ${t.timeMinutes} min</div></div><div class="ai-task-body"><div class="ai-task-desc">${t.tip||''}</div><div class="ai-task-stages"><span class="ai-stage-chip" style="background:rgba(100,116,139,0.15);color:#94a3b8;border:1px solid rgba(100,116,139,0.25)">From: ${t.currentStage}</span><span style="color:var(--text-secondary);font-size:0.7rem;align-self:center">→</span><span class="ai-stage-chip" style="background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">Target: ${t.targetStage}</span><span class="ai-stage-chip" style="background:${pColor}18;color:${pColor};border:1px solid ${pColor}33;margin-left:auto">${(t.priority||'MEDIUM').toUpperCase()} PRIORITY</span></div></div></div>`;});html+=`<div style="text-align:center;padding:16px;font-size:0.72rem;color:var(--text-secondary)">🤖 Plan generated by Claude AI based on your actual progress data</div>`;output.innerHTML=html;}catch(err){console.error(err);output.innerHTML=`<div class="ai-error-box">⚠️ <strong>Couldn't generate plan:</strong> ${err.message||'Unknown error. Check your connection and try again.'}</div>`;}finally{btn.disabled=false;btn.innerHTML=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Generate Plan`;}}
+const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleaned=rawText.replace(/```json|```/g,'').trim();tasks=JSON.parse(cleaned);}catch(e){throw new Error('AI returned unexpected format. Please try again.');}if(!Array.isArray(tasks)||tasks.length===0){throw new Error('No tasks returned. Try adjusting your hours or priority.');}const totalMins=tasks.reduce((a,t)=>a+(t.timeMinutes||0),0);const stageColors={'Theory':{bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.3)',text:'#60a5fa'},'Examples':{bg:'rgba(99,102,241,0.15)',border:'rgba(99,102,241,0.3)',text:'#818cf8'},'Exercise':{bg:'rgba(16,185,129,0.15)',border:'rgba(16,185,129,0.3)',text:'#34d399'},'Mains PYQ':{bg:'rgba(245,158,11,0.15)',border:'rgba(245,158,11,0.3)',text:'#fbbf24'},'Advance PYQ':{bg:'rgba(239,68,68,0.15)',border:'rgba(239,68,68,0.3)',text:'#f87171'}};const subjectColors={Physics:'#60a5fa',Chemistry:'#34d399',Mathematics:'#f59e0b'};const priorityColors={high:'#ef4444',medium:'#f59e0b',low:'#94a3b8'};let html=`<div class="ai-plan-header"><div class="ai-plan-title">✅ Your ${hours}h Study Plan<span class="ai-badge-large">AI</span></div><div class="ai-plan-meta">${tasks.length} tasks · ${totalMins} min total · Generated by AI</div></div><div class="ai-total-bar"><div><div style="font-size:0.68rem;color:var(--text-secondary);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px">Time Allocation</div><div style="display:flex;height:8px;border-radius:6px;overflow:hidden;width:300px;background:rgba(255,255,255,0.06);margin-top:6px;">${tasks.map(t=>{const c=stageColors[t.targetStage]||stageColors['Theory'];const pct=((t.timeMinutes/totalMins)*100).toFixed(1);return`<div style="width:${pct}%;background:${c.text};opacity:0.8;" title="${t.chapterName}: ${t.timeMinutes}min"></div>`;}).join('')}</div></div><div style="text-align:right"><div class="ai-total-label">Total study time</div><div class="ai-total-val">${Math.floor(totalMins/60)}h ${totalMins%60}m</div></div></div>`;tasks.forEach((t,i)=>{const sc=stageColors[t.targetStage]||stageColors['Theory'];const subColor=subjectColors[t.subject]||'#94a3b8';const pColor=priorityColors[t.priority]||'#94a3b8';html+=`<div class="ai-task-card" style="animation-delay:${i*0.07}s"><div class="ai-task-header"><div class="ai-task-num">${t.taskNumber||i+1}</div><div class="ai-task-info"><div class="ai-task-name">${t.chapterName}</div><div class="ai-task-sub"><span style="color:${subColor};font-weight:700">${t.subject}</span> &nbsp;·&nbsp; Class ${t.class} &nbsp;·&nbsp; ${t.unit}</div></div><div class="ai-task-time">⏱ ${t.timeMinutes} min</div></div><div class="ai-task-body"><div class="ai-task-desc">${t.tip||''}</div><div class="ai-task-stages"><span class="ai-stage-chip" style="background:rgba(100,116,139,0.15);color:#94a3b8;border:1px solid rgba(100,116,139,0.25)">From: ${t.currentStage}</span><span style="color:var(--text-secondary);font-size:0.7rem;align-self:center">→</span><span class="ai-stage-chip" style="background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">Target: ${t.targetStage}</span><span class="ai-stage-chip" style="background:${pColor}18;color:${pColor};border:1px solid ${pColor}33;margin-left:auto">${(t.priority||'MEDIUM').toUpperCase()} PRIORITY</span></div></div></div>`;});html+=`<div style="text-align:center;padding:16px;font-size:0.72rem;color:var(--text-secondary)">🤖 Plan generated by OpenRouter AI based on your actual progress data</div>`;output.innerHTML=html;}catch(err){console.error(err);output.innerHTML=`<div class="ai-error-box">⚠️ <strong>Couldn't generate plan:</strong> ${err.message||'Unknown error. Check your connection and try again.'}</div>`;}finally{btn.disabled=false;btn.innerHTML=`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Generate Plan`;}}
 
     function openAISettings() {
         const modal = document.getElementById('ai-settings-modal');
@@ -4147,7 +4280,203 @@ const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleane
     window.saveAISettings = saveAISettings;
     window.clearAISettings = clearAISettings;
 
-    window.render=render;window.updateStats=updateStats;window.renderTests=renderTests;window.switchTab=switchTab;window.setClass=setClass;window.toggleUnit=toggleUnit;window.setStage=setStage;window.editNote=editNote;window.openTestModal=openTestModal;window.closeTestModal=closeTestModal;window.submitTest=submitTest;window.removeTest=removeTest;window.addTarget=addTarget;window.toggleTarget=toggleTarget;window.toggleTargetsPanel=toggleTargetsPanel;window.mobileTargetsToggle=mobileTargetsToggle;window.removeTarget=removeTarget;window.startNotificationReminders=startNotificationReminders;window.saveVault=saveVault;window.vaultSwitchTab=vaultSwitchTab;window.vaultAddSection=vaultAddSection;window.vaultDeleteSection=vaultDeleteSection;window.vaultRenameSection=vaultRenameSection;window.vaultUpdateText=vaultUpdateText;window.vaultTriggerImageUpload=vaultTriggerImageUpload;window.vaultHandleImageUpload=vaultHandleImageUpload;window.vaultDeleteImage=vaultDeleteImage;window.vaultOpenLightbox=vaultOpenLightbox;window.vaultCloseLightbox=vaultCloseLightbox;window.markRevised=markRevised;window.toggleSubtopics=toggleSubtopics;window.setSubtopic=setSubtopic;window.pomToggle=pomToggle;window.pomReset=pomReset;window.pomSkipStep=pomSkipStep;window.pomClearLog=pomClearLog;window.seqAddStep=seqAddStep;window.seqDeleteStep=seqDeleteStep;window.seqUpdateMinutes=seqUpdateMinutes;window.seqUpdateLabel=seqUpdateLabel;window.seqSave=seqSave;window.seqClear=seqClear;window.commInit=commInit;window.commHandleDoubtImg=commHandleDoubtImg;window.commClearDoubtImg=commClearDoubtImg;window.commOpenLightbox=commOpenLightbox;window.commPostDoubt=commPostDoubt;window.commPostReply=commPostReply;window.commMarkSolved=commMarkSolved;window.commDeleteDoubt=commDeleteDoubt;window.commSetFilter=commSetFilter;window.commToggleReplies=commToggleReplies;window.commRender=commRender;window.updateAuthUI=updateAuthUI;window.signOutUser=signOutUser;window.switchBacklogTab=switchBacklogTab;window.generateAIPlan=generateAIPlan;
+
+    // ── CHATBOT ──
+    let chatHistory = [];
+    let chatImgData = null;
+    let chatOpen = false;
+
+    function chatToggle() {
+        chatOpen = !chatOpen;
+        const panel = document.getElementById('chat-panel');
+        const bubble = document.getElementById('chat-bubble');
+        bubble.classList.toggle('open', chatOpen);
+        if (chatOpen) {
+            panel.style.display = 'flex';
+            requestAnimationFrame(() => panel.classList.add('open'));
+            // Check if key is set
+            const key = localStorage.getItem('openrouter_api_key');
+            if (!key) {
+                chatShowSetup();
+            } else if (chatHistory.length === 0) {
+                chatAddMsg('assistant', "👋 Hi! I'm your JEE AI assistant. Ask me anything — concepts, problems, formulas, study tips. I can also look at images you share!");
+            }
+            setTimeout(() => document.getElementById('chat-input')?.focus(), 200);
+        } else {
+            panel.classList.remove('open');
+            setTimeout(() => { panel.style.display = 'none'; }, 200);
+        }
+    }
+
+    function chatShowSetup() {
+        const msgs = document.getElementById('chat-messages');
+        msgs.innerHTML = `<div class="chat-setup-msg">
+            <div style="font-size:2rem;margin-bottom:8px;">🔑</div>
+            <strong>API key not set up yet</strong><br><br>
+            To use the AI chat, you need a free OpenRouter API key.<br><br>
+            <strong>Steps:</strong><br>
+            1. Go to Backlog → <strong>AI Coverage</strong> tab<br>
+            2. Click the <strong>⚙️ API Key</strong> button<br>
+            3. Get your free key from <a href="https://openrouter.ai" target="_blank" style="color:#3b82f6;">openrouter.ai</a><br>
+            4. Paste it and save — done!<br><br>
+            <em style="font-size:0.72rem;color:#475569;">You only do this once. Your key stays in your browser.</em>
+            <br>
+            <button class="chat-setup-btn" onclick="chatGoToSetup()">Go to AI Planner → Set Up Key</button>
+        </div>`;
+    }
+
+    function chatGoToSetup() {
+        chatToggle();
+        // Switch to backlog tab then AI coverage
+        const backlogNav = document.querySelector('.nav-link[onclick*="backlog"]');
+        if (backlogNav) { switchTab('backlog', backlogNav); }
+        setTimeout(() => {
+            const aiTab = document.getElementById('bst-coverage');
+            if (aiTab) { switchBacklogTab('coverage'); }
+            setTimeout(() => { if (typeof openAISettings === 'function') openAISettings(); }, 300);
+        }, 200);
+    }
+
+    function chatHandleImg(input) {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 5 * 1024 * 1024) { alert('Image too large (max 5MB)'); input.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            chatImgData = e.target.result;
+            const prev = document.getElementById('chat-img-preview');
+            const thumb = document.getElementById('chat-img-thumb');
+            const name = document.getElementById('chat-img-name');
+            if (prev) prev.style.display = 'flex';
+            if (thumb) thumb.src = chatImgData;
+            if (name) name.textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function chatClearImg() {
+        chatImgData = null;
+        const prev = document.getElementById('chat-img-preview');
+        if (prev) prev.style.display = 'none';
+        const input = document.getElementById('chat-img-input');
+        if (input) input.value = '';
+    }
+
+    function chatAddMsg(role, content, imgSrc) {
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = 'chat-msg ' + role;
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble-text';
+        // Simple markdown: bold, code, newlines
+        let html = content
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+        if (imgSrc) html += `<img src="${imgSrc}" alt="attached image">`;
+        bubble.innerHTML = html;
+        div.appendChild(bubble);
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+        return div;
+    }
+
+    function chatAddTyping() {
+        const msgs = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = 'chat-msg assistant';
+        div.id = 'chat-typing-indicator';
+        div.innerHTML = '<div class="chat-typing"><span></span><span></span><span></span></div>';
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function chatRemoveTyping() {
+        const t = document.getElementById('chat-typing-indicator');
+        if (t) t.remove();
+    }
+
+    async function chatSend() {
+        const key = localStorage.getItem('openrouter_api_key');
+        if (!key) { chatShowSetup(); return; }
+
+        const input = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('chat-send-btn');
+        const text = input.value.trim();
+        if (!text && !chatImgData) return;
+
+        // Build user message content
+        let userContent;
+        if (chatImgData) {
+            userContent = [
+                { type: 'image_url', image_url: { url: chatImgData } }
+            ];
+            if (text) userContent.push({ type: 'text', text });
+        } else {
+            userContent = text;
+        }
+
+        // Show user message
+        chatAddMsg('user', text || '📎 Image attached', chatImgData);
+
+        // Clear input
+        input.value = '';
+        input.style.height = 'auto';
+        chatClearImg();
+        sendBtn.disabled = true;
+
+        // Add to history
+        chatHistory.push({ role: 'user', content: userContent });
+
+        // Show typing indicator
+        chatAddTyping();
+
+        const model = document.getElementById('chat-model-sel')?.value || 'google/gemini-2.0-flash-001';
+
+        try {
+            const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
+                body: JSON.stringify({
+                    model,
+                    max_tokens: 1500,
+                    messages: [
+                        { role: 'system', content: 'You are a helpful JEE (Joint Entrance Examination) study assistant. Help students with Physics, Chemistry, and Mathematics concepts, problems, and exam strategies. Be concise and clear.' },
+                        ...chatHistory
+                    ]
+                })
+            });
+
+            chatRemoveTyping();
+
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.error?.message || 'Error ' + res.status);
+            }
+
+            const data = await res.json();
+            const reply = data.choices?.[0]?.message?.content || 'No response received.';
+            chatHistory.push({ role: 'assistant', content: reply });
+            chatAddMsg('assistant', reply);
+
+        } catch(e) {
+            chatRemoveTyping();
+            chatAddMsg('assistant', '⚠️ ' + (e.message || 'Something went wrong. Check your API key and internet connection.'));
+        } finally {
+            sendBtn.disabled = false;
+            document.getElementById('chat-input')?.focus();
+        }
+    }
+
+    window.chatToggle = chatToggle;
+    window.chatSend = chatSend;
+    window.chatHandleImg = chatHandleImg;
+    window.chatClearImg = chatClearImg;
+    window.chatGoToSetup = chatGoToSetup;
+    window.render=render;window.updateStats=updateStats;window.renderTests=renderTests;window.switchTab=switchTab;window.setClass=setClass;window.toggleUnit=toggleUnit;window.setStage=setStage;window.editNote=editNote;window.openTestModal=openTestModal;window.closeTestModal=closeTestModal;window.submitTest=submitTest;window.removeTest=removeTest;window.addTarget=addTarget;window.toggleTarget=toggleTarget;window.toggleTargetsPanel=toggleTargetsPanel;window.mobileTargetsToggle=mobileTargetsToggle;window.mobileTargetsExpand=mobileTargetsExpand;window.removeTarget=removeTarget;window.startNotificationReminders=startNotificationReminders;window.saveVault=saveVault;window.vaultSwitchTab=vaultSwitchTab;window.vaultAddSection=vaultAddSection;window.vaultDeleteSection=vaultDeleteSection;window.vaultRenameSection=vaultRenameSection;window.vaultUpdateText=vaultUpdateText;window.vaultTriggerImageUpload=vaultTriggerImageUpload;window.vaultHandleImageUpload=vaultHandleImageUpload;window.vaultDeleteImage=vaultDeleteImage;window.vaultOpenLightbox=vaultOpenLightbox;window.vaultCloseLightbox=vaultCloseLightbox;window.markRevised=markRevised;window.toggleSubtopics=toggleSubtopics;window.setSubtopic=setSubtopic;window.pomToggle=pomToggle;window.pomReset=pomReset;window.pomSkipStep=pomSkipStep;window.pomClearLog=pomClearLog;window.seqAddStep=seqAddStep;window.seqDeleteStep=seqDeleteStep;window.seqUpdateMinutes=seqUpdateMinutes;window.seqUpdateLabel=seqUpdateLabel;window.seqSave=seqSave;window.seqClear=seqClear;window.commInit=commInit;window.commHandleDoubtImg=commHandleDoubtImg;window.commClearDoubtImg=commClearDoubtImg;window.commOpenLightbox=commOpenLightbox;window.commPostDoubt=commPostDoubt;window.commPostReply=commPostReply;window.commMarkSolved=commMarkSolved;window.commDeleteDoubt=commDeleteDoubt;window.commSetFilter=commSetFilter;window.commToggleReplies=commToggleReplies;window.commRender=commRender;window.updateAuthUI=updateAuthUI;window.signOutUser=signOutUser;window.switchBacklogTab=switchBacklogTab;window.generateAIPlan=generateAIPlan;
 
 
     // ── FRIENDS ──
@@ -4682,11 +5011,9 @@ const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleane
 
     init();
 
-
     function mobClose(){const a=document.querySelector('#app-shell aside');if(a)a.classList.remove('mob-open');const ov=document.getElementById('mob-overlay');if(ov)ov.classList.remove('open');}
     window._attachMobListeners=function(){document.querySelectorAll('#app-shell .nav-link').forEach(l=>{l.addEventListener('click',()=>{if(window.innerWidth<=768)mobClose();});});};
     window.mobToggle=mobToggle; window.mobClose=mobClose;
 </script>
-
 </body>
 </html>
