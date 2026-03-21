@@ -502,6 +502,8 @@
         .fpm-unfriend-btn:hover { background: rgba(239,68,68,0.1); }
         @media (max-width: 768px) {
             #friends-view { padding: 1.2rem 1rem 6rem !important; }
+            #groups-view { padding: 1.2rem 1rem 6rem !important; }
+            .groups-grid { grid-template-columns: 1fr !important; }
             .friends-layout { grid-template-columns: 1fr !important; }
             .friends-sidebar { order: -1; }
         }
@@ -642,8 +644,6 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
 
 <button id="mob-menu-btn" onclick="mobToggle()" aria-label="Toggle sidebar" title="Toggle sidebar">&#9776;</button>
 <div id="mob-overlay" onclick="mobClose()"></div>
-    <div class="nav-link" onclick="switchTab('friends', this)"><span>&#128101; FRIENDS</span></div>
-
 <aside>
     <div class="logo-text"><div class="logo-dot"></div> JEE.COMMAND</div>
     <div class="nav-label">Core Syllabus</div>
@@ -659,6 +659,8 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
     <div class="nav-link" onclick="switchTab('pomodoro', this)"><span>&#9201; POMODORO</span></div>
     <div class="nav-label">Community</div>
     <div class="nav-link" onclick="switchTab('community', this)"><span>&#128101; DOUBTS FORUM</span></div>
+    <div class="nav-link" onclick="switchTab('groups', this)"><span>&#128101; STUDY GROUPS</span></div>
+    <div class="nav-link" onclick="switchTab('friends', this)"><span>&#128101; FRIENDS</span></div>
     <div class="nav-label">Tests</div>
     <div class="nav-link" onclick="switchTab('mains', this)"><span>JEE MAINS</span></div>
     <div class="nav-link" onclick="switchTab('advanced', this)"><span>JEE ADVANCED</span></div>
@@ -815,53 +817,50 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         </div>
     </div>
     <div id="community-view" class="content-body">
-        <!-- Auth wall -->
-        <div id="comm-auth-wall" class="comm-auth-wall" style="display:none"><h3>&#128101; Join the Community</h3><p>Sign in with Google to post doubts, join study groups, and collaborate with fellow JEE aspirants.</p><button class="comm-login-btn" onclick="login().then(()=>commInit())">&#128275; Sign in with Google</button></div>
-
-        <!-- Sub-tabs -->
-        <div class="comm-subtabs" id="comm-subtabs-bar">
-            <button class="comm-subtab active" id="cst-forum" onclick="switchCommTab('forum',this)">&#128101; Doubts Forum</button>
-            <button class="comm-subtab" id="cst-groups" onclick="switchCommTab('groups',this)">&#128101; Study Groups</button>
-        </div>
-
-        <!-- ── DOUBTS FORUM PANEL ── -->
-        <div class="comm-panel active" id="comm-forum-panel">
-            <div id="comm-post-section" style="display:none">
-                <div class="comm-post-card">
-                    <div class="comm-post-title">&#10067; Post a Doubt</div>
-                    <div class="comm-input-row"><select class="comm-subject-sel" id="comm-subject"><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Mathematics">Mathematics</option><option value="General">General</option></select><select class="comm-subject-sel" id="comm-chapter"><option value="">Chapter (optional)</option></select></div>
-                    <textarea class="comm-doubt-input" id="comm-doubt-text" placeholder="Describe your doubt clearly..."></textarea>
-                    <button class="comm-post-btn" id="comm-post-btn" onclick="commPostDoubt()">&#128161; Post Doubt</button>
-                    <div style="clear:both"></div>
+        <div id="comm-auth-wall" class="comm-auth-wall" style="display:none"><h3>&#128101; Doubts Forum</h3><p>Sign in with Google to post doubts, answer questions, and help fellow JEE aspirants.</p><button class="comm-login-btn" onclick="login().then(()=>commInit())">&#128275; Sign in with Google</button></div>
+        <div id="comm-post-section" style="display:none">
+            <div class="comm-post-card">
+                <div class="comm-post-title">&#10067; Post a Doubt</div>
+                <div class="comm-input-row"><select class="comm-subject-sel" id="comm-subject"><option value="Physics">Physics</option><option value="Chemistry">Chemistry</option><option value="Mathematics">Mathematics</option><option value="General">General</option></select><select class="comm-subject-sel" id="comm-chapter"><option value="">Chapter (optional)</option></select></div>
+                <textarea class="comm-doubt-input" id="comm-doubt-text" placeholder="Describe your doubt clearly..."></textarea>
+                <div class="img-upload-row">
+                    <label class="img-upload-btn" for="comm-doubt-img">&#128247; Attach Image</label>
+                    <input type="file" id="comm-doubt-img" accept="image/*" style="display:none" onchange="commHandleDoubtImg(this)">
+                    <span id="comm-doubt-img-preview"></span>
                 </div>
-            </div>
-            <div class="comm-layout">
-                <div>
-                    <div class="comm-filter-bar">
-                        <button class="comm-filter-btn active" onclick="commSetFilter('all',this)">All</button>
-                        <button class="comm-filter-btn" onclick="commSetFilter('unsolved',this)">&#128308; Unsolved</button>
-                        <button class="comm-filter-btn" onclick="commSetFilter('solved',this)">&#9989; Solved</button>
-                        <button class="comm-filter-btn" onclick="commSetFilter('mine',this)">&#128100; My Doubts</button>
-                        <input class="comm-search-input" type="text" id="comm-search" placeholder="Search doubts..." oninput="commRender()">
-                    </div>
-                    <div class="comm-doubts-list" id="comm-doubts-list"><div class="comm-loading"><span class="spin">&#9654;</span><br>Loading doubts...</div></div>
-                </div>
-                <div class="comm-sidebar">
-                    <div class="comm-side-card">
-                        <div class="comm-side-title">&#128202; Forum Stats</div>
-                        <div class="comm-stat-row"><span class="comm-stat-lbl">Total Doubts</span><span class="comm-stat-val" id="cs-total" style="color:var(--accent)">&#8212;</span></div>
-                        <div class="comm-stat-row"><span class="comm-stat-lbl">Solved</span><span class="comm-stat-val" id="cs-solved" style="color:#10b981">&#8212;</span></div>
-                        <div class="comm-stat-row"><span class="comm-stat-lbl">Unsolved</span><span class="comm-stat-val" id="cs-unsolved" style="color:#f59e0b">&#8212;</span></div>
-                        <div class="comm-stat-row"><span class="comm-stat-lbl">Total Replies</span><span class="comm-stat-val" id="cs-replies" style="color:#8b5cf6">&#8212;</span></div>
-                    </div>
-                    <div class="comm-side-card"><div class="comm-side-title">&#127942; Top Helpers</div><div id="cs-top-helpers"><span style="color:var(--text-secondary);font-size:0.78rem">Loading...</span></div></div>
-                    <div class="comm-side-card" style="background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.2)"><div class="comm-side-title" style="color:var(--accent)">&#128161; Tips</div><ul style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;padding-left:1rem"><li>Be specific &#8212; mention chapter + concept</li><li>Mark a reply as &#9989; solved to help others</li><li>Search before posting to avoid duplicates</li><li>Help others &#8212; it reinforces your own concepts!</li></ul></div>
-                </div>
+                <button class="comm-post-btn" id="comm-post-btn" onclick="commPostDoubt()">&#128161; Post Doubt</button>
+                <div style="clear:both"></div>
             </div>
         </div>
+        <div class="comm-layout">
+            <div>
+                <div class="comm-filter-bar">
+                    <button class="comm-filter-btn active" onclick="commSetFilter('all',this)">All</button>
+                    <button class="comm-filter-btn" onclick="commSetFilter('unsolved',this)">&#128308; Unsolved</button>
+                    <button class="comm-filter-btn" onclick="commSetFilter('solved',this)">&#9989; Solved</button>
+                    <button class="comm-filter-btn" onclick="commSetFilter('mine',this)">&#128100; My Doubts</button>
+                    <input class="comm-search-input" type="text" id="comm-search" placeholder="Search doubts..." oninput="commRender()">
+                </div>
+                <div class="comm-doubts-list" id="comm-doubts-list"><div class="comm-loading"><span class="spin">&#9654;</span><br>Loading doubts...</div></div>
+            </div>
+            <div class="comm-sidebar">
+                <div class="comm-side-card">
+                    <div class="comm-side-title">&#128202; Forum Stats</div>
+                    <div class="comm-stat-row"><span class="comm-stat-lbl">Total Doubts</span><span class="comm-stat-val" id="cs-total" style="color:var(--accent)">&#8212;</span></div>
+                    <div class="comm-stat-row"><span class="comm-stat-lbl">Solved</span><span class="comm-stat-val" id="cs-solved" style="color:#10b981">&#8212;</span></div>
+                    <div class="comm-stat-row"><span class="comm-stat-lbl">Unsolved</span><span class="comm-stat-val" id="cs-unsolved" style="color:#f59e0b">&#8212;</span></div>
+                    <div class="comm-stat-row"><span class="comm-stat-lbl">Total Replies</span><span class="comm-stat-val" id="cs-replies" style="color:#8b5cf6">&#8212;</span></div>
+                </div>
+                <div class="comm-side-card"><div class="comm-side-title">&#127942; Top Helpers</div><div id="cs-top-helpers"><span style="color:var(--text-secondary);font-size:0.78rem">Loading...</span></div></div>
+                <div class="comm-side-card" style="background:rgba(59,130,246,0.06);border-color:rgba(59,130,246,0.2)"><div class="comm-side-title" style="color:var(--accent)">&#128161; Tips</div><ul style="font-size:0.75rem;color:var(--text-secondary);line-height:1.8;padding-left:1rem"><li>Be specific &#8212; mention chapter + concept</li><li>Mark a reply as &#9989; solved to help others</li><li>Search before posting to avoid duplicates</li><li>Help others &#8212; it reinforces your own concepts!</li></ul></div>
+            </div>
+        </div>
+    </div>
 
-        <!-- ── STUDY GROUPS PANEL ── -->
-        <div class="comm-panel" id="comm-groups-panel">
+    <!-- ── STUDY GROUPS (standalone tab) ── -->
+    <div id="groups-view" class="content-body">
+        <div class="comm-auth-wall" id="groups-auth-wall" style="display:none"><h3>&#128101; Study Groups</h3><p>Sign in to create and join study groups with fellow JEE aspirants.</p><button class="comm-login-btn" onclick="login().then(()=>groupsInit())">&#128275; Sign in with Google</button></div>
+        <div id="groups-main-content">
             <div class="groups-top">
                 <div>
                     <h2>&#128101; Study Groups</h2>
@@ -887,15 +886,26 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
                     <div class="gm-title" id="gm-title-el">Group Chat</div>
                     <div class="gm-sub" id="gm-sub-el">0 members</div>
                 </div>
+                <button id="gm-invite-btn" onclick="copyGroupInviteLink()" title="Copy invite link" style="display:none;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 12px;border-radius:9px;cursor:pointer;font-size:0.75rem;font-weight:700;margin-right:8px;transition:all 0.15s;">&#128279; Invite</button>
                 <button class="gm-close" onclick="closeGroupModal()">&#10005;</button>
             </div>
             <div class="gm-messages" id="gm-messages-el"><div class="gm-empty">No messages yet. Say hello! &#128075;</div></div>
             <div class="gm-input-row">
-                <textarea class="gm-textarea" id="gm-input" placeholder="Type a message..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendGroupMessage();}"></textarea>
+                <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+                    <textarea class="gm-textarea" id="gm-input" placeholder="Type a message... (Shift+Enter for newline)" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendGroupMessage();}"></textarea>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <label class="img-upload-btn" for="gm-img-input" style="font-size:0.72rem;padding:5px 10px;cursor:pointer;">&#128247; Image</label>
+                        <input type="file" id="gm-img-input" accept="image/*" style="display:none" onchange="gmHandleImg(this)">
+                        <span id="gm-img-preview"></span>
+                    </div>
+                </div>
                 <button class="gm-send-btn" onclick="sendGroupMessage()">Send &#9658;</button>
             </div>
         </div>
     </div>
+
+    <!-- Invite link toast -->
+    <div id="invite-toast" style="position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:#10b981;color:white;padding:10px 20px;border-radius:12px;font-size:0.82rem;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;z-index:9999;">&#128279; Invite link copied!</div>
 
     <!-- Create group modal -->
     <div id="create-group-modal">
@@ -1193,15 +1203,11 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
     function switchTab(tab,el) {
         document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
         el.classList.add('active');
-        ['syllabus-view','vault-view','backlog-view','mains-view','advanced-view','pomodoro-view','community-view','friends-view'].forEach(id=>{document.getElementById(id).classList.remove('active');});
+        ['syllabus-view','vault-view','backlog-view','mains-view','advanced-view','pomodoro-view','community-view','groups-view','friends-view'].forEach(id=>{document.getElementById(id).classList.remove('active');});
         document.getElementById('cls-toggle-box').style.display='none';
         if (tab==='vault'){document.getElementById('view-title').innerText="Study Vault";document.getElementById('vault-view').classList.add('active');}
         else if (tab==='backlog'){document.getElementById('view-title').innerText="Study Backlog";document.getElementById('backlog-view').classList.add('active');renderBacklog();}
-        else if (tab==='community'){document.getElementById('view-title').innerText='Doubts Forum';document.getElementById('community-view').classList.add('active');commInit();} else if (tab === 'friends') {
-            document.getElementById('view-title').innerText = 'Friends';
-            document.getElementById('friends-view').classList.add('active');
-            friendsInit();
-        }
+        else if(tab==='community'){document.getElementById('view-title').innerText='Doubts Forum';document.getElementById('community-view').classList.add('active');commInit();} else if(tab==='groups'){document.getElementById('view-title').innerText='Study Groups';document.getElementById('groups-view').classList.add('active');groupsInit();} else if(tab==='friends'){document.getElementById('view-title').innerText='Friends';document.getElementById('friends-view').classList.add('active');friendsInit();}
         else if (tab==='pomodoro'){document.getElementById('view-title').innerText='Pomodoro Timer';document.getElementById('pomodoro-view').classList.add('active');seqRender();pomSyncToSeq();pomRenderLog();}
         else if (tab==='mains'){document.getElementById('view-title').innerText="JEE Mains";document.getElementById('mains-view').classList.add('active');renderTests();}
         else if (tab==='advanced'){document.getElementById('view-title').innerText="JEE Advanced";document.getElementById('advanced-view').classList.add('active');renderTests();}
@@ -1348,8 +1354,27 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
     window.switchCommTab = switchCommTab;
 
     // ── STUDY GROUPS ──
-    let groupsList = [], groupFilter = 'all', groupsUnsubscribe = null, activeGroupId = null, groupMsgUnsubscribe = null;
+    let groupsList = [], groupFilter = 'all', groupsUnsubscribe = null;
+    let activeGroupId = null, activeGroupData = null, groupMsgUnsubscribe = null;
     let selectedGroupEmoji = '👥', selectedGroupType = 'public';
+    let _gmImgData = null;
+
+    function groupsInit() {
+        const user = window.currentUser;
+        const authWall = document.getElementById('groups-auth-wall');
+        const mainContent = document.getElementById('groups-main-content');
+        if (authWall) authWall.style.display = user ? 'none' : 'block';
+        if (mainContent) mainContent.style.display = user ? 'block' : 'none';
+        if (!user) return;
+        listenGroups();
+        // Handle invite join via URL param
+        const params = new URLSearchParams(location.search);
+        const inviteId = params.get('joinGroup');
+        if (inviteId) {
+            history.replaceState(null, '', location.pathname);
+            setTimeout(() => joinGroupById(inviteId), 1000);
+        }
+    }
 
     function selectGroupEmoji(btn, emoji) {
         document.querySelectorAll('.cgm-emoji-btn').forEach(b => b.classList.remove('selected'));
@@ -1361,7 +1386,6 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         document.getElementById('cgm-public-btn').classList.toggle('selected', type === 'public');
         document.getElementById('cgm-private-btn').classList.toggle('selected', type === 'private');
     }
-
     function openCreateGroup() {
         if (!window.currentUser) { alert('Please sign in to create a group.'); return; }
         document.getElementById('create-group-modal').classList.add('open');
@@ -1371,7 +1395,6 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         document.getElementById('cgm-name').value = '';
         document.getElementById('cgm-desc').value = '';
     }
-
     async function createGroup() {
         const user = window.currentUser;
         if (!user) return;
@@ -1386,23 +1409,22 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
                 name, desc, emoji: selectedGroupEmoji, type: selectedGroupType,
                 creatorId: user.uid, creatorName: user.displayName || 'Anonymous',
                 members: [{ uid: user.uid, name: user.displayName || 'Anonymous', initial: (user.displayName || 'A')[0].toUpperCase() }],
-                memberIds: [user.uid],
-                createdAt: serverTimestamp()
+                memberIds: [user.uid], createdAt: serverTimestamp()
             });
             closeCreateGroup();
-            // Auto-open the newly created group
-            setTimeout(() => openGroupChat(ref.id, name, selectedGroupEmoji, [user.uid]), 600);
+            setTimeout(() => {
+                const g = { id: ref.id, name, emoji: selectedGroupEmoji, type: selectedGroupType, memberIds: [user.uid] };
+                openGroupChat(ref.id, name, selectedGroupEmoji, [user.uid], g);
+            }, 600);
         } catch(e) { console.error(e); alert('Failed to create group.'); }
         btn.disabled = false; btn.textContent = '✓ Create Group';
     }
-
     function groupSetFilter(f, btn) {
         groupFilter = f;
-        document.querySelectorAll('#comm-groups-panel .comm-filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#groups-view .comm-filter-btn, #comm-groups-panel .comm-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderGroups();
     }
-
     function listenGroups() {
         if (groupsUnsubscribe) groupsUnsubscribe();
         const { collection, query, orderBy, onSnapshot } = window._fsOps;
@@ -1410,9 +1432,8 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         groupsUnsubscribe = onSnapshot(q, snap => {
             groupsList = snap.docs.map(d => ({ id: d.id, ...d.data() }));
             renderGroups();
-        }, err => { console.error('Groups error:', err); });
+        }, err => console.error('Groups error:', err));
     }
-
     function renderGroups() {
         const container = document.getElementById('groups-list');
         if (!container) return;
@@ -1437,15 +1458,16 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
             const badge = g.type === 'private'
                 ? '<span class="group-private-badge">🔒 Private</span>'
                 : '<span class="group-public-badge">🌐 Public</span>';
+            const gDataStr = escHtml(JSON.stringify({id:g.id,name:g.name,emoji:g.emoji||'👥',type:g.type,memberIds:g.memberIds||[]}));
             const actions = isMember
-                ? `<button class="group-open-btn" onclick="openGroupChat('${g.id}','${escHtml(g.name)}','${g.emoji||'👥'}',${JSON.stringify(g.memberIds||[])})">💬 Open Chat</button><button class="group-leave-btn" onclick="leaveGroup('${g.id}')">Leave</button>`
+                ? `<button class="group-open-btn" onclick='openGroupChatFromCard(${JSON.stringify({id:g.id,name:g.name,emoji:g.emoji||"👥",type:g.type,memberIds:g.memberIds||[]})})'>💬 Open Chat</button><button class="group-leave-btn" onclick="leaveGroup('${g.id}')">Leave</button>`
                 : `<button class="group-join-btn" onclick="joinGroup('${g.id}')">➕ Join Group</button>`;
             return `<div class="group-card">
                 <div class="group-card-header">
                     <div class="group-avatar" style="background:rgba(59,130,246,0.12)">${g.emoji || '👥'}</div>
                     <div class="group-info">
                         <div class="group-name">${escHtml(g.name)}</div>
-                        <div class="group-meta">by ${escHtml(g.creatorName)} · ${fmtDate(g.createdAt)}</div>
+                        <div class="group-meta">by ${escHtml(g.creatorName||'?')} · ${fmtDate(g.createdAt)}</div>
                     </div>
                     ${badge}
                 </div>
@@ -1461,19 +1483,31 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         }).join('') + '</div>';
     }
 
+    function openGroupChatFromCard(g) {
+        openGroupChat(g.id, g.name, g.emoji, g.memberIds, g);
+    }
+
     async function joinGroup(groupId) {
         const user = window.currentUser;
         if (!user) { alert('Please sign in to join a group.'); return; }
+        await joinGroupById(groupId);
+    }
+    async function joinGroupById(groupId) {
+        const user = window.currentUser;
+        if (!user) return;
         try {
-            const { doc, updateDoc } = window._fsOps;
-            const group = groupsList.find(g => g.id === groupId);
-            if (!group) return;
-            const members = [...(group.members || []), { uid: user.uid, name: user.displayName || 'Anonymous', initial: (user.displayName || 'A')[0].toUpperCase() }];
-            const memberIds = [...(group.memberIds || []), user.uid];
-            await updateDoc(doc(window._db, 'studyGroups', groupId), { members, memberIds });
+            const { doc, updateDoc, getDoc } = window._fsOps;
+            const gRef = doc(window._db, 'studyGroups', groupId);
+            const gSnap = await getDoc(gRef);
+            if (!gSnap.exists()) { alert('Group not found.'); return; }
+            const g = { id: gSnap.id, ...gSnap.data() };
+            if (g.memberIds?.includes(user.uid)) { openGroupChatFromCard(g); return; }
+            const members = [...(g.members || []), { uid: user.uid, name: user.displayName || 'Anonymous', initial: (user.displayName || 'A')[0].toUpperCase() }];
+            const memberIds = [...(g.memberIds || []), user.uid];
+            await updateDoc(gRef, { members, memberIds });
+            openGroupChatFromCard({ ...g, members, memberIds });
         } catch(e) { console.error(e); alert('Failed to join group.'); }
     }
-
     async function leaveGroup(groupId) {
         const user = window.currentUser;
         if (!user || !confirm('Leave this group?')) return;
@@ -1488,22 +1522,38 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         } catch(e) { console.error(e); alert('Failed to leave group.'); }
     }
 
-    function openGroupChat(groupId, groupName, emoji, memberIds) {
+    function openGroupChat(groupId, groupName, emoji, memberIds, groupData) {
         activeGroupId = groupId;
+        activeGroupData = groupData || { id: groupId, name: groupName, emoji, memberIds, type: 'public' };
         document.getElementById('gm-avatar-el').textContent = emoji || '👥';
         document.getElementById('gm-title-el').textContent = groupName;
         document.getElementById('gm-sub-el').textContent = `${memberIds.length} member${memberIds.length !== 1 ? 's' : ''}`;
+        // Show invite button only for private groups where user is a member
+        const user = window.currentUser;
+        const inviteBtn = document.getElementById('gm-invite-btn');
+        if (inviteBtn) inviteBtn.style.display = (activeGroupData.type === 'private' && user && memberIds.includes(user.uid)) ? 'flex' : 'none';
         document.getElementById('group-modal').classList.add('open');
-        document.getElementById('gm-messages-el').innerHTML = '<div class="gm-empty"><span class="spin">▶</span><br>Loading messages...</div>';
-        // Listen to messages
+        document.getElementById('gm-messages-el').innerHTML = '<div class="gm-empty"><span class="spin">▶</span> Loading...</div>';
         if (groupMsgUnsubscribe) groupMsgUnsubscribe();
         const { collection, query, orderBy, onSnapshot } = window._fsOps;
         const q = query(collection(window._db, `studyGroups/${groupId}/messages`), orderBy('createdAt', 'asc'));
         groupMsgUnsubscribe = onSnapshot(q, snap => {
-            const msgs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderGroupMessages(msgs);
-        }, err => { console.error('Group messages error:', err); });
+            renderGroupMessages(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        }, err => console.error('Group messages error:', err));
         setTimeout(() => document.getElementById('gm-input').focus(), 200);
+    }
+
+    function gmHandleImg(input) {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 4 * 1024 * 1024) { alert('Image too large (max 4MB).'); input.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = e => {
+            _gmImgData = e.target.result;
+            const prev = document.getElementById('gm-img-preview');
+            if (prev) prev.innerHTML = `<span class="img-preview-wrap"><img class="img-preview-thumb" src="${_gmImgData}"><button class="img-preview-remove" onclick="_gmImgData=null;document.getElementById('gm-img-input').value='';document.getElementById('gm-img-preview').innerHTML=''">✕</button></span>`;
+        };
+        reader.readAsDataURL(file);
     }
 
     function renderGroupMessages(msgs) {
@@ -1512,14 +1562,15 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         const user = window.currentUser;
         if (!msgs.length) { container.innerHTML = '<div class="gm-empty">No messages yet. Say hello! 👋</div>'; return; }
         const fmtTime = ts => { if (!ts) return ''; try { const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }); } catch { return ''; } };
-        const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+        const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
         container.innerHTML = msgs.map(m => {
             const isOwn = user && m.authorId === user.uid;
+            const imgHtml = m.image ? `<img src="${m.image}" style="max-width:100%;max-height:240px;border-radius:10px;margin-top:6px;cursor:pointer;display:block;" onclick="commOpenLightbox(this.src)">` : '';
             return `<div class="gm-msg ${isOwn ? 'own' : ''}">
                 <div class="gm-msg-avatar" style="${isOwn ? 'background:linear-gradient(135deg,#3b82f6,#6366f1)' : ''}">${m.authorInitial || '?'}</div>
                 <div class="gm-msg-body">
                     <div class="gm-msg-author">${escHtml(m.authorName)}</div>
-                    <div class="gm-msg-bubble">${escHtml(m.text)}</div>
+                    <div class="gm-msg-bubble">${m.text ? escHtml(m.text) : ''}${imgHtml}</div>
                     <div class="gm-msg-time">${fmtTime(m.createdAt)}</div>
                 </div>
             </div>`;
@@ -1532,25 +1583,47 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
         if (!user || !activeGroupId) return;
         const input = document.getElementById('gm-input');
         const text = input.value.trim();
-        if (!text) return;
+        if (!text && !_gmImgData) return;
         input.value = '';
+        const imgData = _gmImgData;
+        _gmImgData = null;
+        const prev = document.getElementById('gm-img-preview');
+        if (prev) prev.innerHTML = '';
+        const imgInput = document.getElementById('gm-img-input');
+        if (imgInput) imgInput.value = '';
         try {
             const { collection, addDoc, serverTimestamp } = window._fsOps;
-            await addDoc(collection(window._db, `studyGroups/${activeGroupId}/messages`), {
-                text, authorId: user.uid,
+            const payload = {
+                text: text || '',
+                authorId: user.uid,
                 authorName: user.displayName || 'Anonymous',
                 authorInitial: (user.displayName || 'A')[0].toUpperCase(),
                 createdAt: serverTimestamp()
-            });
+            };
+            if (imgData) payload.image = imgData;
+            await addDoc(collection(window._db, `studyGroups/${activeGroupId}/messages`), payload);
         } catch(e) { console.error(e); input.value = text; }
     }
 
     function closeGroupModal() {
         document.getElementById('group-modal').classList.remove('open');
         if (groupMsgUnsubscribe) { groupMsgUnsubscribe(); groupMsgUnsubscribe = null; }
-        activeGroupId = null;
+        activeGroupId = null; activeGroupData = null;
     }
 
+    function copyGroupInviteLink() {
+        if (!activeGroupId) return;
+        const url = `${location.origin}${location.pathname}?joinGroup=${activeGroupId}`;
+        navigator.clipboard.writeText(url).then(() => {
+            const toast = document.getElementById('invite-toast');
+            if (toast) {
+                toast.style.opacity = '1'; toast.style.transform = 'translateX(-50%) translateY(0)';
+                setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(20px)'; }, 2400);
+            }
+        }).catch(() => prompt('Copy this invite link:', url));
+    }
+
+    window.groupsInit = groupsInit;
     window.openCreateGroup = openCreateGroup;
     window.closeCreateGroup = closeCreateGroup;
     window.createGroup = createGroup;
@@ -1560,16 +1633,13 @@ window.saveToFirebase = async function () { if (!window.currentUser) return; awa
     window.renderGroups = renderGroups;
     window.joinGroup = joinGroup;
     window.leaveGroup = leaveGroup;
+    window.openGroupChatFromCard = openGroupChatFromCard;
     window.openGroupChat = openGroupChat;
+    window.gmHandleImg = gmHandleImg;
     window.sendGroupMessage = sendGroupMessage;
     window.closeGroupModal = closeGroupModal;
+    window.copyGroupInviteLink = copyGroupInviteLink;
 
-    async function commInit(){const user=window.currentUser;const authWall=document.getElementById('comm-auth-wall'),postSection=document.getElementById('comm-post-section');if(authWall)authWall.style.display=user?'none':'block';if(postSection)postSection.style.display=user?'block':'none';if(!user){document.getElementById('comm-doubts-list').innerHTML='<div class="comm-loading">Sign in to see and post doubts.</div>';renderGroups();return;}commPopulateChapters();listenGroups();if(commUnsubscribe)commUnsubscribe();const{collection,query,orderBy,onSnapshot}=window._fsOps;const db=window._db;const q=query(collection(db,'doubts'),orderBy('createdAt','desc'));commUnsubscribe=onSnapshot(q,(snapshot)=>{commDoubts=snapshot.docs.map(d=>({id:d.id,...d.data()}));commRender();commUpdateStats();},(err)=>{console.error('Doubts listener error:',err);document.getElementById('comm-doubts-list').innerHTML='<div class="comm-loading">Could not load doubts. Check your connection.</div>';});}
-    function commPopulateChapters(){const subSel=document.getElementById('comm-subject'),chSel=document.getElementById('comm-chapter');if(!subSel||!chSel)return;function refreshChapters(){const sub=subSel.value.toLowerCase(),subData=DATA[sub==='mathematics'?'mathematics':sub];chSel.innerHTML='<option value="">Chapter (optional)</option>';if(!subData)return;Object.entries(subData).forEach(([cls,units])=>{Object.entries(units).forEach(([unit,chapters])=>{const grp=document.createElement('optgroup');grp.label='Class '+cls+' — '+unit;chapters.forEach(ch=>{const opt=document.createElement('option');opt.value=ch.n;opt.textContent=ch.n;grp.appendChild(opt);});chSel.appendChild(grp);});});}subSel.addEventListener('change',refreshChapters);refreshChapters();}
-    async function commPostDoubt(){const user=window.currentUser;if(!user){alert('Please sign in first.');return;}const text=document.getElementById('comm-doubt-text').value.trim(),subject=document.getElementById('comm-subject').value,chapter=document.getElementById('comm-chapter').value;if(!text){alert('Please describe your doubt.');return;}const btn=document.getElementById('comm-post-btn');btn.disabled=true;btn.textContent='Posting...';try{const{collection,addDoc,serverTimestamp}=window._fsOps;await addDoc(collection(window._db,'doubts'),{text,subject,chapter,authorId:user.uid,authorName:user.displayName||'Anonymous',authorPhoto:user.photoURL||null,authorInitial:(user.displayName||'A')[0].toUpperCase(),solved:false,replies:[],createdAt:serverTimestamp()});document.getElementById('comm-doubt-text').value='';}catch(e){console.error(e);alert('Failed to post. Make sure Firestore rules allow writes.');}btn.disabled=false;btn.textContent='💡 Post Doubt';}
-    async function commPostReply(doubtId){const user=window.currentUser;if(!user){alert('Please sign in to reply.');return;}const ta=document.getElementById('reply-ta-'+doubtId),btn=document.getElementById('reply-btn-'+doubtId);if(!ta)return;const text=ta.value.trim();if(!text)return;btn.disabled=true;const reply={text,authorId:user.uid,authorName:user.displayName||'Anonymous',authorInitial:(user.displayName||'A')[0].toUpperCase(),authorPhoto:user.photoURL||null,createdAt:new Date().toISOString()};try{const{doc,updateDoc}=window._fsOps;const doubt=commDoubts.find(d=>d.id===doubtId);const replies=[...(doubt.replies||[]),reply];await updateDoc(doc(window._db,'doubts',doubtId),{replies});ta.value='';}catch(e){console.error(e);alert('Failed to post reply.');}btn.disabled=false;}
-    async function commMarkSolved(doubtId,replyIdx){const user=window.currentUser;if(!user)return;const doubt=commDoubts.find(d=>d.id===doubtId);if(!doubt||doubt.authorId!==user.uid){alert('Only the person who posted the doubt can mark it as solved.');return;}try{const{doc,updateDoc}=window._fsOps;await updateDoc(doc(window._db,'doubts',doubtId),{solved:true,solvedByReply:replyIdx});}catch(e){console.error(e);}}
-    async function commDeleteDoubt(doubtId){const user=window.currentUser;if(!user)return;const doubt=commDoubts.find(d=>d.id===doubtId);if(!doubt||doubt.authorId!==user.uid){alert('You can only delete your own doubts.');return;}if(!confirm('Delete this doubt and all its replies?'))return;try{const{doc,deleteDoc}=window._fsOps;await deleteDoc(doc(window._db,'doubts',doubtId));}catch(e){console.error(e);alert('Failed to delete.');}}
     function commSetFilter(f,btn){commFilter=f;document.querySelectorAll('.comm-filter-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');commRender();}
     function commFmtTime(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);const now=Date.now(),diff=Math.floor((now-d.getTime())/1000);if(diff<60)return'just now';if(diff<3600)return Math.floor(diff/60)+'m ago';if(diff<86400)return Math.floor(diff/3600)+'h ago';return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'});}
     function commRender(){const list=document.getElementById('comm-doubts-list');if(!list)return;const user=window.currentUser,search=(document.getElementById('comm-search')?.value||'').toLowerCase();let filtered=commDoubts.filter(d=>{if(commFilter==='solved'&&!d.solved)return false;if(commFilter==='unsolved'&&d.solved)return false;if(commFilter==='mine'&&(!user||d.authorId!==user.uid))return false;if(search&&!d.text.toLowerCase().includes(search)&&!d.subject.toLowerCase().includes(search)&&!(d.chapter||'').toLowerCase().includes(search))return false;return true;});if(!filtered.length){list.innerHTML='<div class="comm-loading" style="padding:40px">No doubts found.</div>';return;}list.innerHTML=filtered.map(d=>{const isOwn=user&&d.authorId===user.uid,replies=d.replies||[];const subClass=d.subject==='Chemistry'?'chem':d.subject==='Mathematics'?'math':'';const avatar=d.authorPhoto?`<img class="doubt-avatar" src="${d.authorPhoto}" alt="${d.authorName}">`:`<div class="doubt-avatar-placeholder">${d.authorInitial||'?'}</div>`;const repliesHtml=replies.map((r,ri)=>{const rav=r.authorPhoto?`<img class="doubt-avatar" src="${r.authorPhoto}" alt="${r.authorName}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">`:`<div class="reply-avatar-placeholder">${r.authorInitial||'?'}</div>`;const isSolvedReply=d.solved&&d.solvedByReply===ri;return`<div class="reply-item" ${isSolvedReply?'style="background:rgba(16,185,129,0.06)"':''}>${rav}<div class="reply-meta"><div style="display:flex;align-items:center;gap:8px"><span class="reply-author">${r.authorName}</span>${isSolvedReply?'<span style="background:rgba(16,185,129,0.15);color:#10b981;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:10px">✅ Accepted Solution</span>':''}<span class="reply-ts">${commFmtTime(r.createdAt)}</span></div><div class="reply-text">${escHtml(r.text)}</div></div>${isOwn&&!d.solved?`<button class="reply-solve-btn" onclick="commMarkSolved('${d.id}',${ri})">✅ Mark Solved</button>`:''}</div>`;}).join('');const replyInput=user?`<div class="reply-input-wrap"><textarea class="reply-textarea" id="reply-ta-${d.id}" placeholder="Write your solution or hint..." rows="2"></textarea><button class="reply-send-btn" id="reply-btn-${d.id}" onclick="commPostReply('${d.id}')">Send</button></div>`:`<div style="padding:10px 16px;font-size:0.75rem;color:var(--text-secondary)">Sign in to reply.</div>`;return`<div class="doubt-card ${d.solved?'solved':'unsolved'}" id="dc-${d.id}"><div class="doubt-card-head">${avatar}<div class="doubt-meta"><div class="doubt-author">${d.authorName}</div><div class="doubt-timestamp">${commFmtTime(d.createdAt)}</div></div><span class="doubt-subject-tag ${subClass}">${d.subject}${d.chapter?' · '+d.chapter:''}</span></div><div class="doubt-body"><div class="doubt-text">${escHtml(d.text)}</div></div><div class="doubt-actions"><span class="doubt-solved-badge ${d.solved?'solved-badge':'unsolved-badge'}">${d.solved?'✅ Solved':'⚠️ Unsolved'}</span><span class="doubt-reply-count">${replies.length} repl${replies.length===1?'y':'ies'}</span><button class="doubt-toggle-reply" onclick="commToggleReplies('${d.id}')">${replies.length?'💬 View Replies':'💬 Reply'}</button>${isOwn?`<button class="doubt-del-btn" onclick="commDeleteDoubt('${d.id}')">🗑</button>`:''}</div><div class="doubt-replies" id="dr-${d.id}" style="display:none">${repliesHtml}${replyInput}</div></div>`;}).join('');}
