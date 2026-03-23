@@ -3773,73 +3773,61 @@ document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 // ── FEATURE TILE TOOLTIP ──
 (function() {
   var tip = document.getElementById('feat-tooltip');
-  var current = null;
+  if (!tip) return;
   var showTimer = null;
 
   function getAccent(el) {
-    var s = el.style.cssText + (el.getAttribute('style') || '');
-    var m = s.match(/--preview-accent: *([^;)'"]+)/);
-    return m ? m[1].trim() : '#a5b4fc';
+    var style = el.getAttribute('style') || '';
+    var k = style.indexOf('--preview-accent:');
+    if (k < 0) return '#a5b4fc';
+    return style.slice(k + 17).split(';')[0].trim() || '#a5b4fc';
   }
 
+  
   function show(card) {
     var popup = card.querySelector('.feat-popup');
     if (!popup) return;
-    current = card;
-
-    // Copy popup content into tooltip
     tip.innerHTML = popup.innerHTML;
-
-    // Apply accent colour
     var accent = getAccent(popup);
-    tip.style.setProperty('--tp-accent', accent);
-
-    // Position: just below the card
+    tip.style.cssText += '; --tp-accent:' + accent;
     var r = card.getBoundingClientRect();
     var tipW = 300;
     var left = r.left + r.width / 2 - tipW / 2;
-    var top  = r.bottom + 12;
-
-    // Clamp to viewport
+    var top = r.bottom + 12;
     var vw = window.innerWidth;
-    var caretClass = 'caret-center';
+    tip.className = '';
     if (left < 12) {
       left = r.left;
-      caretClass = 'caret-left'; // default (::before left:28px)
+      tip.className = 'caret-left';
     } else if (left + tipW > vw - 12) {
       left = r.right - tipW;
-      caretClass = 'caret-right';
+      tip.className = 'caret-right';
+    } else {
+      tip.className = 'caret-center';
     }
-
-    tip.style.left  = left + 'px';
-    tip.style.top   = top + 'px';
+    tip.style.left = Math.max(8, left) + 'px';
+    tip.style.top = top + 'px';
     tip.style.width = tipW + 'px';
-    // Set caret class THEN add visible so transition fires correctly
-    tip.className = caretClass;
-    void tip.offsetWidth; // force reflow
     tip.classList.add('visible');
   }
 
   function hide() {
-    current = null;
+    clearTimeout(showTimer);
     tip.classList.remove('visible');
   }
 
-  // Attach to all tiles that have a .feat-popup child
   document.querySelectorAll('.feat-card, .big-card, .full-card').forEach(function(card) {
     if (!card.querySelector('.feat-popup')) return;
-
     card.addEventListener('mouseenter', function() {
       clearTimeout(showTimer);
       showTimer = setTimeout(function() { show(card); }, 80);
     });
-    card.addEventListener('mouseleave', function(e) {
+    card.addEventListener('mouseleave', function() {
       clearTimeout(showTimer);
       hide();
     });
   });
 
-  // Hide on scroll
   window.addEventListener('scroll', hide, { passive: true });
 })();
 
@@ -5575,12 +5563,9 @@ RULES:
         notifSaveRead();
         notifRender();
         notifClose();
-        if (action === 'friends') {
-            const navEl = document.querySelector('#app-shell .nav-link[onclick*="'friends'"]');
-            if (navEl && typeof switchTab === 'function') switchTab('friends', navEl);
-        } else if (action === 'community') {
-            const navEl = document.querySelector('#app-shell .nav-link[onclick*="'community'"]');
-            if (navEl && typeof switchTab === 'function') switchTab('community', navEl);
+        if (action && typeof switchTab === 'function') {
+            var navEl = document.querySelector('#app-shell .nav-link[onclick*=' + action + ']');
+            switchTab(action, navEl || document.createElement('div'));
         }
     }
 
