@@ -2,9 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>
+(function(){
+  var tab = new URLSearchParams(location.search).get("tab");
+  if (!tab) return;
+  var s = document.createElement("style");
+  s.textContent = "#landing-page{display:none!important}#launch-overlay{display:none!important}#app-shell{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:all!important;}";
+  document.head.appendChild(s);
+  window.__deepLinkTab = tab;
+  window.__deepLinkSub = new URLSearchParams(location.search).get("sub");
+  history.replaceState(null,"",location.pathname);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JEEverse — The Ultimate JEE 2026 Study Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ═══ LANDING ═══ */
 
@@ -143,11 +155,11 @@ body::before {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.8)} }
 
 .hero-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(3.5rem, 10vw, 7.5rem);
   font-weight: 800;
   line-height: 0.92;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   margin-bottom: 1.8rem;
   animation: fadeUp 0.6s 0.1s ease both;
 }
@@ -179,7 +191,7 @@ body::before {
   gap: 10px;
   background: linear-gradient(135deg, #6366f1, #3b82f6);
   color: white;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 1rem;
   padding: 16px 36px;
@@ -204,7 +216,7 @@ body::before {
 }
 
 .hero-stat-val {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 2rem;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -240,10 +252,10 @@ section {
 }
 
 .section-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   line-height: 1.1;
   margin-bottom: 1.2rem;
 }
@@ -265,30 +277,119 @@ section {
   background: var(--border);
   border: 1px solid var(--border);
   border-radius: 24px;
-  overflow: hidden;
+  overflow: visible;
+  isolation: isolate;
 }
 
 .feat-card {
   background: var(--surface);
   padding: 2rem;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 1;
 }
-
 .feat-card::before {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--card-glow, transparent);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  border-radius: inherit;
 }
-
 .feat-card:hover::before { opacity: 1; }
-.feat-card:hover { background: #0f1823; }
+.feat-card:hover { background: #0d1520; z-index: 30; }
 .feat-card.feat-link { cursor: pointer; }
 .feat-card.feat-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* hide source popup divs — content is read by JS into #feat-tooltip */
+.feat-popup { display: none !important; }
+
+/* ── BODY-LEVEL TOOLTIP POPUP ── */
+#feat-tooltip {
+  position: fixed;
+  z-index: 99999;
+  width: 300px;
+  background: #0f1b2d;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 1.1rem 1.15rem 1rem;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+#feat-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#feat-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 28px;
+  border: 7px solid transparent;
+  border-top: 0;
+  border-bottom: 7px solid #0f1b2d;
+}
+#feat-tooltip.caret-right::before { left: auto; right: 28px; }
+#feat-tooltip.caret-center::before { left: 50%; transform: translateX(-50%); }
+.feat-popup-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tp-accent, #a5b4fc);
+  margin-bottom: 0.6rem;
+  opacity: 0.9;
+}
+.feat-preview-bullets { display: flex; flex-direction: column; gap: 5px; margin-bottom: 0.85rem; }
+.feat-preview-bullet { display: flex; align-items: flex-start; gap: 7px; font-size: 0.73rem; color: #94a3b8; line-height: 1.5; }
+.feat-preview-bullet::before { content: '→'; color: var(--tp-accent, #6366f1); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+.feat-preview-screen { border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: #020617; width: 100%; box-shadow: 0 4px 16px rgba(0,0,0,0.5); }
+
+
+/* ── HOVER POPUP ── */
+.feat-popup-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--preview-accent, #a5b4fc);
+  margin-bottom: 0.6rem;
+  opacity: 0.9;
+}
+.feat-preview-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 0.85rem;
+}
+.feat-preview-bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 0.73rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+.feat-preview-bullet::before {
+  content: '→';
+  color: var(--preview-accent, #6366f1);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.feat-preview-screen {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: #020617;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
 
 .feat-icon {
   font-size: 1.8rem;
@@ -297,7 +398,7 @@ section {
 }
 
 .feat-name {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -337,11 +438,12 @@ section {
   border-radius: 24px;
   padding: 2.5rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   transition: border-color 0.2s, transform 0.2s;
+  z-index: 1;
 }
 
-.big-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+.big-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); z-index: 20; }
 .big-card.big-link { cursor: pointer; }
 .big-card.big-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -364,7 +466,7 @@ section {
 }
 
 .big-card-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -490,7 +592,7 @@ section {
 }
 
 .quote-text {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(1.6rem, 4vw, 2.8rem);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -515,9 +617,12 @@ section {
   align-items: center;
   margin-bottom: 20px;
   transition: border-color 0.2s;
+  position: relative;
+  overflow: visible;
+  z-index: 1;
 }
 
-.full-card:hover { border-color: rgba(255,255,255,0.1); }
+.full-card:hover { border-color: rgba(255,255,255,0.1); z-index: 20; }
 .full-card.full-link { cursor: pointer; }
 .full-card.full-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
@@ -529,7 +634,7 @@ footer {
 }
 
 .footer-logo {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
   letter-spacing: -0.05em;
@@ -1774,6 +1879,31 @@ footer {
         #app-shell #backlog-filter-select option{ background: var(--surface-2); color: var(--text-primary); }
 
         #app-shell .nav-ai-badge{ font-size: 0.55rem; font-weight: 900; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 6px; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; text-transform: uppercase; box-shadow: 0 2px 8px rgba(245,158,11,0.4); flex-shrink: 0; }
+        /* ── NOTIFICATION BELL ── */
+        #app-shell #notif-btn{ position:relative; width:36px; height:36px; border-radius:50%; background:var(--surface-2); border:1px solid var(--border); display:none; align-items:center; justify-content:center; cursor:pointer; transition:border-color 0.2s,background 0.2s; flex-shrink:0; }
+        #app-shell #notif-btn:hover{ background:var(--surface-1); border-color:rgba(255,255,255,0.15); }
+        #app-shell #notif-badge{ position:absolute; top:-3px; right:-3px; min-width:16px; height:16px; background:#ef4444; border-radius:8px; font-size:0.58rem; font-weight:900; color:white; display:none; align-items:center; justify-content:center; padding:0 4px; border:2px solid var(--bg); line-height:1; }
+        #app-shell #notif-panel{ position:absolute; top:calc(100% + 10px); right:0; width:320px; background:var(--surface-1); border:1px solid var(--border); border-radius:18px; box-shadow:0 12px 40px rgba(0,0,0,0.5); z-index:400; display:none; overflow:hidden; }
+        #app-shell #notif-panel.open{ display:block; }
+        #app-shell .notif-header{ padding:14px 18px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+        #app-shell .notif-header-title{ font-size:0.82rem; font-weight:800; color:var(--text-primary); }
+        #app-shell .notif-mark-read{ font-size:0.68rem; color:var(--accent); cursor:pointer; font-weight:700; background:none; border:none; font-family:inherit; padding:0; }
+        #app-shell .notif-mark-read:hover{ text-decoration:underline; }
+        #app-shell .notif-list{ max-height:340px; overflow-y:auto; }
+        #app-shell .notif-item{ display:flex; align-items:flex-start; gap:12px; padding:13px 18px; border-bottom:1px solid rgba(255,255,255,0.04); cursor:pointer; transition:background 0.15s; }
+        #app-shell .notif-item:hover{ background:rgba(255,255,255,0.03); }
+        #app-shell .notif-item.unread{ background:rgba(99,102,241,0.06); }
+        #app-shell .notif-item.unread:hover{ background:rgba(99,102,241,0.1); }
+        #app-shell .notif-icon{ width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.9rem; flex-shrink:0; margin-top:1px; }
+        #app-shell .notif-text{ flex:1; min-width:0; }
+        #app-shell .notif-title{ font-size:0.78rem; font-weight:700; color:var(--text-primary); margin-bottom:2px; line-height:1.3; }
+        #app-shell .notif-sub{ font-size:0.68rem; color:var(--text-secondary); line-height:1.4; }
+        #app-shell .notif-time{ font-size:0.6rem; color:var(--text-secondary); margin-top:3px; opacity:0.7; }
+        #app-shell .notif-unread-dot{ width:7px; height:7px; background:#6366f1; border-radius:50%; flex-shrink:0; margin-top:5px; }
+        #app-shell .notif-empty{ padding:32px 18px; text-align:center; font-size:0.78rem; color:var(--text-secondary); }
+        /* Green dot on Doubts Forum nav */
+        #app-shell .nav-new-dot{ width:7px; height:7px; background:#10b981; border-radius:50%; box-shadow:0 0 6px #10b981; flex-shrink:0; animation:navDotPulse 2s ease infinite; }
+        @keyframes navDotPulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.5; transform:scale(0.7); } }
 
         #app-shell .backlog-subtabs{ display: flex; gap: 4px; background: var(--surface-2); padding: 4px; border-radius: 12px; margin-bottom: 1.8rem; width: fit-content; }
 
@@ -2080,6 +2210,7 @@ footer {
 </style>
 </head>
 <body>
+<div id="feat-tooltip"></div>
 <div id="landing-page">
 <!-- HERO -->
 <div class="hero">
@@ -2132,60 +2263,286 @@ footer {
   <p class="section-sub reveal">Built by a JEE aspirant, for JEE aspirants. Every feature exists because someone needed it during prep.</p>
 
   <div class="feat-grid reveal">
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(99,102,241,0.06), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(99,102,241,0.06), transparent 60%); --preview-accent:#a5b4fc" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">📐</span>
       <div class="feat-name">Full Syllabus Tracker</div>
       <div class="feat-desc">Physics, Chemistry &amp; Maths — Class 11 &amp; 12 — every chapter, every unit. Toggle between classes instantly.</div>
       <span class="feat-tag" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">3 Subjects · 6 Classes</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 50% 0, rgba(16,185,129,0.06), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Every JEE chapter listed by unit, Class 11 &amp; 12</div>
+          <div class="feat-preview-bullet">One-tap toggle between subjects and classes</div>
+          <div class="feat-preview-bullet">Progress bar per unit updates as you mark stages
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="90" fill="#0d1117"/>
+            <rect x="10" y="10" width="260" height="14" rx="4" fill="#1e293b"/>
+            <rect x="14" y="14" width="60" height="6" rx="3" fill="#6366f1" opacity="0.8"/>
+            <rect x="80" y="14" width="50" height="6" rx="3" fill="#334155"/>
+            <rect x="10" y="30" width="260" height="12" rx="3" fill="#131c2e"/>
+            <rect x="14" y="33" width="90" height="6" rx="3" fill="#475569"/>
+            <rect x="170" y="33" width="40" height="6" rx="3" fill="#1e3a5f"/>
+            <rect x="216" y="33" width="24" height="6" rx="3" fill="#6366f1" opacity="0.6"/>
+            <rect x="10" y="46" width="260" height="12" rx="3" fill="#131c2e"/>
+            <rect x="14" y="49" width="75" height="6" rx="3" fill="#475569"/>
+            <rect x="170" y="49" width="55" height="6" rx="3" fill="#10b981" opacity="0.4"/>
+            <rect x="170" y="49" width="30" height="6" rx="3" fill="#10b981" opacity="0.8"/>
+            <rect x="10" y="62" width="260" height="12" rx="3" fill="#131c2e"/>
+            <rect x="14" y="65" width="100" height="6" rx="3" fill="#475569"/>
+            <rect x="170" y="65" width="55" height="6" rx="3" fill="#f59e0b" opacity="0.3"/>
+            <rect x="170" y="65" width="18" height="6" rx="3" fill="#f59e0b" opacity="0.8"/>
+            <text x="14" y="85" font-size="6" fill="#475569" font-family="monospace">Physics · Class 11 · Mechanics I</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 50% 0, rgba(16,185,129,0.06), transparent 60%); --preview-accent:#6ee7b7" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">🎯</span>
       <div class="feat-name">Multi-Stage Progress</div>
       <div class="feat-desc">Mark Theory, Examples, Exercise, Mains PYQ and Advance PYQ independently per chapter. Mix &amp; match as you go.</div>
       <span class="feat-tag" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">5 Stages · Multi-select</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(245,158,11,0.06), transparent 60%)" onclick="launchAndGo('backlog','coverage')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">5 independent stages per chapter — check any combination</div>
+          <div class="feat-preview-bullet">Shift+click marks all stages up to that point instantly</div>
+          <div class="feat-preview-bullet">Each stage adds weighted points toward Mains &amp; Advanced score
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 72" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="72" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="16" rx="4" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="14" y="12" width="60" height="8" rx="2" fill="#334155"/>
+            <rect x="86" y="11" width="28" height="10" rx="3" fill="#3b82f6" opacity="0.9"/>
+            <rect x="120" y="11" width="28" height="10" rx="3" fill="#6366f1" opacity="0.9"/>
+            <rect x="154" y="11" width="28" height="10" rx="3" fill="#10b981" opacity="0.9"/>
+            <rect x="188" y="11" width="36" height="10" rx="3" fill="#334155" opacity="0.6"/>
+            <rect x="230" y="11" width="36" height="10" rx="3" fill="#334155" opacity="0.6"/>
+            <text x="88" y="18" font-size="5.5" fill="white" font-family="sans-serif">Theory</text>
+            <text x="122" y="18" font-size="5" fill="white" font-family="sans-serif">Examples</text>
+            <text x="156" y="18" font-size="5.5" fill="white" font-family="sans-serif">Exercise</text>
+            <text x="190" y="18" font-size="5" fill="#64748b" font-family="sans-serif">Mains PYQ</text>
+            <text x="232" y="18" font-size="4.5" fill="#64748b" font-family="sans-serif">Adv PYQ</text>
+            <rect x="10" y="30" width="260" height="16" rx="4" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="14" y="34" width="70" height="8" rx="2" fill="#334155"/>
+            <rect x="86" y="33" width="28" height="10" rx="3" fill="#3b82f6" opacity="0.9"/>
+            <rect x="120" y="33" width="28" height="10" rx="3" fill="#6366f1" opacity="0.9"/>
+            <rect x="154" y="33" width="28" height="10" rx="3" fill="#334155" opacity="0.6"/>
+            <rect x="188" y="33" width="36" height="10" rx="3" fill="#334155" opacity="0.6"/>
+            <rect x="230" y="33" width="36" height="10" rx="3" fill="#334155" opacity="0.6"/>
+            <rect x="10" y="52" width="260" height="14" rx="4" fill="rgba(16,185,129,0.05)" stroke="rgba(16,185,129,0.2)" stroke-width="0.5"/>
+            <text x="14" y="61" font-size="6" fill="#34d399" font-family="sans-serif">✓ Kinematics · 3/5 stages complete · 2.75 Mains pts</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(245,158,11,0.06), transparent 60%); --preview-accent:#fcd34d" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=backlog&sub=coverage'" role="link" tabindex="0">
       <span class="feat-icon">🧠</span>
       <div class="feat-name">AI Study Planner</div>
       <div class="feat-desc">AI scans your entire backlog and builds a personalised study plan for the day — with time blocks, priorities and tips. Bring your own free OpenRouter API key.</div>
       <span class="feat-tag" style="background:rgba(245,158,11,0.1);color:#fcd34d;">Powered by OpenRouter AI</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 100%, rgba(232,121,249,0.06), transparent 60%)" onclick="launchAndGo('backlog')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Tell the AI how many free hours you have today</div>
+          <div class="feat-preview-bullet">It scans all pending chapters and builds a timed plan</div>
+          <div class="feat-preview-bullet">Uses free OpenRouter key — Gemini, GPT-4o, Claude and more
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="80" fill="#0d1117"/>
+            <rect x="10" y="8" width="180" height="10" rx="3" fill="#1e293b"/>
+            <rect x="12" y="11" width="80" height="4" rx="2" fill="#f59e0b" opacity="0.7"/>
+            <rect x="200" y="8" width="70" height="10" rx="3" fill="#f59e0b" opacity="0.15" stroke="#f59e0b" stroke-width="0.5" stroke-opacity="0.4"/>
+            <text x="210" y="15" font-size="5.5" fill="#fcd34d" font-family="sans-serif">✦ Generate Plan</text>
+            <rect x="10" y="24" width="260" height="15" rx="4" fill="#131c2e" stroke="rgba(59,130,246,0.3)" stroke-width="0.5"/>
+            <rect x="14" y="27" width="6" height="6" rx="1" fill="#3b82f6" opacity="0.9"/>
+            <rect x="24" y="28" width="60" height="4" rx="2" fill="#f8fafc" opacity="0.8"/>
+            <rect x="24" y="33" width="40" height="3" rx="1.5" fill="#475569"/>
+            <rect x="200" y="28" width="28" height="8" rx="3" fill="#ef4444" opacity="0.15"/>
+            <text x="203" y="33.5" font-size="5" fill="#ef4444" font-family="sans-serif">HIGH · 60m</text>
+            <rect x="10" y="43" width="260" height="15" rx="4" fill="#131c2e" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+            <rect x="14" y="46" width="6" height="6" rx="1" fill="#10b981" opacity="0.9"/>
+            <rect x="24" y="47" width="70" height="4" rx="2" fill="#f8fafc" opacity="0.8"/>
+            <rect x="24" y="52" width="50" height="3" rx="1.5" fill="#475569"/>
+            <rect x="200" y="47" width="28" height="8" rx="3" fill="#f59e0b" opacity="0.15"/>
+            <text x="201" y="52.5" font-size="5" fill="#fcd34d" font-family="sans-serif">MED · 45m</text>
+            <rect x="10" y="62" width="260" height="12" rx="3" fill="rgba(245,158,11,0.05)" stroke="rgba(245,158,11,0.2)" stroke-width="0.5"/>
+            <text x="14" y="70" font-size="6" fill="#fcd34d" font-family="sans-serif">🤖 3 tasks · 2h 45m total · Generated by AI</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 100%, rgba(232,121,249,0.06), transparent 60%); --preview-accent:#f0abfc" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=backlog'" role="link" tabindex="0">
       <span class="feat-icon">🔥</span>
       <div class="feat-name">Revision Heatmap</div>
       <div class="feat-desc">Every chapter glows green, amber or red based on how recently you revised it. Never let a topic go cold again.</div>
       <span class="feat-tag" style="background:rgba(232,121,249,0.1);color:#f0abfc;">Heat tracking · Click to log</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 50% 100%, rgba(59,130,246,0.06), transparent 60%)" onclick="launchAndGo('vault')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Green = revised today, Amber = &lt;7 days, Red = stale</div>
+          <div class="feat-preview-bullet">Click any chapter to log a revision — timestamp saved</div>
+          <div class="feat-preview-bullet">Sort backlog by most stale to prioritise what to revise
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 68" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="68" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="13" rx="3" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" stroke-width="0.5"/>
+            <rect x="14" y="12" width="8" height="5" rx="1.5" fill="#10b981"/>
+            <rect x="26" y="12" width="80" height="5" rx="2" fill="#f8fafc" opacity="0.8"/>
+            <rect x="220" y="11" width="44" height="7" rx="3" fill="rgba(16,185,129,0.2)"/>
+            <text x="223" y="16.5" font-size="5.5" fill="#34d399" font-family="sans-serif">✓ Revised today</text>
+            <rect x="10" y="25" width="260" height="13" rx="3" fill="rgba(245,158,11,0.06)" stroke="rgba(245,158,11,0.2)" stroke-width="0.5"/>
+            <rect x="14" y="29" width="8" height="5" rx="1.5" fill="#f59e0b"/>
+            <rect x="26" y="29" width="95" height="5" rx="2" fill="#f8fafc" opacity="0.8"/>
+            <rect x="220" y="28" width="44" height="7" rx="3" fill="rgba(245,158,11,0.15)"/>
+            <text x="224" y="33.5" font-size="5.5" fill="#fcd34d" font-family="sans-serif">☀ 4 days ago</text>
+            <rect x="10" y="42" width="260" height="13" rx="3" fill="rgba(239,68,68,0.06)" stroke="rgba(239,68,68,0.2)" stroke-width="0.5"/>
+            <rect x="14" y="46" width="8" height="5" rx="1.5" fill="#ef4444"/>
+            <rect x="26" y="46" width="72" height="5" rx="2" fill="#f8fafc" opacity="0.8"/>
+            <rect x="210" y="45" width="60" height="7" rx="3" fill="rgba(239,68,68,0.15)"/>
+            <text x="213" y="50.5" font-size="5.5" fill="#fca5a5" font-family="sans-serif">❄ 12d — revise!</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 50% 100%, rgba(59,130,246,0.06), transparent 60%); --preview-accent:#93c5fd" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=vault'" role="link" tabindex="0">
       <span class="feat-icon">📝</span>
       <div class="feat-name">Study Vault</div>
       <div class="feat-desc">Save notes, formulae and PYQ observations per topic. Upload images of handwritten notes or diagrams.</div>
       <span class="feat-tag" style="background:rgba(59,130,246,0.1);color:#93c5fd;">Notes + Images</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(16,185,129,0.06), transparent 60%)" onclick="launchAndGo('pomodoro')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Multiple named sections — Notes, Questions, Formulae, etc.</div>
+          <div class="feat-preview-bullet">Rich text + image uploads in every section</div>
+          <div class="feat-preview-bullet">Syncs to cloud — access from any device after sign-in
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 72" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="72" fill="#0d1117"/>
+            <rect x="10" y="8" width="70" height="10" rx="3" fill="#3b82f6" opacity="0.2" stroke="#3b82f6" stroke-width="0.6" stroke-opacity="0.5"/>
+            <rect x="86" y="8" width="70" height="10" rx="3" fill="#1e293b"/>
+            <rect x="162" y="8" width="80" height="10" rx="3" fill="#1e293b"/>
+            <text x="22" y="15" font-size="6" fill="#93c5fd" font-family="sans-serif">Important Notes</text>
+            <text x="92" y="15" font-size="6" fill="#475569" font-family="sans-serif">Revision Summary</text>
+            <text x="168" y="15" font-size="6" fill="#475569" font-family="sans-serif">PYQ Observations</text>
+            <rect x="10" y="24" width="260" height="42" rx="4" fill="#0a1628" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="16" y="30" width="200" height="4" rx="2" fill="#334155"/>
+            <rect x="16" y="38" width="160" height="4" rx="2" fill="#334155"/>
+            <rect x="16" y="46" width="180" height="4" rx="2" fill="#334155"/>
+            <rect x="16" y="54" width="120" height="4" rx="2" fill="#334155"/>
+            <rect x="224" y="28" width="36" height="30" rx="4" fill="#1e293b" stroke="#334155" stroke-width="0.5"/>
+            <rect x="228" y="32" width="28" height="22" rx="2" fill="#0f172a"/>
+            <text x="230" y="46" font-size="6" fill="#475569" font-family="sans-serif">IMG</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(16,185,129,0.06), transparent 60%); --preview-accent:#6ee7b7" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=pomodoro'" role="link" tabindex="0">
       <span class="feat-icon">⏱</span>
       <div class="feat-name">Custom Pomodoro</div>
       <div class="feat-desc">Build your own study sequence — set Study blocks, Short breaks, Long breaks. Hourly desktop notifications keep you on track.</div>
       <span class="feat-tag" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">Custom sequences</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(245,158,11,0.08), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Build sequences of any length with custom block durations</div>
+          <div class="feat-preview-bullet">Circular timer with audio beep + desktop notifications</div>
+          <div class="feat-preview-bullet">Session log tracks total study time for the day
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 72" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="72" fill="#0d1117"/>
+            <circle cx="50" cy="38" r="26" fill="none" stroke="#1e293b" stroke-width="4"/>
+            <circle cx="50" cy="38" r="26" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="100 63" stroke-dashoffset="25" stroke-linecap="round" transform="rotate(-90 50 38)"/>
+            <text x="50" y="42" font-size="10" fill="white" font-family="monospace" text-anchor="middle" font-weight="700">24:15</text>
+            <text x="50" y="56" font-size="5.5" fill="#475569" font-family="sans-serif" text-anchor="middle">Study Block</text>
+            <rect x="90" y="12" width="180" height="11" rx="3" fill="#131c2e" stroke="#3b82f6" stroke-width="0.4" stroke-opacity="0.4"/>
+            <rect x="94" y="15" width="30" height="5" rx="2" fill="#3b82f6" opacity="0.7"/>
+            <text x="128" y="19.5" font-size="5.5" fill="#64748b" font-family="sans-serif">25m</text>
+            <rect x="90" y="27" width="180" height="11" rx="3" fill="#131c2e" stroke="#10b981" stroke-width="0.4" stroke-opacity="0.4"/>
+            <rect x="94" y="30" width="18" height="5" rx="2" fill="#10b981" opacity="0.7"/>
+            <text x="116" y="34.5" font-size="5.5" fill="#64748b" font-family="sans-serif">Short Break · 5m</text>
+            <rect x="90" y="42" width="180" height="11" rx="3" fill="#131c2e" stroke="#3b82f6" stroke-width="0.4" stroke-opacity="0.4"/>
+            <rect x="94" y="45" width="30" height="5" rx="2" fill="#3b82f6" opacity="0.7"/>
+            <text x="128" y="49.5" font-size="5.5" fill="#64748b" font-family="sans-serif">25m</text>
+            <rect x="90" y="57" width="90" height="9" rx="3" fill="rgba(59,130,246,0.15)"/>
+            <text x="92" y="63" font-size="5.5" fill="#93c5fd" font-family="sans-serif">▶ Start Sequence</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(245,158,11,0.08), transparent 60%); --preview-accent:#fcd34d" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">📋</span>
       <div class="feat-name">Chapter PYQ Access</div>
       <div class="feat-desc">Direct JEE Main PYQs from every chapter card — one click to Examside.com questions for that exact chapter.</div>
       <span class="feat-tag" style="background:rgba(245,158,11,0.1);color:#fcd34d;">Examside Links</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(99,102,241,0.08), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Every chapter card has a direct PYQ button</div>
+          <div class="feat-preview-bullet">Opens Examside.com filtered to that exact chapter</div>
+          <div class="feat-preview-bullet">No searching — one click from tracker to questions
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="60" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="20" rx="4" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="14" y="12" width="110" height="6" rx="3" fill="#334155"/>
+            <rect x="14" y="20" width="70" height="4" rx="2" fill="#1e293b"/>
+            <rect x="150" y="11" width="56" height="10" rx="3" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="0.5"/>
+            <text x="153" y="17.5" font-size="5.5" fill="#fcd34d" font-family="sans-serif">📋 Mains PYQ</text>
+            <rect x="212" y="11" width="52" height="10" rx="3" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="0.5"/>
+            <text x="215" y="17.5" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">🧠 AI Notes</text>
+            <rect x="10" y="34" width="260" height="20" rx="4" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="14" y="38" width="90" height="6" rx="3" fill="#334155"/>
+            <rect x="14" y="46" width="60" height="4" rx="2" fill="#1e293b"/>
+            <rect x="150" y="37" width="56" height="10" rx="3" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.3)" stroke-width="0.5"/>
+            <text x="153" y="43.5" font-size="5.5" fill="#fcd34d" font-family="sans-serif">📋 Mains PYQ</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(99,102,241,0.08), transparent 60%); --preview-accent:#a5b4fc" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">🧠</span>
       <div class="feat-name">AI Notes & Questions</div>
       <div class="feat-desc">Chapter & topic-wise notes + instant AI questions (ChatGPT). Every chapter card → everything you need.</div>
       <span class="feat-tag" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">AI Powered</span>
-    </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(99,102,241,0.08), transparent 60%)" onclick="launchAndGo('backlog','coverage')" role="link" tabindex="0">
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">One click opens ChatGPT pre-prompted for that chapter</div>
+          <div class="feat-preview-bullet">Get formula sheets, concept summaries or practice MCQs</div>
+          <div class="feat-preview-bullet">Works on any chapter — no setup needed
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 62" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="62" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="46" rx="4" fill="#0a1628" stroke="#1e293b" stroke-width="0.5"/>
+            <rect x="16" y="14" width="180" height="5" rx="2" fill="#334155"/>
+            <rect x="16" y="22" width="220" height="4" rx="2" fill="#1e293b"/>
+            <rect x="16" y="29" width="200" height="4" rx="2" fill="#1e293b"/>
+            <rect x="16" y="36" width="160" height="4" rx="2" fill="#1e293b"/>
+            <rect x="170" y="44" width="90" height="8" rx="3" fill="rgba(99,102,241,0.2)" stroke="rgba(99,102,241,0.4)" stroke-width="0.5"/>
+            <text x="174" y="49.5" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">🧠 Open in ChatGPT →</text>
+          </svg>
+        </div></div>    </div>
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(99,102,241,0.08), transparent 60%); --preview-accent:#a5b4fc" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=backlog&sub=coverage'" role="link" tabindex="0">
       <span class="feat-icon">🤖</span>
       <div class="feat-name">AI Integration</div>
       <div class="feat-desc">Study Planner · Instant Chat · Formula Sheets · Question Generator — powered by OpenRouter models</div>
       <span class="feat-tag" style="background:rgba(99,102,241,0.1);color:#a5b4fc;">Live AI Features</span>
-    </div>
+      <div class="feat-popup">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Embedded chat uses full app context — knows your progress</div>
+          <div class="feat-preview-bullet">Switch between Gemini, GPT-4o, Mistral and more</div>
+          <div class="feat-preview-bullet">AI can navigate tabs, mark stages and add targets for you
+      </div></div>
+        <div class="feat-preview-screen"><div class="feat-preview-screen-bar"><div class="feat-preview-screen-dot" style="background:#ef4444"></div><div class="feat-preview-screen-dot" style="background:#f59e0b"></div><div class="feat-preview-screen-dot" style="background:#10b981"></div></div>
+          <svg viewBox="0 0 280 68" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="68" fill="#0d1117"/>
+            <rect x="10" y="8" width="190" height="12" rx="10" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <text x="18" y="16.5" font-size="6" fill="#475569" font-family="sans-serif">What should I study today?</text>
+            <rect x="10" y="26" width="220" height="18" rx="4" fill="rgba(99,102,241,0.08)" stroke="rgba(99,102,241,0.2)" stroke-width="0.5"/>
+            <text x="16" y="33" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">🤖 Based on your backlog, I'd focus on</text>
+            <text x="16" y="40.5" font-size="5.5" fill="#94a3b8" font-family="sans-serif">Thermodynamics (cold 14d) + Equilibrium.</text>
+            <rect x="10" y="50" width="160" height="12" rx="10" fill="#131c2e" stroke="#1e293b" stroke-width="0.5"/>
+            <text x="18" y="58.5" font-size="6" fill="#475569" font-family="sans-serif">Mark Kinematics theory as done</text>
+            <rect x="178" y="50" width="90" height="12" rx="4" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+            <text x="182" y="58" font-size="5.5" fill="#34d399" font-family="sans-serif">✅ Marked Theory done</text>
+          </svg>
+        </div></div>    </div>
   </div>
 
 </section>
@@ -2200,7 +2557,7 @@ footer {
 
   <div class="big-grid reveal">
     <!-- Mains scoring -->
-    <div class="big-card big-link" onclick="launchAndGo('physics')" role="link" tabindex="0">
+    <div class="big-card big-link" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <div class="big-card-accent" style="background: linear-gradient(90deg, #6366f1, #3b82f6)"></div>
       <div class="big-card-num">01 — Mains Scoring</div>
       <div class="big-card-title" style="color:#a5b4fc">Mains Readiness<br>Points</div>
@@ -2227,10 +2584,40 @@ footer {
           <div class="pts-val" style="color:#fcd34d">2.25 pts</div>
         </div>
       </div>
+      <div class="feat-popup" style="--preview-accent:#a5b4fc">
+        <div class="feat-popup-label">Mains Readiness Points</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Max 5 pts per chapter — Mains PYQ alone gives 2.25 pts</div>
+          <div class="feat-preview-bullet">Total Mains score = sum across all chapters you've covered</div>
+          <div class="feat-preview-bullet">See your Mains % live in the sidebar as you progress</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="80" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="11" width="8" height="4" rx="1.5" fill="#3b82f6"/><text x="24" y="16" font-size="5.5" fill="#94a3b8" font-family="sans-serif">📖 Theory</text>
+            <rect x="180" y="11" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="11" width="9" height="4" rx="2" fill="#3b82f6"/>
+            <text x="246" y="16" font-size="5.5" fill="#60a5fa" font-family="sans-serif">0.75</text>
+            <rect x="10" y="22" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="25" width="8" height="4" rx="1.5" fill="#6366f1"/><text x="24" y="30" font-size="5.5" fill="#94a3b8" font-family="sans-serif">💡 Examples</text>
+            <rect x="180" y="25" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="25" width="12" height="4" rx="2" fill="#6366f1"/>
+            <text x="246" y="30" font-size="5.5" fill="#818cf8" font-family="sans-serif">1.00</text>
+            <rect x="10" y="36" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="39" width="8" height="4" rx="1.5" fill="#10b981"/><text x="24" y="44" font-size="5.5" fill="#94a3b8" font-family="sans-serif">✏️ Exercise</text>
+            <rect x="180" y="39" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="39" width="12" height="4" rx="2" fill="#10b981"/>
+            <text x="246" y="44" font-size="5.5" fill="#34d399" font-family="sans-serif">1.00</text>
+            <rect x="10" y="50" width="280" height="10" rx="3" fill="#131c2e" stroke="rgba(245,158,11,0.2)" stroke-width="0.5"/>
+            <rect x="12" y="53" width="8" height="4" rx="1.5" fill="#f59e0b"/><text x="24" y="58" font-size="5.5" fill="#fcd34d" font-family="sans-serif" font-weight="700">📋 Mains PYQ  ★ highest weight</text>
+            <rect x="180" y="53" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="53" width="27" height="4" rx="2" fill="#f59e0b"/>
+            <text x="246" y="58" font-size="5.5" fill="#fcd34d" font-family="sans-serif">2.25</text>
+            <text x="10" y="73" font-size="5.5" fill="#475569" font-family="monospace">Max 5.00 pts per chapter · ~200+ chapters total</text>
+          </svg>
+        </div>
+      </div>
     </div>
 
     <!-- Advanced scoring -->
-    <div class="big-card big-link" onclick="launchAndGo('physics')" role="link" tabindex="0">
+    <div class="big-card big-link" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <div class="big-card-accent" style="background: linear-gradient(90deg, #f59e0b, #e879f9)"></div>
       <div class="big-card-num">02 — Advanced Scoring</div>
       <div class="big-card-title" style="color:#fcd34d">Advanced Mastery<br>Points</div>
@@ -2262,11 +2649,45 @@ footer {
           <div class="pts-val" style="color:#f0abfc">2.00 pts</div>
         </div>
       </div>
+      <div class="feat-popup" style="--preview-accent:#fcd34d">
+        <div class="feat-popup-label">Advanced Mastery Points</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Advance PYQ alone gives 2.00 pts — the heaviest stage</div>
+          <div class="feat-preview-bullet">Separate from Mains score — Advanced is a harder exam</div>
+          <div class="feat-preview-bullet">Your Advanced % tracks independently in the sidebar</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="90" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="11" width="8" height="4" rx="1.5" fill="#3b82f6"/><text x="24" y="16" font-size="5.5" fill="#94a3b8" font-family="sans-serif">📖 Theory</text>
+            <rect x="180" y="11" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="11" width="6" height="4" rx="2" fill="#3b82f6"/>
+            <text x="246" y="16" font-size="5.5" fill="#60a5fa" font-family="sans-serif">0.50</text>
+            <rect x="10" y="22" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="25" width="8" height="4" rx="1.5" fill="#6366f1"/><text x="24" y="30" font-size="5.5" fill="#94a3b8" font-family="sans-serif">💡 Examples</text>
+            <rect x="180" y="25" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="25" width="9" height="4" rx="2" fill="#6366f1"/>
+            <text x="246" y="30" font-size="5.5" fill="#818cf8" font-family="sans-serif">0.75</text>
+            <rect x="10" y="36" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="39" width="8" height="4" rx="1.5" fill="#10b981"/><text x="24" y="44" font-size="5.5" fill="#94a3b8" font-family="sans-serif">✏️ Exercise</text>
+            <rect x="180" y="39" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="39" width="9" height="4" rx="2" fill="#10b981"/>
+            <text x="246" y="44" font-size="5.5" fill="#34d399" font-family="sans-serif">0.75</text>
+            <rect x="10" y="50" width="280" height="10" rx="3" fill="#131c2e"/>
+            <rect x="12" y="53" width="8" height="4" rx="1.5" fill="#f59e0b"/><text x="24" y="58" font-size="5.5" fill="#94a3b8" font-family="sans-serif">📋 Mains PYQ</text>
+            <rect x="180" y="53" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="53" width="12" height="4" rx="2" fill="#f59e0b"/>
+            <text x="246" y="58" font-size="5.5" fill="#fcd34d" font-family="sans-serif">1.00</text>
+            <rect x="10" y="64" width="280" height="10" rx="3" fill="#131c2e" stroke="rgba(232,121,249,0.2)" stroke-width="0.5"/>
+            <rect x="12" y="67" width="8" height="4" rx="1.5" fill="#e879f9"/><text x="24" y="72" font-size="5.5" fill="#f0abfc" font-family="sans-serif" font-weight="700">🏆 Advance PYQ  ★ highest weight</text>
+            <rect x="180" y="67" width="60" height="4" rx="2" fill="#1e3a5f"/><rect x="180" y="67" width="24" height="4" rx="2" fill="#e879f9"/>
+            <text x="246" y="72" font-size="5.5" fill="#f0abfc" font-family="sans-serif">2.00</text>
+            <text x="10" y="84" font-size="5.5" fill="#475569" font-family="monospace">Max 5.00 pts per chapter · Tracks separately from Mains</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Leaderboard preview -->
-  <div class="full-card full-link reveal" onclick="launchAndGo('friends')" role="link">
+  <div class="full-card full-link reveal" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=friends'" role="link">
     <div>
       <div class="big-card-accent" style="background: linear-gradient(90deg, #10b981, #6366f1); position:relative; top:auto; left:auto; right:auto; height:3px; border-radius:3px; margin-bottom:1.5rem;"></div>
       <div class="big-card-num">03 — Live Rankings</div>
@@ -2312,6 +2733,41 @@ footer {
       </div>
       <div style="text-align:center;font-size:0.65rem;color:var(--muted);margin-top:8px;font-style:italic;">Switch between Friends · All Users · Class 11 · 12 · Overall</div>
     </div>
+      <div class="feat-popup" style="--preview-accent:#10b981; left:50%; transform:translateX(-50%) translateY(4px);">
+        <div class="feat-popup-label">Live Leaderboard</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Rank updates instantly every time you complete a stage</div>
+          <div class="feat-preview-bullet">Filter: Friends only · All users · Class 11 · Class 12</div>
+          <div class="feat-preview-bullet">YOUR badge always shows your exact position in the list</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 82" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="82" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="13" rx="4" fill="#131c2e"/>
+            <text x="16" y="17" font-size="5.5" fill="#94a3b8" font-family="sans-serif">🥇</text>
+            <rect x="28" y="11" width="16" height="7" rx="8" fill="linear-gradient"/><circle cx="36" cy="14.5" r="4.5" fill="#f59e0b"/><text x="34" y="17" font-size="5" fill="white" font-family="sans-serif">R</text>
+            <text x="46" y="17" font-size="5.5" fill="#f8fafc" font-family="sans-serif">Riya Sharma</text>
+            <text x="240" y="17" font-size="5.5" fill="#fbbf24" font-family="sans-serif" font-weight="700">142 pts</text>
+            <rect x="10" y="24" width="280" height="13" rx="4" fill="#131c2e"/>
+            <text x="16" y="33" font-size="5.5" fill="#94a3b8" font-family="sans-serif">🥈</text>
+            <circle cx="36" cy="30.5" r="4.5" fill="#10b981"/><text x="34" y="33" font-size="5" fill="white" font-family="sans-serif">A</text>
+            <text x="46" y="33" font-size="5.5" fill="#f8fafc" font-family="sans-serif">Arjun Mehta</text>
+            <text x="240" y="33" font-size="5.5" fill="#94a3b8" font-family="sans-serif">118 pts</text>
+            <rect x="10" y="40" width="280" height="13" rx="4" fill="rgba(99,102,241,0.08)" stroke="rgba(99,102,241,0.25)" stroke-width="0.5"/>
+            <text x="16" y="49" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">#3</text>
+            <circle cx="36" cy="46.5" r="4.5" fill="#6366f1"/><text x="34" y="49" font-size="5" fill="white" font-family="sans-serif">Y</text>
+            <text x="46" y="49" font-size="5.5" fill="#a5b4fc" font-family="sans-serif" font-weight="700">You</text>
+            <rect x="62" y="43" width="18" height="6" rx="3" fill="#6366f1"/><text x="63.5" y="47.5" font-size="4.2" fill="white" font-family="sans-serif" font-weight="800">YOU</text>
+            <text x="240" y="49" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">97 pts</text>
+            <rect x="10" y="56" width="280" height="13" rx="4" fill="#131c2e"/>
+            <text x="16" y="65" font-size="5.5" fill="#64748b" font-family="sans-serif">#4</text>
+            <circle cx="36" cy="62.5" r="4.5" fill="#e879f9"/><text x="34" y="65" font-size="5" fill="white" font-family="sans-serif">K</text>
+            <text x="46" y="65" font-size="5.5" fill="#94a3b8" font-family="sans-serif">Karan Patel</text>
+            <text x="240" y="65" font-size="5.5" fill="#64748b" font-family="sans-serif">84 pts</text>
+            <text x="10" y="78" font-size="5.2" fill="#475569" font-family="monospace">Filter: Friends · All Users · Cl.11 · Cl.12 · Overall</text>
+          </svg>
+        </div>
+      </div>
   </div>
 </section>
 
@@ -2324,7 +2780,7 @@ footer {
   <p class="section-sub reveal">Three dedicated community spaces — built for how JEE prep actually happens.</p>
 
   <div class="big-grid reveal">
-    <div class="big-card big-link" onclick="launchAndGo('community')" role="link">
+    <div class="big-card big-link" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=community'" role="link">
       <div class="big-card-accent" style="background:linear-gradient(90deg,#3b82f6,#6366f1)"></div>
       <div class="big-card-num">01 — Doubts Forum</div>
       <div class="big-card-title">❓ Ask. Answer.<br>Get Unstuck.</div>
@@ -2341,9 +2797,35 @@ footer {
           <div class="doubt-meta-prev"><span>💬 2 replies</span><span>⚠️ Unsolved</span><span>Rohan · 5h ago</span></div>
         </div>
       </div>
+      <div class="feat-popup" style="--preview-accent:#60a5fa">
+        <div class="feat-popup-label">Doubts Forum</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Post doubts with images — others reply with solutions + images</div>
+          <div class="feat-preview-bullet">Mark a reply as ✅ Accepted Solution when you're satisfied</div>
+          <div class="feat-preview-bullet">Filter by subject, solved/unsolved, or just your own doubts</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="80" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="22" rx="5" fill="#131c2e" stroke="rgba(59,130,246,0.15)" stroke-width="0.5"/>
+            <rect x="14" y="11" width="55" height="6" rx="3" fill="rgba(59,130,246,0.2)"/><text x="16" y="16" font-size="5" fill="#60a5fa" font-family="sans-serif">Physics · Electrostatics</text>
+            <text x="14" y="24" font-size="5.5" fill="#94a3b8" font-family="sans-serif">Why does charge reside only on the outer surface?</text>
+            <text x="14" y="28" font-size="4.5" fill="#475569" font-family="sans-serif">💬 4 replies</text>
+            <rect x="240" y="10" width="46" height="8" rx="4" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+            <text x="244" y="15.5" font-size="4.8" fill="#34d399" font-family="sans-serif">✅ Solved</text>
+            <rect x="10" y="34" width="280" height="22" rx="5" fill="#131c2e" stroke="rgba(16,185,129,0.15)" stroke-width="0.5"/>
+            <rect x="14" y="37" width="58" height="6" rx="3" fill="rgba(16,185,129,0.15)"/><text x="16" y="42" font-size="5" fill="#34d399" font-family="sans-serif">Chemistry · Equilibrium</text>
+            <text x="14" y="50" font-size="5.5" fill="#94a3b8" font-family="sans-serif">Kp vs Kc — when does Δn matter?</text>
+            <text x="14" y="54" font-size="4.5" fill="#475569" font-family="sans-serif">💬 2 replies</text>
+            <rect x="240" y="36" width="46" height="8" rx="4" fill="rgba(245,158,11,0.1)" stroke="rgba(245,158,11,0.3)" stroke-width="0.5"/>
+            <text x="243" y="41.5" font-size="4.8" fill="#fcd34d" font-family="sans-serif">⚠️ Unsolved</text>
+            <text x="10" y="73" font-size="5.2" fill="#475569" font-family="monospace">Filters: All · Solved · Unsolved · My Doubts · By subject</text>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <div class="big-card big-link" onclick="launchAndGo('groups')" role="link">
+    <div class="big-card big-link" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=groups'" role="link">
       <div class="big-card-accent" style="background:linear-gradient(90deg,#10b981,#e879f9)"></div>
       <div class="big-card-num">02 — Study Groups</div>
       <div class="big-card-title">👥 Public &amp; Private<br>Group Chats</div>
@@ -2366,11 +2848,40 @@ footer {
           <span style="margin-left:auto;font-size:0.62rem;background:rgba(232,121,249,0.1);color:#f0abfc;padding:4px 10px;border-radius:8px;font-weight:700;">🔗 Invite</span>
         </div>
       </div>
+      <div class="feat-popup" style="--preview-accent:#34d399">
+        <div class="feat-popup-label">Study Groups</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Public groups anyone can join, private groups need an invite link</div>
+          <div class="feat-preview-bullet">Full real-time group chat with text and image support</div>
+          <div class="feat-preview-bullet">Share invite link — non-members can't even see private groups</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="80" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="15" rx="4" fill="#131c2e" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+            <text x="16" y="18" font-size="8" font-family="sans-serif">⚡</text>
+            <text x="30" y="15" font-size="5.5" fill="#f8fafc" font-family="sans-serif" font-weight="700">JEE Physics Warriors</text>
+            <text x="30" y="21" font-size="4.8" fill="#475569" font-family="sans-serif">🌐 Public · 23 members</text>
+            <rect x="240" y="11" width="46" height="9" rx="4" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+            <text x="248" y="17" font-size="5" fill="#34d399" font-family="sans-serif">Open Chat</text>
+            <rect x="10" y="27" width="280" height="15" rx="4" fill="rgba(99,102,241,0.06)" stroke="rgba(99,102,241,0.2)" stroke-width="0.5"/>
+            <text x="16" y="37" font-size="8" font-family="sans-serif">🔒</text>
+            <text x="30" y="33" font-size="5.5" fill="#f8fafc" font-family="sans-serif" font-weight="700">Secret Mains Grind</text>
+            <text x="30" y="39" font-size="4.8" fill="#475569" font-family="sans-serif">🔒 Private · 5 members</text>
+            <rect x="240" y="29" width="46" height="9" rx="4" fill="rgba(232,121,249,0.12)" stroke="rgba(232,121,249,0.3)" stroke-width="0.5"/>
+            <text x="244" y="35" font-size="5" fill="#f0abfc" font-family="sans-serif">🔗 Invite</text>
+            <rect x="10" y="48" width="200" height="10" rx="3" fill="#131c2e"/>
+            <text x="16" y="55" font-size="5" fill="#94a3b8" font-family="sans-serif">Arjun: anyone solved Rotational SHM yet?</text>
+            <rect x="10" y="62" width="170" height="10" rx="3" fill="rgba(99,102,241,0.1)" stroke="rgba(99,102,241,0.2)" stroke-width="0.5"/>
+            <text x="16" y="69" font-size="5" fill="#a5b4fc" font-family="sans-serif">You: yes! it's just Iα = -kθ basically</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Friends full-width -->
-  <div class="full-card full-link reveal" onclick="launchAndGo('friends')" role="link">
+  <div class="full-card full-link reveal" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=friends'" role="link">
     <div>
       <div class="big-card-num">03 — Friends System</div>
       <div class="big-card-title">👫 See Each Other's<br>Real Progress</div>
@@ -2410,6 +2921,33 @@ footer {
         </div>
       </div>
     </div>
+      <div class="feat-popup" style="--preview-accent:#a5b4fc; left:50%; transform:translateX(-50%) translateY(4px);">
+        <div class="feat-popup-label">Friends System</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Search any signed-in user and send a friend request</div>
+          <div class="feat-preview-bullet">See their Physics, Chemistry, Maths % and stage counts</div>
+          <div class="feat-preview-bullet">Stats sync live — notes are always private, only stages shared</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="300" height="80" fill="#0d1117"/>
+            <rect x="10" y="8" width="280" height="22" rx="5" fill="#131c2e"/>
+            <circle cx="24" cy="19" r="7" fill="linear-gradient"/><circle cx="24" cy="19" r="7" fill="#6366f1"/>
+            <text x="22" y="22" font-size="6" fill="white" font-family="sans-serif">A</text>
+            <text x="36" y="16" font-size="5.5" fill="#f8fafc" font-family="sans-serif" font-weight="700">Arjun Mehta</text>
+            <text x="36" y="23" font-size="4.8" fill="#475569" font-family="sans-serif">arjun@gmail.com</text>
+            <rect x="180" y="11" width="40" height="6" rx="2" fill="#1e3a5f"/><rect x="180" y="11" width="30" height="6" rx="2" fill="#60a5fa" opacity="0.8"/><text x="222" y="16" font-size="5" fill="#60a5fa" font-family="sans-serif">74% Phy</text>
+            <rect x="180" y="20" width="40" height="6" rx="2" fill="#1e293b"/><rect x="180" y="20" width="23" height="6" rx="2" fill="#34d399" opacity="0.8"/><text x="222" y="25" font-size="5" fill="#34d399" font-family="sans-serif">58% Chem</text>
+            <rect x="10" y="34" width="280" height="22" rx="5" fill="#131c2e"/>
+            <circle cx="24" cy="45" r="7" fill="#10b981"/><text x="22" y="48" font-size="6" fill="white" font-family="sans-serif">R</text>
+            <text x="36" y="42" font-size="5.5" fill="#f8fafc" font-family="sans-serif" font-weight="700">Riya Sharma</text>
+            <text x="36" y="49" font-size="4.8" fill="#475569" font-family="sans-serif">riya@gmail.com</text>
+            <rect x="180" y="37" width="40" height="6" rx="2" fill="#1e3a5f"/><rect x="180" y="37" width="36" height="6" rx="2" fill="#60a5fa" opacity="0.8"/><text x="222" y="42" font-size="5" fill="#60a5fa" font-family="sans-serif">91% Phy</text>
+            <rect x="180" y="46" width="40" height="6" rx="2" fill="#1e293b"/><rect x="180" y="46" width="33" height="6" rx="2" fill="#f59e0b" opacity="0.8"/><text x="222" y="51" font-size="5" fill="#fcd34d" font-family="sans-serif">83% Math</text>
+            <text x="10" y="73" font-size="5.2" fill="#475569" font-family="monospace">Click any friend → full stage breakdown + subject %</text>
+          </svg>
+        </div>
+      </div>
   </div>
 </section>
 
@@ -2430,30 +2968,144 @@ footer {
   <div class="section-label reveal">More features</div>
   <h2 class="section-title reveal">The details that<br>make a difference.</h2>
 
-  <div class="feat-grid reveal" style="grid-template-columns: repeat(2, 1fr)">
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(245,158,11,0.06), transparent 60%)" onclick="launchAndGo('mains')" role="link">
+  <div class="feat-grid feat-grid-2col reveal" style="grid-template-columns: repeat(2, 1fr)">
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 0, rgba(245,158,11,0.06), transparent 60%)" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=mains'" role="link">
       <span class="feat-icon">📊</span>
       <div class="feat-name">JEE Mains & Advanced Test Logger</div>
       <div class="feat-desc">Log every mock test result — total marks, subject-wise breakdown, AIR estimate, batch rank. Track your trajectory over time with a clean history view.</div>
       <span class="feat-tag" style="background:rgba(245,158,11,0.1);color:#fcd34d;">Mains + Advanced separate</span>
+      <div class="feat-popup" style="--preview-accent:#fcd34d">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Log date, total marks, Physics / Chemistry / Maths breakdown</div>
+          <div class="feat-preview-bullet">AIR estimate and batch rank tracked per test</div>
+          <div class="feat-preview-bullet">History cards show your score trend over time</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 280 76" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="76" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="16" rx="4" fill="#131c2e" stroke="rgba(245,158,11,0.2)" stroke-width="0.5"/>
+            <rect x="14" y="12" width="55" height="4" rx="2" fill="#475569"/>
+            <rect x="120" y="10" width="28" height="8" rx="3" fill="#6366f1" opacity="0.8"/>
+            <text x="121" y="16" font-size="5" fill="white" font-family="sans-serif">Physics</text>
+            <rect x="153" y="10" width="30" height="8" rx="3" fill="#10b981" opacity="0.8"/>
+            <text x="154" y="16" font-size="5" fill="white" font-family="sans-serif">Chemistry</text>
+            <rect x="188" y="10" width="24" height="8" rx="3" fill="#f59e0b" opacity="0.8"/>
+            <text x="189" y="16" font-size="5" fill="white" font-family="sans-serif">Maths</text>
+            <rect x="216" y="9" width="50" height="10" rx="4" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.4)" stroke-width="0.5"/>
+            <text x="219" y="16" font-size="5.5" fill="#fcd34d" font-family="sans-serif">AIR ~8,200</text>
+            <rect x="10" y="28" width="260" height="14" rx="4" fill="#131c2e"/>
+            <rect x="14" y="32" width="45" height="3" rx="1.5" fill="#334155"/>
+            <rect x="216" y="29" width="50" height="8" rx="4" fill="rgba(99,102,241,0.12)" stroke="rgba(99,102,241,0.3)" stroke-width="0.5"/>
+            <text x="219" y="35" font-size="5.5" fill="#a5b4fc" font-family="sans-serif">AIR ~5,400</text>
+            <rect x="10" y="46" width="260" height="14" rx="4" fill="#131c2e"/>
+            <rect x="14" y="50" width="50" height="3" rx="1.5" fill="#334155"/>
+            <rect x="216" y="47" width="50" height="8" rx="4" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="0.5"/>
+            <text x="219" y="53" font-size="5.5" fill="#34d399" font-family="sans-serif">AIR ~12,100</text>
+            <text x="10" y="70" font-size="5.5" fill="#475569" font-family="monospace">3 tests logged · Score trending ↑</text>
+          </svg>
+        </div>
+      </div>
     </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(16,185,129,0.06), transparent 60%)" onclick="launchAndGo('backlog')" role="link" tabindex="0">
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 0, rgba(16,185,129,0.06), transparent 60%)" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=backlog'" role="link" tabindex="0">
       <span class="feat-icon">📋</span>
       <div class="feat-name">Daily Targets Panel</div>
       <div class="feat-desc">A floating to-do panel for daily goals. Tick them off as you go — the tab title updates live with your completion count. Enable hourly desktop reminders to stay on track.</div>
       <span class="feat-tag" style="background:rgba(16,185,129,0.1);color:#6ee7b7;">Live tab title · Notifications</span>
+      <div class="feat-popup" style="--preview-accent:#6ee7b7">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Floating panel — visible from every tab in the app</div>
+          <div class="feat-preview-bullet">Tab title shows "(2/5 done) JEEverse" live as you tick</div>
+          <div class="feat-preview-bullet">Hourly browser notifications nudge you back on track</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 280 76" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="76" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="14" rx="5" fill="rgba(16,185,129,0.08)" stroke="rgba(16,185,129,0.25)" stroke-width="0.5"/>
+            <text x="14" y="18" font-size="6" fill="#34d399" font-weight="700" font-family="sans-serif">📋 Today's Targets — 2/5 done</text>
+            <rect x="10" y="26" width="260" height="11" rx="3" fill="#131c2e"/>
+            <rect x="14" y="29" width="8" height="5" rx="1.5" fill="#10b981"/>
+            <rect x="26" y="30" width="100" height="4" rx="2" fill="#475569" opacity="0.5"/>
+            <text x="27" y="33.5" font-size="5" fill="#64748b" font-family="sans-serif" text-decoration="line-through">Finish Kinematics Theory</text>
+            <rect x="10" y="40" width="260" height="11" rx="3" fill="#131c2e"/>
+            <rect x="14" y="43" width="8" height="5" rx="1.5" fill="#10b981"/>
+            <rect x="26" y="44" width="80" height="4" rx="2" fill="#475569" opacity="0.5"/>
+            <text x="27" y="47.5" font-size="5" fill="#64748b" font-family="sans-serif" text-decoration="line-through">Solve 20 Mains PYQs</text>
+            <rect x="10" y="54" width="260" height="11" rx="3" fill="#131c2e"/>
+            <rect x="14" y="57" width="8" height="5" rx="1.5" fill="#1e293b" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+            <text x="27" y="61.5" font-size="5" fill="#94a3b8" font-family="sans-serif">Revise Thermodynamics formulas</text>
+            <text x="10" y="73" font-size="5" fill="#475569" font-family="monospace">🔔 Hourly reminders active</text>
+          </svg>
+        </div>
+      </div>
     </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 100%, rgba(59,130,246,0.06), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 0 100%, rgba(59,130,246,0.06), transparent 60%)" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">🔄</span>
       <div class="feat-name">Cloud Sync via Google</div>
       <div class="feat-desc">Sign in with Google and your entire progress syncs to the cloud. Switch devices, share with friends — your data follows you everywhere, instantly.</div>
       <span class="feat-tag" style="background:rgba(59,130,246,0.1);color:#93c5fd;">Firebase · Real-time</span>
+      <div class="feat-popup" style="--preview-accent:#93c5fd">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Sign in once — progress auto-saves to Firebase in real time</div>
+          <div class="feat-preview-bullet">Same data on phone, laptop, anywhere — no export needed</div>
+          <div class="feat-preview-bullet">Friends can see your stage counts once you connect</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 280 72" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="72" fill="#0d1117"/>
+            <circle cx="70" cy="36" r="20" fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.3)" stroke-width="0.8"/>
+            <text x="70" y="33" text-anchor="middle" font-size="9" font-family="sans-serif">💻</text>
+            <text x="70" y="44" text-anchor="middle" font-size="5" fill="#60a5fa" font-family="sans-serif">Laptop</text>
+            <circle cx="140" cy="36" r="16" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.4)" stroke-width="0.8"/>
+            <text x="140" y="33" text-anchor="middle" font-size="8" font-family="sans-serif">☁️</text>
+            <text x="140" y="44" text-anchor="middle" font-size="5" fill="#a5b4fc" font-family="sans-serif">Firebase</text>
+            <circle cx="210" cy="36" r="20" fill="rgba(16,185,129,0.1)" stroke="rgba(16,185,129,0.3)" stroke-width="0.8"/>
+            <text x="210" y="33" text-anchor="middle" font-size="9" font-family="sans-serif">📱</text>
+            <text x="210" y="44" text-anchor="middle" font-size="5" fill="#34d399" font-family="sans-serif">Phone</text>
+            <line x1="91" y1="36" x2="124" y2="36" stroke="rgba(99,102,241,0.5)" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="156" y1="36" x2="189" y2="36" stroke="rgba(16,185,129,0.5)" stroke-width="1" stroke-dasharray="3,2"/>
+            <text x="107" y="31" font-size="5" fill="#6366f1" font-family="sans-serif">sync</text>
+            <text x="168" y="31" font-size="5" fill="#10b981" font-family="sans-serif">sync</text>
+            <text x="10" y="66" font-size="5.5" fill="#475569" font-family="monospace">✓ Progress saved 2 seconds ago</text>
+          </svg>
+        </div>
+      </div>
     </div>
-    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(232,121,249,0.06), transparent 60%)" onclick="launchAndGo('physics')" role="link" tabindex="0">
+    <div class="feat-card feat-link" style="--card-glow: radial-gradient(circle at 100% 100%, rgba(232,121,249,0.06), transparent 60%)" onclick="location.href='https://anshverma-stack.github.io/JEEverse/?tab=physics'" role="link" tabindex="0">
       <span class="feat-icon">📎</span>
       <div class="feat-name">PYQ & Formula Quick-Links</div>
       <div class="feat-desc">Every chapter has one-click links to ExamSide PYQs, ChatGPT formula sheets, and practice question generators — directly from the chapter card.</div>
       <span class="feat-tag" style="background:rgba(232,121,249,0.1);color:#f0abfc;">ExamSide · ChatGPT</span>
+      <div class="feat-popup" style="--preview-accent:#f0abfc">
+        <div class="feat-popup-label">What you'll see</div>
+        <div class="feat-preview-bullets">
+          <div class="feat-preview-bullet">Each chapter card has PYQ, formula and AI question buttons</div>
+          <div class="feat-preview-bullet">PYQ → ExamSide filtered to that exact chapter instantly</div>
+          <div class="feat-preview-bullet">Formula → ChatGPT pre-prompted for that topic's key formulae</div>
+        </div>
+        <div class="feat-preview-screen">
+          <svg viewBox="0 0 280 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+            <rect width="280" height="70" fill="#0d1117"/>
+            <rect x="10" y="8" width="260" height="18" rx="5" fill="#131c2e"/>
+            <rect x="14" y="12" width="80" height="5" rx="2" fill="#475569"/>
+            <rect x="14" y="19" width="55" height="3.5" rx="1.5" fill="#334155"/>
+            <rect x="155" y="10" width="46" height="14" rx="5" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.35)" stroke-width="0.5"/>
+            <text x="158" y="19" font-size="5.2" fill="#fcd34d" font-family="sans-serif">📋 Mains PYQ</text>
+            <rect x="205" y="10" width="58" height="14" rx="5" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.35)" stroke-width="0.5"/>
+            <text x="208" y="19" font-size="5.2" fill="#a5b4fc" font-family="sans-serif">🧠 Formulae</text>
+            <rect x="10" y="30" width="260" height="18" rx="5" fill="#131c2e"/>
+            <rect x="14" y="34" width="65" height="5" rx="2" fill="#475569"/>
+            <rect x="14" y="41" width="44" height="3.5" rx="1.5" fill="#334155"/>
+            <rect x="155" y="32" width="46" height="14" rx="5" fill="rgba(245,158,11,0.15)" stroke="rgba(245,158,11,0.35)" stroke-width="0.5"/>
+            <text x="158" y="41" font-size="5.2" fill="#fcd34d" font-family="sans-serif">📋 Mains PYQ</text>
+            <rect x="205" y="32" width="58" height="14" rx="5" fill="rgba(232,121,249,0.15)" stroke="rgba(232,121,249,0.35)" stroke-width="0.5"/>
+            <text x="208" y="41" font-size="5.2" fill="#f0abfc" font-family="sans-serif">✦ AI Questions</text>
+            <text x="10" y="62" font-size="5.5" fill="#475569" font-family="monospace">Links auto-filtered per chapter · No copy-paste</text>
+          </svg>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2497,7 +3149,7 @@ footer {
             <div class="nav-link" onclick="switchTab('mathematics', this)"><span>MATHEMATICS</span></div>
         </div>
         <div class="nav-label">Community</div>
-        <div class="nav-link" onclick="switchTab('community', this)"><span>&#128101; DOUBTS FORUM</span></div>
+        <div class="nav-link" onclick="switchTab('community', this)" id="nav-community"><span>&#128101; DOUBTS FORUM</span><span id="comm-new-dot" class="nav-new-dot" style="display:none;"></span></div>
         <div class="nav-link" onclick="switchTab('groups', this)"><span>&#128101; STUDY GROUPS</span></div>
         <div class="nav-link" onclick="switchTab('friends', this)"><span>&#128101; FRIENDS</span></div>
         <div class="nav-label">Study Vault</div>
@@ -2568,7 +3220,19 @@ footer {
                 <div style="font-size:0.65rem;color:var(--text-secondary);text-transform:uppercase;">Subject Mastery</div>
                 <div id="sub-percent" style="font-size:2.2rem;font-weight:800;color:var(--accent);">0%</div>
             </div>
-            <div id="auth-widget">
+            <div id="auth-widget" style="display:flex;align-items:center;gap:10px;position:relative;">
+                <!-- Notification bell -->
+                <div id="notif-btn" title="Notifications" onclick="notifToggle(event)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    <div id="notif-badge"></div>
+                </div>
+                <div id="notif-panel">
+                    <div class="notif-header">
+                        <span class="notif-header-title">🔔 Notifications</span>
+                        <button class="notif-mark-read" onclick="notifMarkAllRead(event)">Mark all read</button>
+                    </div>
+                    <div class="notif-list" id="notif-list"><div class="notif-empty">No notifications yet</div></div>
+                </div>
                 <button id="login-btn" onclick="login()" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;background:var(--accent);color:white;border:none;font-weight:700;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(59,130,246,0.3);transition:all 0.2s;">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
                     Sign In
@@ -3106,6 +3770,79 @@ const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+// ── FEATURE TILE TOOLTIP ──
+(function() {
+  var tip = document.getElementById('feat-tooltip');
+  var current = null;
+  var showTimer = null;
+
+  function getAccent(el) {
+    var s = el.style.cssText + (el.getAttribute('style') || '');
+    var m = s.match(/--preview-accent: *([^;)'"]+)/);
+    return m ? m[1].trim() : '#a5b4fc';
+  }
+
+  function show(card) {
+    var popup = card.querySelector('.feat-popup');
+    if (!popup) return;
+    current = card;
+
+    // Copy popup content into tooltip
+    tip.innerHTML = popup.innerHTML;
+
+    // Apply accent colour
+    var accent = getAccent(popup);
+    tip.style.setProperty('--tp-accent', accent);
+
+    // Position: just below the card
+    var r = card.getBoundingClientRect();
+    var tipW = 300;
+    var left = r.left + r.width / 2 - tipW / 2;
+    var top  = r.bottom + 12;
+
+    // Clamp to viewport
+    var vw = window.innerWidth;
+    var caretClass = 'caret-center';
+    if (left < 12) {
+      left = r.left;
+      caretClass = 'caret-left'; // default (::before left:28px)
+    } else if (left + tipW > vw - 12) {
+      left = r.right - tipW;
+      caretClass = 'caret-right';
+    }
+
+    tip.style.left  = left + 'px';
+    tip.style.top   = top + 'px';
+    tip.style.width = tipW + 'px';
+    // Set caret class THEN add visible so transition fires correctly
+    tip.className = caretClass;
+    void tip.offsetWidth; // force reflow
+    tip.classList.add('visible');
+  }
+
+  function hide() {
+    current = null;
+    tip.classList.remove('visible');
+  }
+
+  // Attach to all tiles that have a .feat-popup child
+  document.querySelectorAll('.feat-card, .big-card, .full-card').forEach(function(card) {
+    if (!card.querySelector('.feat-popup')) return;
+
+    card.addEventListener('mouseenter', function() {
+      clearTimeout(showTimer);
+      showTimer = setTimeout(function() { show(card); }, 80);
+    });
+    card.addEventListener('mouseleave', function(e) {
+      clearTimeout(showTimer);
+      hide();
+    });
+  });
+
+  // Hide on scroll
+  window.addEventListener('scroll', hide, { passive: true });
+})();
+
 document.querySelectorAll('.feat-grid,.big-grid').forEach(grid => {
   [...grid.children].forEach((c,i) => { c.style.transitionDelay=(i*.07)+'s'; c.classList.add('reveal'); observer.observe(c); });
 });
@@ -3140,62 +3877,29 @@ function launchApp() {
   if (typeof init==='function') init();
   if (typeof window._attachMobListeners==='function') window._attachMobListeners();
 }
-function launchAndGo(tab, backlogSubtab) {
-  launchApp();
-  setTimeout(function() {
-    var sel = '#app-shell .nav-link[onclick*="\'' + tab + '\'"]';
-    var navEl = document.querySelector(sel);
-    if (navEl && typeof switchTab === 'function') {
-      switchTab(tab, navEl);
-    }
-    if (tab === 'backlog' && backlogSubtab === 'coverage' && typeof switchBacklogTab === 'function') {
-      setTimeout(function() { switchBacklogTab('coverage'); }, 150);
-    }
-  }, 50);
-}
-window.launchApp = launchApp;
-window.launchAndGo = launchAndGo;
-
-// ── DEEP-LINK: auto-launch to tab when ?tab= param is present ──
-(function() {
-  var p = new URLSearchParams(location.search);
-  var tab = p.get('tab');
-  var sub = p.get('sub') || null;
+// ── DEEP-LINK: runs after all scripts load, reads __deepLinkTab set in <head> ──
+window.addEventListener('load', function() {
+  var tab = window.__deepLinkTab;
+  var sub = window.__deepLinkSub;
   if (!tab) return;
-
-  // Clean the URL immediately
-  history.replaceState(null, '', location.pathname);
-
-  function doSwitch() {
-    // Find and click the nav link for this tab
-    var sel = '#app-shell .nav-link[onclick*="\'' + tab + '\'"]';
-    var navEl = document.querySelector(sel);
-    if (navEl && typeof switchTab === 'function') {
-      switchTab(tab, navEl);
-    }
-    // Handle sub-tab (e.g. backlog → AI Coverage)
-    if (sub && tab === 'backlog' && sub === 'coverage') {
-      setTimeout(function() {
-        if (typeof switchBacklogTab === 'function') {
-          switchBacklogTab('coverage');
-        }
-      }, 200);
-    }
+  // pre-set subject so init() renders the right subject immediately
+  if (['physics','chemistry','mathematics'].indexOf(tab) !== -1 && typeof curTab !== 'undefined') curTab = tab;
+  // boot the app (landing page already hidden by early <head> script)
+  launchApp();
+  // switch to the right tab
+  var navEl = document.querySelector('#app-shell .nav-link[onclick*="\'' + tab + '\'"]');
+  if (navEl && typeof switchTab === 'function') switchTab(tab, navEl);
+  // sub-tab (e.g. backlog → AI Coverage)
+  if (tab === 'backlog' && sub === 'coverage' && typeof switchBacklogTab === 'function') {
+    setTimeout(function() { switchBacklogTab('coverage'); }, 80);
   }
+  // remove the early-inject style so normal CSS takes over cleanly
+  var early = document.getElementById('deeplink-early');
+  if (early) early.remove();
+  window.__deepLinkTab = null;
+});
 
-  function doLaunch() {
-    // Show the app shell
-    if (typeof launchApp === 'function') launchApp();
-    // Give init() time to finish rendering the nav before switching tabs
-    setTimeout(doSwitch, 600);
-  }
-
-  // Fire after full page load so all scripts + DOM are ready
-  window.addEventListener('load', function() {
-    // Small delay to let inline scripts after </body> finish
-    setTimeout(doLaunch, 100);
-  });
-})();
+window.launchAndGo = function() {};  // no-op, tiles now use direct links
 
 document.querySelectorAll('.hero-cta,[data-launch]').forEach(btn => {
   btn.removeAttribute('href');
@@ -4812,6 +5516,240 @@ RULES:
     window.chatHandleImg = chatHandleImg;
     window.chatClearImg = chatClearImg;
     window.chatGoToSetup = chatGoToSetup;
+    // ══════════════════════════════════════════════
+    // NOTIFICATION SYSTEM
+    // ══════════════════════════════════════════════
+    let notifItems = [];        // in-memory notification list
+    let notifReadIds = new Set(JSON.parse(localStorage.getItem('notif_read_ids')||'[]'));
+    let notifUnsubs = [];       // Firestore unsubscribers
+    let notifPanelOpen = false;
+    let lastDoubtTs = null;     // track newest doubt timestamp for green dot
+
+    function notifSaveRead() {
+        localStorage.setItem('notif_read_ids', JSON.stringify([...notifReadIds].slice(-200)));
+    }
+
+    function notifTimeAgo(ts) {
+        if (!ts) return '';
+        const secs = Math.floor((Date.now() - (ts.toMillis ? ts.toMillis() : ts)) / 1000);
+        if (secs < 60) return 'just now';
+        if (secs < 3600) return Math.floor(secs/60) + 'm ago';
+        if (secs < 86400) return Math.floor(secs/3600) + 'h ago';
+        return Math.floor(secs/86400) + 'd ago';
+    }
+
+    function notifRender() {
+        const list = document.getElementById('notif-list');
+        const badge = document.getElementById('notif-badge');
+        if (!list) return;
+        const unread = notifItems.filter(n => !notifReadIds.has(n.id));
+        // Badge
+        if (badge) {
+            if (unread.length > 0) {
+                badge.style.display = 'flex';
+                badge.textContent = unread.length > 9 ? '9+' : unread.length;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+        if (!notifItems.length) {
+            list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
+            return;
+        }
+        list.innerHTML = notifItems.map(n => {
+            const isUnread = !notifReadIds.has(n.id);
+            return `<div class="notif-item ${isUnread?'unread':''}" onclick="notifClick('${n.id}','${n.action||''}')">
+                <div class="notif-icon" style="background:${n.iconBg}">${n.icon}</div>
+                <div class="notif-text">
+                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-sub">${n.body}</div>
+                    <div class="notif-time">${notifTimeAgo(n.ts)}</div>
+                </div>
+                ${isUnread ? '<div class="notif-unread-dot"></div>' : ''}
+            </div>`;
+        }).join('');
+    }
+
+    function notifClick(id, action) {
+        notifReadIds.add(id);
+        notifSaveRead();
+        notifRender();
+        notifClose();
+        if (action === 'friends') {
+            const navEl = document.querySelector('#app-shell .nav-link[onclick*="'friends'"]');
+            if (navEl && typeof switchTab === 'function') switchTab('friends', navEl);
+        } else if (action === 'community') {
+            const navEl = document.querySelector('#app-shell .nav-link[onclick*="'community'"]');
+            if (navEl && typeof switchTab === 'function') switchTab('community', navEl);
+        }
+    }
+
+    function notifMarkAllRead(e) {
+        if (e) e.stopPropagation();
+        notifItems.forEach(n => notifReadIds.add(n.id));
+        notifSaveRead();
+        notifRender();
+    }
+
+    function notifToggle(e) {
+        if (e) e.stopPropagation();
+        const panel = document.getElementById('notif-panel');
+        if (!panel) return;
+        notifPanelOpen = !notifPanelOpen;
+        panel.classList.toggle('open', notifPanelOpen);
+    }
+
+    function notifClose() {
+        notifPanelOpen = false;
+        const panel = document.getElementById('notif-panel');
+        if (panel) panel.classList.remove('open');
+    }
+
+    // Close panel when clicking outside
+    document.addEventListener('click', function(e) {
+        const btn = document.getElementById('notif-btn');
+        const panel = document.getElementById('notif-panel');
+        if (btn && panel && !btn.contains(e.target) && !panel.contains(e.target)) {
+            notifClose();
+        }
+    });
+
+    function notifAddItem(item) {
+        // Avoid duplicates
+        if (notifItems.find(n => n.id === item.id)) return;
+        notifItems.unshift(item);
+        // Keep max 50
+        if (notifItems.length > 50) notifItems = notifItems.slice(0, 50);
+        notifRender();
+    }
+
+    // ── START LISTENERS (called when user signs in) ──
+    function notifStartListeners(user) {
+        // Clear old listeners
+        notifUnsubs.forEach(u => u());
+        notifUnsubs = [];
+        notifItems = [];
+
+        const { collection, query, where, onSnapshot, orderBy, limit } = window._fsOps;
+        const db = window._db;
+
+        // Show the bell
+        const btn = document.getElementById('notif-btn');
+        if (btn) btn.style.display = 'flex';
+
+        // 1. Friend requests sent TO this user (pending)
+        const q1 = query(
+            collection(db, 'friendRequests'),
+            where('toUid', '==', user.uid),
+            where('status', '==', 'pending')
+        );
+        notifUnsubs.push(onSnapshot(q1, snap => {
+            snap.docs.forEach(d => {
+                const r = d.data();
+                notifAddItem({
+                    id: 'fr_' + d.id,
+                    icon: '👋',
+                    iconBg: 'rgba(99,102,241,0.15)',
+                    title: 'Friend Request',
+                    body: (r.fromName || 'Someone') + ' wants to be your study buddy',
+                    ts: r.createdAt,
+                    action: 'friends'
+                });
+            });
+            // Remove friend request notifs that are no longer pending
+            const activeIds = new Set(snap.docs.map(d => 'fr_' + d.id));
+            notifItems = notifItems.filter(n => !n.id.startsWith('fr_') || activeIds.has(n.id));
+            notifRender();
+        }));
+
+        // 2. Group messages in groups the user is a member of
+        const q2 = query(collection(db, 'studyGroups'), where('memberIds', 'array-contains', user.uid));
+        notifUnsubs.push(onSnapshot(q2, groupSnap => {
+            groupSnap.docs.forEach(gDoc => {
+                const g = gDoc.data();
+                // Listen to last 10 messages per group
+                const mq = query(
+                    collection(db, 'studyGroups/' + gDoc.id + '/messages'),
+                    orderBy('createdAt', 'desc'),
+                    limit(10)
+                );
+                const unsub = onSnapshot(mq, mSnap => {
+                    mSnap.docs.forEach(mDoc => {
+                        const m = mDoc.data();
+                        // Only notify for messages from others
+                        if (m.uid === user.uid) return;
+                        const notifId = 'msg_' + mDoc.id;
+                        notifAddItem({
+                            id: notifId,
+                            icon: g.emoji || '💬',
+                            iconBg: 'rgba(16,185,129,0.15)',
+                            title: (g.name || 'Study Group'),
+                            body: (m.senderName || 'Someone') + ': ' + (m.text || '📎 image').slice(0, 60),
+                            ts: m.createdAt,
+                            action: 'groups'
+                        });
+                    });
+                });
+                notifUnsubs.push(unsub);
+            });
+        }));
+
+        // 3. New community doubts (green dot + notification for everyone)
+        const q3 = query(collection(db, 'doubts'), orderBy('createdAt', 'desc'), limit(1));
+        notifUnsubs.push(onSnapshot(q3, snap => {
+            if (!snap.docs.length) return;
+            const latest = snap.docs[0];
+            const d = latest.data();
+            // Only show if someone else posted
+            if (d.authorId === user.uid) return;
+            const notifId = 'doubt_' + latest.id;
+            const dot = document.getElementById('comm-new-dot');
+
+            // Show green dot on Doubts Forum nav
+            if (dot) dot.style.display = 'flex';
+
+            // Hide dot when user navigates to community
+            const origSwitch = window.switchTab;
+            window.switchTab = function(tab, el) {
+                if (tab === 'community' && dot) dot.style.display = 'none';
+                origSwitch(tab, el);
+            };
+
+            notifAddItem({
+                id: notifId,
+                icon: '❓',
+                iconBg: 'rgba(245,158,11,0.15)',
+                title: 'New Doubt Posted',
+                body: (d.subject ? '[' + d.subject + '] ' : '') + (d.text || '').slice(0, 70),
+                ts: d.createdAt,
+                action: 'community'
+            });
+        }));
+
+        notifRender();
+    }
+
+    // Hook into auth — start listeners when user logs in
+    const _origUpdateAuthUI = window.updateAuthUI || function(){};
+    window.updateAuthUI = function(user) {
+        _origUpdateAuthUI(user);
+        if (user) {
+            notifStartListeners(user);
+        } else {
+            notifUnsubs.forEach(u => u());
+            notifUnsubs = [];
+            notifItems = [];
+            const btn = document.getElementById('notif-btn');
+            if (btn) btn.style.display = 'none';
+            notifRender();
+        }
+    };
+
+    window.notifToggle = notifToggle;
+    window.notifMarkAllRead = notifMarkAllRead;
+    window.notifClick = notifClick;
+
+    // ══════════════════════════════════════════════
     window.render=render;window.updateStats=updateStats;window.renderTests=renderTests;window.switchTab=switchTab;window.setClass=setClass;window.toggleUnit=toggleUnit;window.setStage=setStage;window.editNote=editNote;window.openTestModal=openTestModal;window.closeTestModal=closeTestModal;window.submitTest=submitTest;window.removeTest=removeTest;window.addTarget=addTarget;window.toggleTarget=toggleTarget;window.toggleTargetsPanel=toggleTargetsPanel;window.mobileTargetsToggle=mobileTargetsToggle;window.mobileTargetsExpand=mobileTargetsExpand;window.removeTarget=removeTarget;window.startNotificationReminders=startNotificationReminders;window.saveVault=saveVault;window.vaultSwitchTab=vaultSwitchTab;window.vaultAddSection=vaultAddSection;window.vaultDeleteSection=vaultDeleteSection;window.vaultRenameSection=vaultRenameSection;window.vaultUpdateText=vaultUpdateText;window.vaultTriggerImageUpload=vaultTriggerImageUpload;window.vaultHandleImageUpload=vaultHandleImageUpload;window.vaultDeleteImage=vaultDeleteImage;window.vaultOpenLightbox=vaultOpenLightbox;window.vaultCloseLightbox=vaultCloseLightbox;window.markRevised=markRevised;window.toggleSubtopics=toggleSubtopics;window.setSubtopic=setSubtopic;window.pomToggle=pomToggle;window.pomReset=pomReset;window.pomSkipStep=pomSkipStep;window.pomClearLog=pomClearLog;window.seqAddStep=seqAddStep;window.seqDeleteStep=seqDeleteStep;window.seqUpdateMinutes=seqUpdateMinutes;window.seqUpdateLabel=seqUpdateLabel;window.seqSave=seqSave;window.seqClear=seqClear;window.commInit=commInit;window.commHandleDoubtImg=commHandleDoubtImg;window.commClearDoubtImg=commClearDoubtImg;window.commOpenLightbox=commOpenLightbox;window.commPostDoubt=commPostDoubt;window.commPostReply=commPostReply;window.commMarkSolved=commMarkSolved;window.commDeleteDoubt=commDeleteDoubt;window.commSetFilter=commSetFilter;window.commToggleReplies=commToggleReplies;window.commRender=commRender;window.updateAuthUI=updateAuthUI;window.signOutUser=signOutUser;window.switchBacklogTab=switchBacklogTab;window.generateAIPlan=generateAIPlan;
 
 
