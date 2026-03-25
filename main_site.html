@@ -2803,7 +2803,7 @@ const db = getFirestore(app);
 window.currentUser = null;
 window.login = async function () { const provider = new GoogleAuthProvider(); const result = await signInWithPopup(auth, provider); window.currentUser = result.user; if (window.updateAuthUI) window.updateAuthUI(result.user); if (window.writeUserProfile) window.writeUserProfile(result.user); };
 window._signOut = async function () { await signOut(auth); };
-onAuthStateChanged(auth, async (user) => { if (user) { window.currentUser = user; if (window.updateAuthUI) window.updateAuthUI(user); const ref = doc(db, "users", user.uid); const snap = await getDoc(ref); if (snap.exists()) { const data = snap.data(); window.store = data.store || {}; store = window.store; if (data.tests) { tests = data.tests; localStorage.setItem('jee_tests', JSON.stringify(tests)); } localStorage.setItem('jee_command_v10', JSON.stringify(window.store)); window.render(); window.updateStats(); window.renderTests(); } } });
+onAuthStateChanged(auth, async (user) => { if (user) { window.currentUser = user; if (window.updateAuthUI) window.updateAuthUI(user); const ref = doc(db, "users", user.uid); const snap = await getDoc(ref); if (snap.exists()) { const data = snap.data(); window.store = data.store || {}; store = window.store; if (data.tests) { tests = data.tests; localStorage.setItem('jee_tests', JSON.stringify(tests)); } localStorage.setItem('jee_command_v10', JSON.stringify(window.store)); window.render(curCls==='12'?'syllabus-view-12':undefined); window.updateStats(); window.renderTests(); } } });
 window._db = db;
 window._fsOps = { collection, addDoc, onSnapshot, query, orderBy, where, getDocs, updateDoc, deleteDoc, serverTimestamp, doc, setDoc: setDoc, getDoc, getCountFromServer };
 window.saveToFirebase = async function () { if (!window.currentUser) return; await setDoc(doc(db, "users", window.currentUser.uid), { store: store, tests: tests }); };
@@ -3291,7 +3291,7 @@ window.addEventListener('load', function() {
         `;
     }
 
-    function init() { render(); updateStats();
+    function init() { render(curCls==='12'?'syllabus-view-12':undefined); updateStats();
         // Show green if API key already set
         setTimeout(()=>{ const btn=document.querySelector('.ai-key-btn'); if(btn&&localStorage.getItem('openrouter_api_key')) btn.classList.add('key-set'); },200); loadVault(); renderTests(); renderTargets(); document.getElementById('targets-panel').classList.toggle('collapsed',panelCollapsed); updateTabTitle(); if (typeof Notification!=='undefined'&&Notification.permission==='granted') startNotificationReminders(); setTimeout(renderNotifBanner,500);
     }
@@ -3330,13 +3330,13 @@ window.addEventListener('load', function() {
         else if (tab==='pomodoro'){document.getElementById('view-title').innerText='Timer';document.getElementById('pomodoro-view').classList.add('active');seqRender();pomSyncToSeq();pomRenderLog();} else if(tab==='focus-stats'){document.getElementById('view-title').innerText='Study Stats';document.getElementById('focus-stats-view').classList.add('active');focusStatsRender();} else if(tab==='focus-lb'){document.getElementById('view-title').innerText='Time Leaderboard';document.getElementById('focus-lb-view').classList.add('active');tlbLoad('all');}
         else if (tab==='mains'){document.getElementById('view-title').innerText="JEE Mains";document.getElementById('mains-view').classList.add('active');renderTests();}
         else if (tab==='advanced'){document.getElementById('view-title').innerText="JEE Advanced";document.getElementById('advanced-view').classList.add('active');renderTests();}
-        else if(tab==='class11'){document.getElementById('view-title').innerText='Class 11';document.getElementById('class11-view').classList.add('active');setSylTab('11', curSylSubject11||'physics', document.getElementById('syl11-phy'));} else if(tab==='class12'){document.getElementById('view-title').innerText='Class 12';document.getElementById('class12-view').classList.add('active');setSylTab('12', curSylSubject12||'physics', document.getElementById('syl12-phy'));} else if(tab==='leaderboard'){document.getElementById('view-title').innerText='Leaderboard';document.getElementById('leaderboard-view').classList.add('active');lbInit();} else{curTab=tab;document.getElementById('view-title').innerText=tab;const sv=document.getElementById('syllabus-view');if(sv)sv.classList.add('active');render();updateStats();}
+        else if(tab==='class11'){document.getElementById('view-title').innerText='Class 11';document.getElementById('class11-view').classList.add('active');setSylTab('11', curSylSubject11||'physics', document.getElementById('syl11-phy'));} else if(tab==='class12'){document.getElementById('view-title').innerText='Class 12';document.getElementById('class12-view').classList.add('active');setSylTab('12', curSylSubject12||'physics', document.getElementById('syl12-phy'));} else if(tab==='leaderboard'){document.getElementById('view-title').innerText='Leaderboard';document.getElementById('leaderboard-view').classList.add('active');lbInit();} else{curTab=tab;document.getElementById('view-title').innerText=tab;const sv=document.getElementById('syllabus-view');if(sv)sv.classList.add('active');render(curCls==='12'?'syllabus-view-12':undefined);updateStats();}
     }
 
-    function setClass(c){curCls=c;document.getElementById('btn11').classList.toggle('active',c==='11');document.getElementById('btn12').classList.toggle('active',c==='12');render();}
+    function setClass(c){curCls=c;document.getElementById('btn11').classList.toggle('active',c==='11');document.getElementById('btn12').classList.toggle('active',c==='12');render(curCls==='12'?'syllabus-view-12':undefined);}
 
-    function render() {
-        const container=document.getElementById('syllabus-view');
+    function render(targetContainerId) {
+        const container=document.getElementById(targetContainerId||'syllabus-view');
         const units=DATA[curTab][curCls];
         container.innerHTML = '';
         // Tip banner — click (desktop) or double-tap (mobile) to dismiss, persists via localStorage
@@ -3454,7 +3454,7 @@ window.addEventListener('load', function() {
         container.appendChild(bottomBar);
     }
 
-    function toggleUnit(id){if(openUnits.has(id))openUnits.delete(id);else openUnits.add(id);render();updateStats();}
+    function toggleUnit(id){if(openUnits.has(id))openUnits.delete(id);else openUnits.add(id);render(curCls==='12'?'syllabus-view-12':undefined);updateStats();}
     function setStage(id, s, event) {
         if (!store[id]) store[id] = {};
         const ORDER = ['Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];
@@ -3481,7 +3481,7 @@ window.addEventListener('load', function() {
         store[id].stages = [...cur];
         const highest = ORDER.filter(x => cur.has(x)).pop() || 'Pending';
         store[id].stage = highest;
-        save(); render(); updateStats();
+        save(); render(curCls==='12'?'syllabus-view-12':undefined); updateStats();
     }
     // Mobile double-tap on stage buttons = Shift+click behaviour
     (function() {
@@ -3524,7 +3524,7 @@ window.addEventListener('load', function() {
         if (item) item.classList.toggle('done', cb.checked);
         save();
     }
-    function editNote(id){const val=prompt("Chapter Note/Formula:",store[id]?.note||"");if(val!==null){store[id]={...store[id],note:val};save();render();}}
+    function editNote(id){const val=prompt("Chapter Note/Formula:",store[id]?.note||"");if(val!==null){store[id]={...store[id],note:val};save();render(curCls==='12'?'syllabus-view-12':undefined);}}
     function save(){localStorage.setItem('jee_command_v10',JSON.stringify(store));if(window.saveToFirebase)window.saveToFirebase();if(window.currentUser&&window.writeUserProfile)window.writeUserProfile(window.currentUser);}
 
     let vaultData=null,vaultActiveTab='notes',vaultImgTargetSection=null;
@@ -3648,7 +3648,7 @@ function toggleTargetsPanel(){panelCollapsed=!panelCollapsed;document.getElement
         if (el('psb-adv-bar'))    el('psb-adv-bar').style.width   = aPct + '%';
     }
 
-    function markRevised(id){store[id]={...store[id],lastRevised:Date.now()};save();render();updateStats();}
+    function markRevised(id){store[id]={...store[id],lastRevised:Date.now()};save();render(curCls==='12'?'syllabus-view-12':undefined);updateStats();}
     function daysSinceRevision(id){const ts=store[id]?.lastRevised;if(!ts)return null;return Math.floor((Date.now()-ts)/(1000*60*60*24));}
     function getHeatClass(id){const days=daysSinceRevision(id);if(days===null)return 'heat-never';if(days===0)return 'heat-fresh';if(days<=7)return 'heat-warm';return 'heat-cold';}
     function getRevLabel(id){const days=daysSinceRevision(id);if(days===null)return '🔥 Never revised — click!';if(days===0)return '✅ Revised today';if(days===1)return '☀️ 1 day ago';if(days<=7)return `☀️ ${days} days ago`;return `❄️ ${days} days ago — revise now!`;}
@@ -5090,14 +5090,14 @@ const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleane
                 const validStages = stages.filter(s => ORDER.includes(s));
                 store[chap].stages = validStages;
                 store[chap].stage = ORDER.filter(x => validStages.includes(x)).pop() || 'Pending';
-                save(); render(); updateStats();
+                save(); render(curCls==='12'?'syllabus-view-12':undefined); updateStats();
                 return `✅ Set stages [${validStages.join(', ')}] for ${chap}.`;
             }
             if (toolName === 'markRevised') {
                 const chap = args.chapter_id || '';
                 if (!store[chap]) store[chap] = {};
                 store[chap].lastRevised = new Date().toISOString().split('T')[0];
-                save(); render();
+                save(); render(curCls==='12'?'syllabus-view-12':undefined);
                 return `✅ Marked ${chap} as revised today.`;
             }
             if (toolName === 'editNote') {
@@ -5105,7 +5105,7 @@ const rawText=data.choices?.[0]?.message?.content||'';let tasks;try{const cleane
                 const note = args.note || '';
                 if (!store[chap]) store[chap] = {};
                 store[chap].note = note;
-                save(); render();
+                save(); render(curCls==='12'?'syllabus-view-12':undefined);
                 return `✅ Updated note for ${chap}.`;
             }
             if (toolName === 'checkSubtopic') {
@@ -5685,25 +5685,9 @@ RULES:
         updateStats();
     }
 
-    // Shared render helper — renders DATA[curTab][curCls] into any container
+    // Shared render helper — renders DATA[curTab][curCls] into the correct container
     function _renderSyllabus(container) {
-        const units = DATA[curTab] && DATA[curTab][curCls];
-        if (!units) return;
-        // Re-use the existing render() logic but target the correct container
-        const origContainer = document.getElementById('syllabus-view');
-        // Temporarily swap IDs then call render(), then restore
-        // Simpler: just call render() which already reads curTab/curCls and writes to syllabus-view
-        // For class12 we need it to write to syllabus-view-12
-        if (container.id === 'syllabus-view') {
-            render();
-        } else {
-            // Swap container id temporarily
-            container.id = 'syllabus-view';
-            if (origContainer && origContainer !== container) origContainer.id = '_sv_tmp';
-            render();
-            container.id = 'syllabus-view-12';
-            if (origContainer && origContainer !== container) origContainer.id = 'syllabus-view';
-        }
+        render(container.id);
     }
 
     // ══════════════════════════════════════════════
