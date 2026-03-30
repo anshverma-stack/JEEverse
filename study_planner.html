@@ -1771,5 +1771,28 @@ function scheduleSave() {
 }
 
 </script>
+   <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDMG2GapxBu9Tnry0fJx7IaQO1zwgA0sVw",
+    authDomain: "jee-progress-tracker-3d733.firebaseapp.com",
+    projectId: "jee-progress-tracker-3d733",
+    storageBucket: "jee-progress-tracker-3d733.firebasestorage.app",
+    messagingSenderId: "644810316053",
+    appId: "1:644810316053:web:3ba275b18d7641672c311c",
+    measurementId: "G-1MKZ1LSMZJ"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
