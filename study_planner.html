@@ -28,6 +28,7 @@
   --text-2:      #94a3b8;
   --text-3:      #475569;
   --hour-h:      56px;
+  --slot-h:      28px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -310,7 +311,7 @@ body::before {
   width: 54px; flex-shrink: 0;
   border-right: 1px solid var(--border);
   position: relative;
-  height: calc(var(--hour-h) * 24);
+  height: calc(var(--slot-h) * 48);
 }
 .tt-time-lbl {
   position: absolute; right: 7px; height: var(--hour-h);
@@ -322,7 +323,7 @@ body::before {
   flex: 1; min-width: 0;
   border-right: 1px solid var(--border);
   position: relative;
-  height: calc(var(--hour-h) * 24);
+  height: calc(var(--slot-h) * 48);
 }
 .tt-hour-line-g {
   position: absolute; left: 0; right: 0;
@@ -336,7 +337,7 @@ body::before {
 /* Hour zone — click target in edit mode */
 .tt-zone {
   position: absolute; left: 0; right: 0;
-  height: var(--hour-h); z-index: 5;
+  height: var(--slot-h); z-index: 5;
   cursor: default;
 }
 .edit-mode .tt-zone.zone-free {
@@ -597,15 +598,40 @@ html.light .tt-hour-label { color: var(--text-3); border-color: var(--border); }
 html.light .tt-cell { border-color: rgba(0,0,0,0.04); }
 html.light .tt-cell:hover { background: rgba(79,70,229,0.04); }
 html.light .modal-backdrop { background: rgba(0,0,0,0.45); }
-html.light .modal-box { background: #ffffff; border-color: rgba(0,0,0,0.1); color: var(--text); }
-html.light .modal-box input,
-html.light .modal-box textarea { background: #f8fafc; border-color: rgba(0,0,0,0.12); color: var(--text); }
+html.light .modal { background: #ffffff; border-color: rgba(0,0,0,0.1); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+html.light .modal input,
+html.light .modal textarea { background: #f8fafc; border-color: rgba(0,0,0,0.12); color: var(--text); }
+html.light .modal input:focus,
+html.light .modal textarea:focus { background: #fff; border-color: rgba(79,70,229,0.4); }
+html.light .modal-title { color: var(--text); }
+html.light .form-label { color: var(--text-2); }
+html.light .form-input { background: #f8fafc; border-color: rgba(0,0,0,0.12); color: var(--text); }
+html.light .form-input:focus { background: #fff; border-color: rgba(79,70,229,0.4); }
 html.light .modal-time-display { background: rgba(0,0,0,0.03); border-color: var(--border); color: var(--text-2); }
-html.light .btn-secondary { border-color: var(--border); color: var(--text-2); }
-html.light .btn-secondary:hover { border-color: var(--border-2); background: rgba(0,0,0,0.03); }
-html.light .detail-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); }
+html.light .btn-secondary { border-color: var(--border); color: var(--text-2); background: rgba(0,0,0,0.03); }
+html.light .btn-secondary:hover { border-color: var(--border-2); background: rgba(0,0,0,0.06); }
+html.light .detail-panel { background: #ffffff; border-color: rgba(0,0,0,0.1); color: var(--text); }
 html.light .detail-panel-header { border-color: var(--border); }
-html.light .reset-notice { background: rgba(79,70,229,0.06); border-color: rgba(79,70,229,0.18); }
+html.light .detail-drag { background: rgba(0,0,0,0.12); }
+html.light .detail-name { color: var(--text); }
+html.light .detail-time { color: var(--text-3); }
+html.light .detail-close { border-color: var(--border); color: var(--text-3); background: transparent; }
+html.light .detail-close:hover { border-color: var(--border-2); color: var(--text); background: rgba(0,0,0,0.04); }
+html.light .detail-section-label { color: var(--text-3); }
+html.light .status-btn { border-color: var(--border); background: transparent; color: var(--text-2); }
+html.light .status-btn:hover { border-color: var(--border-2); background: rgba(0,0,0,0.04); }
+html.light .status-btn.active-done { background: rgba(5,150,105,0.1); border-color: rgba(5,150,105,0.4); color: #059669; }
+html.light .status-btn.active-partial { background: rgba(217,119,6,0.1); border-color: rgba(217,119,6,0.4); color: #d97706; }
+html.light .status-btn.active-notdone { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.35); color: #dc2626; }
+html.light .note-area { background: #f8fafc; border-color: rgba(0,0,0,0.12); color: var(--text); }
+html.light .note-area:focus { background: #fff; border-color: rgba(79,70,229,0.4); }
+html.light .note-area:disabled { background: rgba(0,0,0,0.04); opacity: 0.6; }
+html.light .note-locked-msg { color: var(--text-3); }
+html.light .btn-detail-save { box-shadow: 0 3px 12px rgba(79,70,229,0.25); }
+html.light .btn-detail-cancel { border-color: var(--border); color: var(--text-3); background: transparent; }
+html.light .btn-detail-cancel:hover { background: rgba(0,0,0,0.04); color: var(--text-2); border-color: var(--border-2); }
+html.light .reset-notice { background: rgba(79,70,229,0.06); border-color: rgba(79,70,229,0.18); color: var(--text-3); }
+html.light .color-swatch { box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
 
 /* Theme toggle button */
 #theme-toggle {
@@ -837,6 +863,7 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
    CONSTANTS & CONFIG
 ══════════════════════════════════════════ */
 const HOUR_H = 56; // px per hour (must match --hour-h CSS var)
+const SLOT_H = 28; // px per 30-min slot (half of HOUR_H)
 const COLORS = [
   { hex: '#6366f1', label: 'Indigo'  },
   { hex: '#3b82f6', label: 'Blue'    },
@@ -864,8 +891,16 @@ function storageGet(k, def=[]) {
 function storageSet(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
 
 // ttSlots: [{id, day, startHour, endHour, label, color}]
-// startHour inclusive, endHour exclusive (e.g. 6–8 → startHour:6, endHour:8)
+// startHour/endHour are now in 30-min slot units (0=12AM, 1=12:30AM, 2=1AM…)
 let ttSlots    = storageGet('jv_tt_slots2', []);
+// Migration: if old hour-based data (version < 2), convert to half-hour units
+if (localStorage.getItem('jv_tt_ver') !== '2') {
+  if (ttSlots.length > 0) {
+    ttSlots = ttSlots.map(s => ({...s, startHour: s.startHour*2, endHour: s.endHour*2}));
+    storageSet('jv_tt_slots2', ttSlots);
+  }
+  localStorage.setItem('jv_tt_ver', '2');
+}
 let ttSlotsSaved = JSON.parse(JSON.stringify(ttSlots)); // snapshot for cancel
 
 // weekData: {weekKey, entries:{[slotId]:{status,goalNote,doneNote}}}
@@ -1187,20 +1222,20 @@ function renderTimetable() {
   for(let d=0;d<7;d++){
     const col=document.createElement('div'); col.className='tt-day-col'; col.id='tt-dcol-'+d;
 
-    // Hour lines
+    // Hour lines (major every hour, minor every 30 min)
     for(let h=0;h<24;h++){
       const ln=document.createElement('div');ln.className='tt-hour-line-g';ln.style.top=(h*HOUR_H)+'px';col.appendChild(ln);
-      const hl=document.createElement('div');hl.className='tt-half-line-g';hl.style.top=(h*HOUR_H+28)+'px';col.appendChild(hl);
+      const hl=document.createElement('div');hl.className='tt-half-line-g';hl.style.top=(h*HOUR_H+SLOT_H)+'px';col.appendChild(hl);
     }
 
-    // Clickable zones (one per hour)
-    for(let h=0;h<24;h++){
-      const occupied=isCellOccupied(d,h);
+    // Clickable zones (one per 30-min slot = 48 per day)
+    for(let s=0;s<48;s++){
+      const occupied=isCellOccupied(d,s);
       const zone=document.createElement('div');
       zone.className='tt-zone'+(occupied?'':' zone-free');
-      zone.style.top=(h*HOUR_H)+'px';
-      zone.dataset.day=d; zone.dataset.hour=h;
-      zone.id=`tz-${d}-${h}`;
+      zone.style.top=(s*SLOT_H)+'px';
+      zone.dataset.day=d; zone.dataset.hour=s;
+      zone.id=`tz-${d}-${s}`;
 
       // Selection highlight (rectangular across days)
       if(selState.active) {
@@ -1208,10 +1243,10 @@ function renderTimetable() {
         const dHi=Math.max(selState.startDay,selState.endDay);
         const hLo=Math.min(selState.startHour,selState.endHour);
         const hHi=Math.max(selState.startHour,selState.endHour);
-        if(d>=dLo && d<=dHi && h>=hLo && h<=hHi && !occupied) {
+        if(d>=dLo && d<=dHi && s>=hLo && s<=hHi && !occupied) {
           zone.classList.add('zone-sel');
-          if(h===hLo) zone.classList.add('zone-sel-first');
-          if(h===hHi) zone.classList.add('zone-sel-last');
+          if(s===hLo) zone.classList.add('zone-sel-first');
+          if(s===hHi) zone.classList.add('zone-sel-last');
         }
       }
 
@@ -1219,8 +1254,8 @@ function renderTimetable() {
         zone.addEventListener('mousedown',(e)=>{
           if(e.button!==0) return;
           e.preventDefault();
-          dragState={dragging:true,startDay:d,startHour:h};
-          selState={active:true,startDay:d,endDay:d,startHour:h,endHour:h};
+          dragState={dragging:true,startDay:d,startHour:s};
+          selState={active:true,startDay:d,endDay:d,startHour:s,endHour:s};
           renderTimetable();
         });
       }
@@ -1229,8 +1264,8 @@ function renderTimetable() {
 
     // Render slot blocks
     ttSlots.filter(s=>s.day===d).forEach(slot=>{
-      const top=slot.startHour*HOUR_H+2;
-      const height=(slot.endHour-slot.startHour)*HOUR_H-4;
+      const top=slot.startHour*SLOT_H+2;
+      const height=(slot.endHour-slot.startHour)*SLOT_H-4;
       const wd=weekData[slot.id]||{};
       const status = wd.status || null;
       let borderColor, blockShadow;
@@ -1273,17 +1308,20 @@ function renderTimetable() {
   if(selState.active) updatePill();
   else hidePill();
 
-  // Scroll to 5am on first render
+  // Scroll to 5am on first render (slot 10 * 28px = 280px = 5*HOUR_H)
   requestAnimationFrame(()=>{
     const wrap=document.getElementById('tt-scroll-wrap');
     if(wrap && wrap.scrollTop===0) wrap.scrollTop=5*HOUR_H+42; // +42 for sticky header
   });
 }
 
-function fmtHour(h) {
-  const hh=h%24;
-  if(hh===0) return '12 AM'; if(hh<12) return hh+' AM';
-  if(hh===12) return '12 PM'; return (hh-12)+' PM';
+function fmtHour(s) { // s = half-hour slot index (0 = 12:00 AM, 1 = 12:30 AM, 2 = 1:00 AM …)
+  const h = Math.floor(s / 2);
+  const half = s % 2;
+  const hh = h % 24;
+  const period = hh < 12 ? 'AM' : 'PM';
+  const disp = hh === 0 ? 12 : hh > 12 ? hh - 12 : hh;
+  return half ? `${disp}:30 ${period}` : `${disp} ${period}`;
 }
 
 /* ══════════════════════════════════════════
@@ -1336,7 +1374,7 @@ function updatePill() {
   const colHi=document.getElementById('tt-dcol-'+dHi);
   if(colLo && colHi){
     const midColX = colLo.offsetLeft + (colHi.offsetLeft+colHi.offsetWidth - colLo.offsetLeft)/2 + 54;
-    const midTop = (hLo+hHi)/2*HOUR_H + HOUR_H/2 + 42;
+    const midTop = (hLo+hHi)/2*SLOT_H + SLOT_H/2 + 42;
     pill.style.top=(midTop-16)+'px';
     pill.style.left=midColX+'px';
   }
@@ -1435,13 +1473,17 @@ function getSlotDate(dayOfWeek) {
 function isGoalEditable(slot) {
   const slotDate=getSlotDate(slot.day);
   const slotStart=new Date(slotDate);
-  slotStart.setHours(slot.startHour,0,0,0);
+  const startH=Math.floor(slot.startHour/2);
+  const startM=(slot.startHour%2)*30;
+  slotStart.setHours(startH,startM,0,0);
   return new Date()<slotStart;
 }
 function isDoneEditable(slot) {
   const slotDate=getSlotDate(slot.day);
   const slotEnd=new Date(slotDate);
-  slotEnd.setHours(slot.endHour,0,0,0);
+  const endH=Math.floor(slot.endHour/2);
+  const endM=(slot.endHour%2)*30;
+  slotEnd.setHours(endH,endM,0,0);
   return new Date()>=slotEnd;
 }
 
