@@ -673,6 +673,63 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
 .sync-dot.error  { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
 
 /* ══════════════════════════════════════════
+   CATEGORY CHIPS (slot modal + block badge)
+══════════════════════════════════════════ */
+.cat-chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.cat-chip {
+  padding: 5px 13px; border-radius: 20px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text-3);
+  font-size: 0.72rem; font-weight: 700; cursor: pointer; transition: all 0.14s;
+  font-family: 'DM Sans', sans-serif;
+}
+.cat-chip:hover { border-color: var(--border-2); color: var(--text-2); }
+.cat-chip.selected { border-color: var(--accent); background: rgba(99,102,241,0.15); color: var(--accent); }
+.cat-custom-input {
+  flex: 1; min-width: 110px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text); font-size: 0.72rem; font-family: 'DM Sans', sans-serif;
+  outline: none; transition: border-color 0.14s;
+}
+.cat-custom-input:focus { border-color: var(--accent); }
+.cat-custom-input::placeholder { color: var(--text-3); }
+.tt-slot-cat {
+  font-size: 0.55rem; font-weight: 800; letter-spacing: 0.06em;
+  text-transform: uppercase; opacity: 0.75; margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* AI timetable toggle row */
+.ai-tt-toggle-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  background: rgba(99,102,241,0.07); border: 1px solid rgba(99,102,241,0.2);
+  margin-bottom: 10px; flex-wrap: wrap;
+}
+.ai-tt-toggle-label { font-size: 0.8rem; font-weight: 700; color: var(--text-2); flex: 1; }
+.ai-tt-toggle { position: relative; width: 36px; height: 20px; cursor: pointer; }
+.ai-tt-toggle input { opacity: 0; width: 0; height: 0; }
+.ai-tt-slider {
+  position: absolute; inset: 0; background: var(--surface-3); border-radius: 20px;
+  border: 1px solid var(--border); transition: all 0.2s;
+}
+.ai-tt-slider::before {
+  content: ''; position: absolute; left: 2px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; border-radius: 50%; background: var(--text-3); transition: all 0.2s;
+}
+.ai-tt-toggle input:checked + .ai-tt-slider { background: var(--accent); border-color: var(--accent); }
+.ai-tt-toggle input:checked + .ai-tt-slider::before { transform: translate(16px,-50%); background: white; }
+.ai-tt-cat-select {
+  padding: 5px 12px; border-radius: 9px; border: 1px solid rgba(99,102,241,0.35);
+  background: var(--surface-2); color: var(--text); font-size: 0.78rem;
+  font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer;
+}
+.ai-tt-schedule-preview {
+  font-size: 0.72rem; color: var(--text-3); line-height: 1.6;
+  background: rgba(0,0,0,0.2); border-radius: 8px; padding: 8px 12px;
+  border-left: 2px solid rgba(99,102,241,0.4); width: 100%; margin-top: 4px;
+}
+
+/* ══════════════════════════════════════════
    MOBILE TIMETABLE — horizontal scroll
 ══════════════════════════════════════════ */
 .tt-sticky-header {
@@ -720,6 +777,168 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
   .tt-day-col { flex: 1; min-width: 0; }
 }
 
+/* ══════════════════════════════════════════
+   SHARED PAGE INNER WRAPPER
+══════════════════════════════════════════ */
+.syl-page-inner {
+  max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.5rem 4rem;
+}
+
+/* ══════════════════════════════════════════
+   NAV AI BADGE
+══════════════════════════════════════════ */
+.nav-ai-badge {
+  font-size: 0.55rem; font-weight: 900; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 6px;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white; text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.4); flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
+   SYLLABUS TRACKER
+══════════════════════════════════════════ */
+.syl-header-bar { display:flex; align-items:center; gap:12px; margin-bottom:1.5rem; flex-wrap:wrap; }
+.syl-header-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; letter-spacing:-0.02em; }
+.syl-class-toggle { display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:3px; margin-left:auto; }
+.syl-class-btn { padding:5px 16px; border-radius:7px; border:none; background:transparent; color:var(--text-3); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.syl-class-btn.active { background:var(--accent); color:white; box-shadow:0 2px 8px var(--accent-glow); }
+.syl-subtabs { display:flex; gap:4px; background:var(--surface-2); padding:4px; border-radius:14px; margin-bottom:1.6rem; width:fit-content; border:1px solid var(--border); }
+.syl-subtab { padding:8px 20px; border-radius:10px; border:none; background:transparent; color:var(--text-3); font-size:0.82rem; font-weight:700; cursor:pointer; transition:all 0.18s; font-family:'DM Sans',sans-serif; white-space:nowrap; }
+.syl-subtab:hover { color:var(--text-2); }
+.syl-subtab.active { background:var(--surface-3); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.syl-unit-card { background:var(--surface-1); border:1px solid var(--border); border-radius:18px; margin-bottom:1rem; overflow:hidden; }
+.syl-unit-trigger { width:100%; padding:18px 24px 12px; background:transparent; border:none; color:var(--text); display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-size:0.95rem; font-weight:800; text-transform:uppercase; font-family:'DM Sans',sans-serif; letter-spacing:0.04em; }
+.syl-unit-content { display:none; padding:0 24px 16px; }
+.syl-unit-card.open .syl-unit-content { display:block; }
+.syl-unit-progress-wrap { padding:0 24px 14px; }
+.syl-unit-progress-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+.syl-unit-progress-label { font-family:'DM Mono',monospace; font-size:0.57rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-3); }
+.syl-unit-progress-right { display:flex; gap:10px; align-items:center; }
+.syl-unit-progress-legend { display:flex; gap:7px; align-items:center; flex-wrap:wrap; }
+.syl-unit-progress-legend-item { display:flex; align-items:center; gap:3px; font-size:0.57rem; font-weight:700; color:var(--text-3); }
+.syl-upl-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.syl-unit-progress-pct { font-family:'DM Mono',monospace; font-size:0.76rem; font-weight:800; min-width:34px; text-align:right; }
+.syl-unit-progress-bar { height:6px; background:rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; display:flex; }
+.syl-unit-progress-seg { height:100%; transition:width 0.5s; }
+.syl-unit-ch-count { font-family:'DM Mono',monospace; font-size:0.58rem; color:var(--text-3); font-weight:600; margin-top:4px; text-align:right; }
+.syl-chapter-item { display:grid; grid-template-columns:1fr 1.3fr; align-items:start; gap:1.4rem; padding:18px 0; border-bottom:1px solid rgba(255,255,255,0.05); position:relative; }
+.syl-chapter-item:last-child { border:none; }
+.syl-chapter-item.heat-fresh { border-left:3px solid #10b981; padding-left:12px; }
+.syl-chapter-item.heat-warm  { border-left:3px solid #f59e0b; padding-left:12px; }
+.syl-chapter-item.heat-cold  { border-left:3px solid #ef4444; padding-left:12px; }
+.syl-chapter-item.heat-never { border-left:3px solid #334155; padding-left:12px; }
+.syl-ch-title { font-size:0.88rem; font-weight:700; color:var(--text); margin-bottom:5px; }
+.syl-note-preview { font-size:0.72rem; color:var(--text-3); background:rgba(0,0,0,0.2); padding:6px 10px; border-radius:7px; border-left:3px solid var(--accent); cursor:pointer; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; }
+.syl-rev-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.65rem; font-weight:700; padding:3px 9px; border-radius:20px; cursor:pointer; border:none; font-family:'DM Sans',sans-serif; transition:all 0.2s; white-space:nowrap; margin-left:8px; }
+.syl-rev-badge.rev-fresh  { background:rgba(16,185,129,0.12); color:#10b981; }
+.syl-rev-badge.rev-warm   { background:rgba(245,158,11,0.12); color:#f59e0b; }
+.syl-rev-badge.rev-cold   { background:rgba(239,68,68,0.12); color:#ef4444; }
+.syl-rev-badge.rev-never  { background:rgba(51,65,85,0.25); color:var(--text-3); }
+.syl-rev-badge:hover { filter:brightness(1.2); transform:scale(1.04); }
+.syl-stage-box { display:flex; flex-wrap:wrap; gap:5px; }
+.syl-stage-btn { padding:6px 12px; border-radius:9px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-3); font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.syl-stage-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
+.syl-stage-btn.active[data-s="Theory"]       { background:#3b82f6; color:white; border-color:#3b82f6; }
+.syl-stage-btn.active[data-s="Examples"]     { background:#6366f1; color:white; border-color:#6366f1; }
+.syl-stage-btn.active[data-s="Exercise"]     { background:#10b981; color:white; border-color:#10b981; }
+.syl-stage-btn.active[data-s="Mains PYQ"]   { background:#f59e0b; color:white; border-color:#f59e0b; }
+.syl-stage-btn.active[data-s="Advance PYQ"] { background:#c026d3; color:white; border-color:#e879f9; box-shadow:0 0 12px rgba(232,121,249,0.4); }
+.syl-action-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+.syl-action-btn { background:var(--surface-2); color:var(--text-2); text-decoration:none; padding:7px 13px; border-radius:9px; font-size:0.72rem; font-weight:700; border:1px solid var(--border); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.14s; white-space:nowrap; }
+.syl-action-btn:hover { background:var(--surface-3); color:var(--text); }
+.syl-subtopics-toggle { display:flex; align-items:center; gap:6px; margin-top:8px; padding:5px 10px; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:9px; cursor:pointer; font-size:0.7rem; font-weight:700; color:var(--text-3); width:fit-content; transition:all 0.15s; font-family:'DM Sans',sans-serif; }
+.syl-subtopics-toggle:hover { background:rgba(255,255,255,0.06); color:var(--text-2); }
+.syl-subtopics-toggle .st-arrow { font-size:0.6rem; transition:transform 0.2s; }
+.syl-subtopics-toggle.open .st-arrow { transform:rotate(180deg); }
+.syl-subtopics-list { display:none; margin-top:7px; padding:9px 11px; background:rgba(0,0,0,0.2); border:1px solid var(--border); border-radius:11px; }
+.syl-subtopics-list.open { display:block; }
+.syl-subtopic-item { display:flex; align-items:center; gap:9px; padding:4px 3px; border-radius:6px; transition:background 0.1s; }
+.syl-subtopic-item:hover { background:rgba(255,255,255,0.04); }
+.syl-subtopic-item.done .syl-subtopic-label { text-decoration:line-through; opacity:0.45; }
+.syl-subtopic-label { font-size:0.74rem; color:var(--text-2); cursor:pointer; line-height:1.4; }
+.syl-st-progress { font-size:0.58rem; font-weight:800; color:var(--green); margin-left:4px; }
+.syl-st-actions { display:flex; gap:4px; margin-left:auto; flex-shrink:0; }
+.syl-st-btn { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:6px; font-size:0.72rem; text-decoration:none; transition:all 0.15s; border:1px solid transparent; }
+.syl-st-btn.st-q { background:rgba(99,102,241,0.12); border-color:rgba(99,102,241,0.25); }
+.syl-st-btn.st-q:hover { background:rgba(99,102,241,0.25); }
+.syl-st-btn.st-f { background:rgba(245,158,11,0.12); border-color:rgba(245,158,11,0.25); }
+.syl-st-btn.st-f:hover { background:rgba(245,158,11,0.25); }
+#syl-page-stats-bar { background:var(--surface-1); border:1px solid var(--border); border-radius:18px; padding:16px 22px; margin-top:2rem; }
+.syl-psb-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.syl-psb-section-title { font-family:'DM Mono',monospace; font-size:0.58rem; font-weight:800; text-transform:uppercase; letter-spacing:0.12em; margin-bottom:6px; }
+.syl-psb-pts-row { display:flex; align-items:baseline; gap:5px; margin-bottom:5px; }
+.syl-psb-pts-val { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; line-height:1; }
+.syl-psb-pts-max { font-size:0.75rem; font-weight:600; color:var(--text-3); }
+.syl-psb-pct { font-family:'DM Mono',monospace; font-size:0.75rem; font-weight:800; margin-left:auto; }
+.syl-psb-bar-wrap { height:6px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; }
+.syl-psb-bar-fill { height:100%; border-radius:10px; transition:width 0.5s; }
+.syl-psb-weights-row { display:flex; flex-wrap:wrap; gap:4px; margin-top:8px; }
+.syl-psb-weight-chip { font-size:0.58rem; font-weight:700; padding:2px 7px; border-radius:20px; white-space:nowrap; }
+.syl-heat-legend { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:1rem; padding:10px 16px; border-radius:12px; background:var(--surface-2); border:1px solid var(--border); font-size:0.7rem; font-weight:700; color:var(--text-3); }
+.syl-hm-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:3px; }
+.syl-tip-banner { display:flex; align-items:center; gap:10px; padding:10px 16px; margin-bottom:1.2rem; background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.18); border-radius:12px; font-size:0.72rem; color:var(--text-3); font-weight:600; cursor:pointer; }
+.syl-tip-banner kbd { background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:5px; padding:1px 6px; font-size:0.68rem; font-family:'DM Mono',monospace; color:var(--text); }
+
+/* ══════════════════════════════════════════
+   BACKLOG & AI COVERAGE
+══════════════════════════════════════════ */
+.backlog-subtabs { display:flex; gap:4px; background:var(--surface-2); padding:4px; border-radius:12px; margin-bottom:1.8rem; width:fit-content; border:1px solid var(--border); }
+.backlog-subtab { padding:8px 20px; border-radius:9px; border:none; background:transparent; color:var(--text-3); font-weight:700; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+.backlog-subtab:hover { color:var(--text-2); }
+.backlog-subtab.active { background:var(--surface-1); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.ai-hours-card { background:linear-gradient(135deg,rgba(245,158,11,0.08),rgba(239,68,68,0.06)); border:1px solid rgba(245,158,11,0.25); border-radius:24px; padding:2.4rem; margin-bottom:1.6rem; }
+.ai-hours-title { font-size:1.1rem; font-weight:800; margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+.ai-badge-large { font-size:0.62rem; font-weight:900; letter-spacing:0.08em; padding:3px 10px; border-radius:8px; background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; text-transform:uppercase; box-shadow:0 2px 10px rgba(245,158,11,0.35); }
+.ai-hours-subtitle { font-size:0.82rem; color:var(--text-2); margin-bottom:1.6rem; line-height:1.6; }
+.ai-input-row { display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; }
+.ai-input-group { display:flex; flex-direction:column; gap:6px; }
+.ai-input-group label { font-size:0.68rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-3); }
+.ai-hours-input { width:140px; padding:12px 16px; border-radius:12px; border:1px solid rgba(245,158,11,0.3); background:rgba(0,0,0,0.3); color:var(--text); font-size:1.1rem; font-weight:800; font-family:inherit; outline:none; transition:border-color 0.2s; text-align:center; }
+.ai-hours-input:focus { border-color:#f59e0b; box-shadow:0 0 0 3px rgba(245,158,11,0.12); }
+.ai-focus-select { padding:12px 36px 12px 16px; border-radius:12px; border:1px solid rgba(245,158,11,0.3); background:rgba(0,0,0,0.3); color:var(--text); font-size:0.88rem; font-weight:700; font-family:inherit; outline:none; cursor:pointer; appearance:none; background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 10 10%22><path d=%22M1 3l4 4 4-4%22 stroke=%22%23f59e0b%22 stroke-width=%221.5%22 fill=%22none%22/></svg>'); background-repeat:no-repeat; background-position:right 12px center; transition:border-color 0.2s; }
+.ai-focus-select:focus { border-color:#f59e0b; }
+.ai-focus-select option { background:var(--surface-2); }
+.ai-key-btn { padding:9px 16px; border-radius:11px; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.25); color:#a5b4fc; font-weight:700; font-size:0.78rem; cursor:pointer; font-family:inherit; transition:all 0.15s; margin-bottom:0; }
+.ai-key-btn:hover { background:rgba(99,102,241,0.2); border-color:rgba(99,102,241,0.5); }
+.ai-key-btn.key-set { background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.3); color:#10b981; }
+.ai-generate-btn { padding:13px 28px; border-radius:14px; background:linear-gradient(135deg,#f59e0b,#ef4444); color:white; border:none; font-weight:800; font-size:0.95rem; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:8px; box-shadow:0 6px 20px rgba(245,158,11,0.35); transition:all 0.2s; white-space:nowrap; }
+.ai-generate-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(245,158,11,0.45); }
+.ai-generate-btn:disabled { opacity:0.6; cursor:not-allowed; transform:none; }
+#ai-plan-output { margin-top:1.6rem; display:none; }
+#ai-plan-output.visible { display:block; }
+.ai-plan-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; flex-wrap:wrap; gap:10px; }
+.ai-plan-title { font-size:1.05rem; font-weight:800; display:flex; align-items:center; gap:8px; }
+.ai-plan-meta { font-size:0.72rem; color:var(--text-2); font-weight:600; }
+.ai-task-card { background:var(--surface-1); border:1px solid var(--border); border-radius:18px; margin-bottom:1rem; overflow:hidden; transition:border-color 0.2s,box-shadow 0.2s; animation:slideInUp 0.4s ease both; }
+@keyframes slideInUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.ai-task-card:hover { border-color:rgba(245,158,11,0.3); box-shadow:0 6px 24px rgba(0,0,0,0.3); }
+.ai-task-card:nth-child(2){animation-delay:0.06s} .ai-task-card:nth-child(3){animation-delay:0.12s} .ai-task-card:nth-child(4){animation-delay:0.18s} .ai-task-card:nth-child(5){animation-delay:0.24s} .ai-task-card:nth-child(6){animation-delay:0.30s}
+.ai-task-header { display:flex; align-items:center; gap:14px; padding:16px 20px; border-bottom:1px solid var(--border); }
+.ai-task-num { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,rgba(245,158,11,0.13),rgba(239,68,68,0.13)); border:1px solid rgba(245,158,11,0.3); display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:800; color:#f59e0b; flex-shrink:0; }
+.ai-task-info { flex:1; }
+.ai-task-name { font-size:0.95rem; font-weight:800; }
+.ai-task-sub { font-size:0.7rem; color:var(--text-2); margin-top:2px; font-weight:600; }
+.ai-task-time { font-size:0.88rem; font-weight:800; color:#f59e0b; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.25); padding:6px 14px; border-radius:20px; white-space:nowrap; flex-shrink:0; }
+.ai-task-body { padding:14px 20px; }
+.ai-task-desc { font-size:0.82rem; color:var(--text-2); line-height:1.6; margin-bottom:10px; }
+.ai-task-stages { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.ai-stage-chip { font-size:0.65rem; font-weight:800; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.06em; }
+.ai-loading-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:50px 20px; gap:16px; }
+.ai-loading-ring { width:48px; height:48px; border-radius:50%; border:3px solid rgba(245,158,11,0.15); border-top-color:#f59e0b; animation:spin 0.9s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.ai-loading-text { font-size:0.85rem; color:var(--text-2); font-weight:600; }
+.ai-loading-sub { font-size:0.72rem; color:var(--text-3); }
+.ai-total-bar { display:flex; align-items:center; justify-content:space-between; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:14px; padding:14px 20px; margin-bottom:1.2rem; flex-wrap:wrap; gap:10px; }
+.ai-total-label { font-size:0.75rem; font-weight:700; color:var(--text-2); }
+.ai-total-val { font-size:1rem; font-weight:800; color:#f59e0b; }
+.ai-error-box { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:14px; padding:20px 24px; color:#f87171; font-size:0.85rem; font-weight:600; line-height:1.6; }
+
+@media (max-width:640px) {
+  .syl-chapter-item { grid-template-columns:1fr; gap:0.8rem; }
+  .syl-psb-grid { grid-template-columns:1fr; gap:12px; }
+}
+
 </style>
 </head>
 <body>
@@ -741,11 +960,14 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
 <nav class="top-nav">
   <a href="index.html" class="nav-brand">JEEverse</a>
   <div class="nav-tabs">
-    <button class="nav-tab active" id="tab-calendar" onclick="switchPage('calendar')">
-      <span>📅</span> Calendar
-    </button>
-    <button class="nav-tab" id="tab-timetable" onclick="switchPage('timetable')">
+    <button class="nav-tab active" id="tab-timetable" onclick="switchPage('timetable')">
       <span>📋</span> Weekly Timetable
+    </button>
+    <button class="nav-tab" id="tab-syllabus" onclick="switchPage('syllabus')">
+      <span>📚</span> Syllabus Tracker
+    </button>
+    <button class="nav-tab" id="tab-backlog" onclick="switchPage('backlog')">
+      <span>📋</span> Backlog <span class="nav-ai-badge" style="font-size:0.48rem;padding:1px 5px;">AI</span>
     </button>
   </div>
   <button class="auth-btn" id="auth-btn" onclick="handleAuthClick()">Sign in with Google</button>
@@ -754,45 +976,9 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
 </nav>
 
 <!-- ════════════════════════════════════════
-     PAGE 1: CALENDAR
+     PAGE 1: TIMETABLE
 ════════════════════════════════════════ -->
-<div id="page-calendar" class="page active">
-  <div class="cal-toolbar">
-    <button class="cal-nav-btn" onclick="calNav(-1)">&#8249;</button>
-    <button class="cal-nav-btn" onclick="calNav(1)">&#8250;</button>
-    <div class="cal-title" id="cal-title"></div>
-    <button class="cal-today-btn" onclick="calGoToday()">Today</button>
-    <div class="view-toggle" style="margin-left:auto">
-      <button class="view-btn active" id="vbtn-month" onclick="setCalView('month')">Month</button>
-      <button class="view-btn" id="vbtn-week" onclick="setCalView('week')">Week</button>
-    </div>
-    <button class="add-event-btn" onclick="openEventModal(null,null)">+ Add Event</button>
-  </div>
-
-  <!-- Month View -->
-  <div id="view-month">
-    <div class="month-header-row">
-      <div class="month-day-label">Sun</div><div class="month-day-label">Mon</div>
-      <div class="month-day-label">Tue</div><div class="month-day-label">Wed</div>
-      <div class="month-day-label">Thu</div><div class="month-day-label">Fri</div>
-      <div class="month-day-label">Sat</div>
-    </div>
-    <div class="month-grid-scroll"><div class="month-grid" id="month-grid"></div></div>
-  </div>
-
-  <!-- Week View -->
-  <div id="view-week" style="display:none">
-    <div class="week-header" id="week-header"></div>
-    <div class="week-body-scroll" id="week-scroll">
-      <div class="week-body-inner" id="week-body"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════
-     PAGE 2: TIMETABLE
-════════════════════════════════════════ -->
-<div id="page-timetable" class="page">
+<div id="page-timetable" class="page active">
 
   <!-- Toolbar — dynamic -->
   <div class="tt-toolbar" id="tt-toolbar">
@@ -810,6 +996,155 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
     <button class="sel-create-pill" id="sel-create-pill" onclick="openSlotModal()">
       <span>＋</span> <span id="sel-pill-label">Create Slot</span>
     </button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 2: SYLLABUS TRACKER
+════════════════════════════════════════ -->
+<div id="page-syllabus" class="page" style="overflow-y:auto;">
+  <div class="syl-page-inner">
+    <div class="syl-header-bar">
+      <span class="syl-header-title">📚 JEE Syllabus Tracker</span>
+      <div class="syl-class-toggle">
+        <button class="syl-class-btn active" id="syl-btn11" onclick="sylSetClass('11',this)">Class 11</button>
+        <button class="syl-class-btn" id="syl-btn12" onclick="sylSetClass('12',this)">Class 12</button>
+      </div>
+    </div>
+    <div id="syl-class11-view">
+      <div class="syl-subtabs" id="syl11-subtabs">
+        <button class="syl-subtab active" id="syl11-phy" onclick="sylSetTab('11','physics',this)">⚡ Physics</button>
+        <button class="syl-subtab" id="syl11-chem" onclick="sylSetTab('11','chemistry',this)">🧪 Chemistry</button>
+        <button class="syl-subtab" id="syl11-math" onclick="sylSetTab('11','mathematics',this)">📐 Mathematics</button>
+      </div>
+      <div id="syl-view-11"></div>
+    </div>
+    <div id="syl-class12-view" style="display:none">
+      <div class="syl-subtabs" id="syl12-subtabs">
+        <button class="syl-subtab active" id="syl12-phy" onclick="sylSetTab('12','physics',this)">⚡ Physics</button>
+        <button class="syl-subtab" id="syl12-chem" onclick="sylSetTab('12','chemistry',this)">🧪 Chemistry</button>
+        <button class="syl-subtab" id="syl12-math" onclick="sylSetTab('12','mathematics',this)">📐 Mathematics</button>
+      </div>
+      <div id="syl-view-12"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 3: BACKLOG & AI COVERAGE
+════════════════════════════════════════ -->
+<div id="page-backlog" class="page" style="overflow-y:auto;">
+  <div class="syl-page-inner">
+    <div class="backlog-subtabs">
+      <button class="backlog-subtab active" id="bst-classic" onclick="switchBacklogTab('classic')">📋 Backlog</button>
+      <button class="backlog-subtab" id="bst-coverage" onclick="switchBacklogTab('coverage')">🤖 AI Coverage <span class="nav-ai-badge" style="font-size:0.5rem;padding:1px 5px;">AI</span></button>
+    </div>
+
+    <!-- Classic Backlog Panel -->
+    <div id="backlog-classic-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:1.6rem;">
+        <div>
+          <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">📋 Study Backlog</h2>
+          <p style="font-size:0.78rem;color:var(--text-2);">Chapters you haven't reached yet for the selected stage.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <label for="backlog-filter-select" style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-3);">Show backlog for</label>
+          <select id="backlog-filter-select" onchange="renderBacklog()" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:10px 16px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;outline:none;cursor:pointer;appearance:none;background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 10 10%22><path d=%22M1 3l4 4 4-4%22 stroke=%22%2394a3b8%22 stroke-width=%221.5%22 fill=%22none%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;transition:border-color 0.15s;">
+            <option value="Theory">📖 Theory Backlog</option>
+            <option value="Examples">💡 Examples Backlog</option>
+            <option value="Exercise">✏️ Exercise Backlog</option>
+            <option value="Mains PYQ">📝 Mains PYQ Backlog</option>
+            <option value="Advance PYQ">🏆 Advance PYQ Backlog</option>
+            <option value="Mastery">⭐ Mastery Backlog</option>
+          </select>
+        </div>
+      </div>
+      <div id="backlog-summary-chips" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:1.4rem;"></div>
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:20px;overflow:hidden;">
+        <div id="backlog-list" style="max-height:560px;overflow-y:auto;"></div>
+      </div>
+    </div>
+
+    <!-- AI Coverage Panel -->
+    <div id="ai-coverage-panel" style="display:none;">
+      <div class="ai-hours-card">
+        <div class="ai-hours-title"><span>Smart Study Planner</span><span class="ai-badge-large">AI</span></div>
+        <p class="ai-hours-subtitle">Tell the AI how many free hours you have today. It will scan your backlog and build the most effective study plan with time estimates. <strong style="color:var(--text);">First time?</strong> Click <strong style="color:#a5b4fc;">⚙️ API Key</strong> — get a free key from <a href="https://openrouter.ai" target="_blank" style="color:#3b82f6;">openrouter.ai</a> in 1 minute. You only need to do this once.</p>
+
+        <!-- Timetable-aware toggle -->
+        <div class="ai-tt-toggle-row">
+          <div>
+            <div class="ai-tt-toggle-label">📅 Plan by timetable schedule</div>
+            <div style="font-size:0.7rem;color:var(--text-3);margin-top:2px;">AI will read your weekly timetable slots and plan within those exact time windows</div>
+          </div>
+          <label class="ai-tt-toggle"><input type="checkbox" id="ai-tt-toggle-chk" onchange="onAiTtToggle()"><span class="ai-tt-slider"></span></label>
+        </div>
+        <div id="ai-tt-options" style="display:none;margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+            <span style="font-size:0.76rem;color:var(--text-2);font-weight:600;">Category to use:</span>
+            <select class="ai-tt-cat-select" id="ai-tt-cat-sel" onchange="renderAiTtPreview()">
+              <option value="">— pick a category —</option>
+            </select>
+          </div>
+          <div id="ai-tt-preview" class="ai-tt-schedule-preview" style="display:none;"></div>
+        </div>
+
+        <div class="ai-input-row">
+          <div class="ai-input-group" id="ai-hours-group"><label>Free hours today</label><input type="number" id="ai-hours-input" class="ai-hours-input" min="0.5" max="16" step="0.5" value="4" placeholder="e.g. 5"></div>
+          <div class="ai-input-group"><label>Class filter</label><select id="ai-class-select" class="ai-focus-select"><option value="both">📖 Both Class 11 &amp; 12</option><option value="11">Class 11 only</option><option value="12">Class 12 only</option></select></div>
+          <div class="ai-input-group"><label>Focus priority</label><select id="ai-priority-select" class="ai-focus-select"><option value="balanced">⚖️ Balanced (all subjects)</option><option value="physics">⚡ Physics first</option><option value="chemistry">🧪 Chemistry first</option><option value="mathematics">📐 Mathematics first</option><option value="weakest">🎯 Weakest chapters first</option><option value="mains">📝 Mains PYQ focus</option><option value="advanced">🏆 Advanced PYQ focus</option></select></div>
+          <div class="ai-input-group"><label>Target stage</label><select id="ai-stage-select" class="ai-focus-select"><option value="next">⬆️ Move to next stage</option><option value="Theory">📖 Theory</option><option value="Examples">💡 Examples</option><option value="Exercise">✏️ Exercise</option><option value="Mains PYQ">📝 Mains PYQ</option><option value="Advance PYQ">🏆 Advance PYQ</option></select></div>
+          <button class="ai-key-btn" id="ai-key-btn" onclick="openAISettings()">⚙️ API Key</button>
+          <button class="ai-generate-btn" id="ai-gen-btn" onclick="generateAIPlan()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Generate Plan</button>
+        </div>
+      </div>
+      <div id="ai-plan-output"></div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Settings Modal -->
+<div id="ai-settings-modal" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);align-items:center;justify-content:center;">
+  <div style="background:#0d1828;border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:28px;width:min(480px,92vw);box-shadow:0 24px 60px rgba(0,0,0,0.5);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:1rem;font-weight:800;">⚙️ AI Planner Settings</div>
+      <button onclick="closeAISettings()" style="background:transparent;border:1px solid var(--border);color:var(--text-3);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:0.9rem;">✕</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--text-2);margin-bottom:16px;line-height:1.6;">
+      The AI Planner uses <strong style="color:var(--text);">OpenRouter</strong> — a free AI gateway. Each user needs their own free key (1 minute to get). Your key is saved <strong style="color:var(--text);">only in your browser</strong>.<br><br>
+      <span style="display:inline-block;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:6px 10px;color:#10b981;font-weight:700;margin-bottom:8px;">🎉 One-time setup — enter your key once and all AI features work forever.</span><br><br>
+      <strong style="color:#10b981;">Get your free key:</strong><br>
+      1. Go to <a href="https://openrouter.ai" target="_blank" style="color:#3b82f6;">openrouter.ai</a> → sign up free<br>
+      2. <strong>Keys</strong> → Create Key → copy it<br>
+      3. Paste below → Save → done! 🎉
+    </div>
+    <div id="ai-local-warning" style="display:none;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:0.75rem;color:#f59e0b;line-height:1.6;">
+      ⚠️ <strong>You're on a local file.</strong> API calls won't work from <code>file://</code>. Upload to GitHub Pages for it to work.
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);display:block;margin-bottom:8px;">Your OpenRouter API Key</label>
+      <input id="ai-key-input" type="password" placeholder="sk-or-v1-..." style="width:100%;padding:12px 16px;background:var(--surface-2);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:var(--text);font-size:0.85rem;font-family:monospace;outline:none;" oninput="this.style.borderColor=this.value?'#10b981':'rgba(255,255,255,0.1)'">
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);display:block;margin-bottom:8px;">Model</label>
+      <select id="ai-model-select" style="width:100%;padding:12px 16px;background:var(--surface-2);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:var(--text);font-size:0.85rem;font-family:inherit;outline:none;cursor:pointer;appearance:none;">
+        <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash (Free ⚡)</option>
+        <option value="google/gemini-flash-1.5-8b">Gemini Flash 1.5 8B (Free)</option>
+        <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (Free)</option>
+        <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B (Free)</option>
+        <option value="deepseek/deepseek-r1:free">DeepSeek R1 (Free)</option>
+        <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+        <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku</option>
+        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+        <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+        <option value="openai/gpt-4o">GPT-4o</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="saveAISettings()" style="flex:1;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-weight:800;font-size:0.88rem;cursor:pointer;font-family:inherit;">✓ Save Key</button>
+      <button onclick="clearAISettings()" style="padding:12px 16px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:12px;font-weight:700;font-size:0.82rem;cursor:pointer;font-family:inherit;">Clear</button>
+    </div>
+    <div id="ai-key-status" style="margin-top:12px;font-size:0.75rem;text-align:center;"></div>
   </div>
 </div>
 
@@ -906,6 +1241,16 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
       <input class="form-input" id="sl-name" type="text" placeholder="e.g. Physics Study"></div>
     <div class="form-group"><label class="form-label">Time</label>
       <div class="modal-time-display" id="sl-time-display">—</div></div>
+    <div class="form-group"><label class="form-label">Category <span style="color:var(--text-3);font-weight:400;font-size:0.7rem;">(used by AI Planner)</span></label>
+      <div class="cat-chip-row" id="sl-cat-chips">
+        <div class="cat-chip" data-cat="Physics"     onclick="selectCatChip(this)">⚡ Physics</div>
+        <div class="cat-chip" data-cat="Chemistry"   onclick="selectCatChip(this)">🧪 Chemistry</div>
+        <div class="cat-chip" data-cat="Mathematics" onclick="selectCatChip(this)">📐 Maths</div>
+        <div class="cat-chip" data-cat="Break"       onclick="selectCatChip(this)">☕ Break</div>
+        <div class="cat-chip" data-cat="Revision"    onclick="selectCatChip(this)">🔄 Revision</div>
+      </div>
+      <input class="cat-custom-input" id="sl-cat-custom" placeholder="or type custom…" oninput="onCatCustomInput(this)" style="margin-top:6px;width:100%;">
+    </div>
     <div class="form-group"><label class="form-label">Colour</label>
       <div class="color-grid" id="sl-colors"></div></div>
     <div class="modal-actions">
@@ -999,6 +1344,8 @@ function switchPage(p) {
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('tab-'+p).classList.add('active');
   if (p === 'timetable') { renderTimetableToolbar(); renderTimetable(); }
+  if (p === 'syllabus')  { sylRender(); }
+  if (p === 'backlog')   { renderBacklog(); }
 }
 
 /* ══════════════════════════════════════════
@@ -1351,6 +1698,7 @@ function renderTimetable() {
       const isHalfHour = (slot.endHour - slot.startHour) <= 1;
       block.innerHTML=`
         <div class="tt-slot-name">${escHtml(slot.label)}</div>
+        ${slot.category ? `<div class="tt-slot-cat">${escHtml(slot.category)}</div>` : ''}
         ${isHalfHour ? '' : `<div class="tt-slot-time">${fmtHour(slot.startHour)} – ${fmtHour(slot.endHour)}</div>`}
         <button class="tt-slot-del" onclick="event.stopPropagation();deleteSlotById('${slot.id}')">×</button>`;
 
@@ -1445,6 +1793,36 @@ function hidePill() {
 }
 
 /* ══════════════════════════════════════════
+   CATEGORY — chip helpers
+══════════════════════════════════════════ */
+const PRESET_CATS = ['Physics','Chemistry','Mathematics','Break','Revision'];
+
+function selectCatChip(el) {
+  document.querySelectorAll('#sl-cat-chips .cat-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('sl-cat-custom').value = '';
+}
+function onCatCustomInput(inp) {
+  if (inp.value.trim()) {
+    document.querySelectorAll('#sl-cat-chips .cat-chip').forEach(c => c.classList.remove('selected'));
+  }
+}
+function getSelectedCategory() {
+  const custom = document.getElementById('sl-cat-custom').value.trim();
+  if (custom) return custom;
+  const chip = document.querySelector('#sl-cat-chips .cat-chip.selected');
+  return chip ? chip.dataset.cat : '';
+}
+function setSelectedCategory(cat) {
+  document.querySelectorAll('#sl-cat-chips .cat-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('sl-cat-custom').value = '';
+  if (!cat) return;
+  const chip = document.querySelector(`#sl-cat-chips .cat-chip[data-cat="${cat}"]`);
+  if (chip) chip.classList.add('selected');
+  else document.getElementById('sl-cat-custom').value = cat;
+}
+
+/* ══════════════════════════════════════════
    SLOT MODAL (edit mode: create)
 ══════════════════════════════════════════ */
 function openSlotModal() {
@@ -1457,6 +1835,7 @@ function openSlotModal() {
   document.getElementById('slot-modal-title').textContent='New Time Block';
   document.getElementById('sl-delete-btn').style.display='none';
   document.getElementById('sl-name').value='';
+  setSelectedCategory('');
   const dayLabel=dHi>dLo?DAY_FULL[dLo]+' – '+DAY_FULL[dHi]:DAY_FULL[dLo];
   document.getElementById('sl-time-display').textContent=
     dayLabel+' · '+fmtHour(hLo)+' – '+fmtHour(hHi+1);
@@ -1470,6 +1849,7 @@ function openSlotModalEdit(slotId) {
   document.getElementById('slot-modal-title').textContent='Edit Time Block';
   document.getElementById('sl-delete-btn').style.display='';
   document.getElementById('sl-name').value=slot.label;
+  setSelectedCategory(slot.category || '');
   document.getElementById('sl-time-display').textContent=
     DAY_FULL[slot.day]+' · '+fmtHour(slot.startHour)+' – '+fmtHour(slot.endHour);
   buildColorGrid('sl-colors',selSlColor,c=>{selSlColor=c;});
@@ -1484,20 +1864,20 @@ function saveSlot() {
   const label=document.getElementById('sl-name').value.trim();
   if(!label){document.getElementById('sl-name').style.borderColor='#ef4444';return;}
   document.getElementById('sl-name').style.borderColor='';
+  const category = getSelectedCategory();
 
   if(editingSlotId){
     const idx=ttSlots.findIndex(s=>s.id===editingSlotId);
-    if(idx>-1){ttSlots[idx].label=label;ttSlots[idx].color=selSlColor;}
+    if(idx>-1){ttSlots[idx].label=label;ttSlots[idx].color=selSlColor;ttSlots[idx].category=category;}
   } else {
     const dLo=Math.min(selState.startDay,selState.endDay);
     const dHi=Math.max(selState.startDay,selState.endDay);
     const hLo=Math.min(selState.startHour,selState.endHour);
     const hHi=Math.max(selState.startHour,selState.endHour);
     for(let day=dLo;day<=dHi;day++){
-      // Only create if at least one hour in this day's range is free
       let anyFree=false;
       for(let h=hLo;h<=hHi;h++) if(!isCellOccupied(day,h)){anyFree=true;break;}
-      if(anyFree) ttSlots.push({id:uid(),day,startHour:hLo,endHour:hHi+1,label,color:selSlColor});
+      if(anyFree) ttSlots.push({id:uid(),day,startHour:hLo,endHour:hHi+1,label,color:selSlColor,category});
     }
     selState={active:false,startDay:null,endDay:null,startHour:null,endHour:null};
   }
@@ -1644,10 +2024,8 @@ document.getElementById('sl-name').addEventListener('keydown',e=>{if(e.key==='En
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-renderCal();
 renderTimetableToolbar();
-// Refresh now-line every minute
-setInterval(()=>{ if(calView==='week') renderWeek(); }, 60000);
+renderTimetable();
 
 /* ══════════════════════════════════════════
    FIREBASE AUTH + CLOUD SYNC
@@ -1703,6 +2081,8 @@ async function loadFromCloud(user) {
     renderCal();
     const activePage = document.querySelector('.page.active');
     if (activePage && activePage.id === 'page-timetable') renderTimetable();
+    if (activePage && activePage.id === 'page-syllabus')  { if(typeof sylRender==='function') sylRender(); }
+    if (activePage && activePage.id === 'page-backlog')   { if(typeof renderBacklog==='function') renderBacklog(); }
   } catch(e) { console.warn('Cloud load error:', e); setSyncDot('error'); }
 }
 
@@ -1724,6 +2104,920 @@ function scheduleSave() {
   clearTimeout(_syncTimeout);
   _syncTimeout = setTimeout(saveToCloud, 1200);
 }
+
+/* ══════════════════════════════════════════
+   JEE SYLLABUS DATA + PROGRESS STORE
+   (shared with backlog & AI planner)
+══════════════════════════════════════════ */
+const DATA = {
+  physics: {
+    '11': {
+      'Mechanics I': [{n:'Units & Measurements',s:'units-and-measurements'},{n:'Motion in a Straight Line',s:'motion-in-a-straight-line'},{n:'Motion in a Plane',s:'motion-in-a-plane'},{n:'Laws of Motion',s:'laws-of-motion'}],
+      'Mechanics II': [{n:'Work, Power & Energy',s:'work-power-and-energy'},{n:'System of Particles',s:'rotational-motion'},{n:'Gravitation',s:'gravitation'}],
+      'Properties of Matter': [{n:'Mechanical Prop of Solids',s:'properties-of-solids'},{n:'Mechanical Prop of Fluids',s:'properties-of-matter'},{n:'Thermal Properties',s:'thermal-properties-of-matter'}],
+      'Thermodynamics': [{n:'Thermodynamics',s:'thermodynamics'},{n:'Kinetic Theory',s:'kinetic-theory-of-gases'}],
+      'Oscillations & Waves': [{n:'Oscillations',s:'oscillations'},{n:'Waves',s:'waves'}]
+    },
+    '12': {
+      'Electrodynamics': [{n:'Electric Charges & Fields',s:'electrostatics'},{n:'Electrostatic Potential',s:'electrostatic-potential-and-capacitance'},{n:'Current Electricity',s:'current-electricity'},{n:'Moving Charges & Mag',s:'magnetic-effect-of-current'},{n:'Magnetism & Matter',s:'magnetism-and-matter'},{n:'EMI',s:'electromagnetic-induction'},{n:'Alternating Current',s:'alternating-current'}],
+      'Optics': [{n:'EM Waves',s:'electromagnetic-waves'},{n:'Ray Optics',s:'ray-optics'},{n:'Wave Optics',s:'wave-optics'}],
+      'Modern Physics': [{n:'Dual Nature of Matter',s:'dual-nature-of-radiation-and-matter'},{n:'Atoms',s:'atoms'},{n:'Nuclei',s:'nuclei'},{n:'Semiconductors',s:'semiconductor'}]
+    }
+  },
+  chemistry: {
+    '11': {
+      'Physical': [{n:'Basic Concepts',s:'some-basic-concepts-of-chemistry'},{n:'Structure of Atom',s:'structure-of-atom'},{n:'Thermodynamics',s:'chemical-thermodynamics'},{n:'Equilibrium',s:'chemical-equilibrium'},{n:'Redox Reactions',s:'redox-reactions'}],
+      'Inorganic': [{n:'Classification of Elements',s:'classification-of-elements-and-periodicity-in-properties'},{n:'Chemical Bonding',s:'chemical-bonding-and-molecular-structure'},{n:'p-Block (11)',s:'p-block-elements'}],
+      'Organic': [{n:'GOC Basics',s:'basics-of-organic-chemistry'},{n:'Hydrocarbons',s:'hydrocarbons'}]
+    },
+    '12': {
+      'Physical': [{n:'Solutions',s:'solutions'},{n:'Electrochemistry',s:'electrochemistry'},{n:'Chemical Kinetics',s:'chemical-kinetics'}],
+      'Inorganic': [{n:'d & f Block',s:'d-and-f-block-elements'},{n:'Coordination Compounds',s:'coordination-compounds'}],
+      'Organic': [{n:'Haloalkanes',s:'haloalkanes-and-haloarenes'},{n:'Alcohols & Phenols',s:'alcohols-phenols-and-ethers'},{n:'Aldehydes & Ketones',s:'aldehydes-ketones-and-carboxylic-acids'},{n:'Amines',s:'amines'},{n:'Biomolecules',s:'biomolecules'}]
+    }
+  },
+  mathematics: {
+    '11': {
+      'Algebra': [{n:'Sets & Relations',s:'sets-and-relations'},{n:'Complex Numbers',s:'complex-numbers'},{n:'Quadratic Equations',s:'quadratic-equation-and-inequalities'},{n:'P & C',s:'permutations-and-combinations'},{n:'Binomial Theorem',s:'binomial-theorem'},{n:'Sequence & Series',s:'sequences-and-series'}],
+      'Coordinate': [{n:'Straight Lines',s:'straight-lines-and-pair-of-straight-lines'},{n:'Circles',s:'circle'},{n:'Conic Sections',s:'conic-sections'}],
+      'Trig': [{n:'Trigonometric Func',s:'trigonometric-functions'}]
+    },
+    '12': {
+      'Calculus': [{n:'Limits & Continuity',s:'limits-continuity-and-differentiability'},{n:'Application of Derivatives',s:'applications-of-derivatives'},{n:'Indefinite Integrals',s:'indefinite-integration'},{n:'Definite Integrals',s:'definite-integration'},{n:'Differential Equations',s:'differential-equations'}],
+      'Vectors/3D': [{n:'Vector Algebra',s:'vector-algebra'},{n:'3D Geometry',s:'3d-geometry'}],
+      'Algebra/Prob': [{n:'Matrices',s:'matrices'},{n:'Determinants',s:'determinants'},{n:'Probability',s:'probability'}]
+    }
+  }
+};
+
+// Progress store — same localStorage key as main JEEverse app so data is shared
+let store = JSON.parse(localStorage.getItem('jee_command_v10')) || {};
+
+/* ══════════════════════════════════════════
+   BACKLOG — CLASSIC PANEL
+══════════════════════════════════════════ */
+function renderBacklog() {
+  const list    = document.getElementById('backlog-list');
+  const chipsEl = document.getElementById('backlog-summary-chips');
+  const sel     = document.getElementById('backlog-filter-select');
+  if (!list) return;
+  const filterVal  = sel ? sel.value : 'Theory';
+  const stageOrder = ['Pending','Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];
+
+  const isBehind = (stage, filter) => {
+    if (filter === 'Mastery') return stage !== 'Advance PYQ';
+    const fi = stageOrder.indexOf(filter);
+    const si = stageOrder.indexOf(stage === undefined ? 'Pending' : stage);
+    return si < fi;
+  };
+
+  const subColor = { physics:'#60a5fa', chemistry:'#34d399', mathematics:'#f59e0b' };
+  const subIcon  = { physics:'⚡', chemistry:'🧪', mathematics:'📐' };
+
+  const groups = {};
+  let totalBehind = 0, phyBehind = 0, chemBehind = 0, mathBehind = 0;
+
+  Object.keys(DATA).forEach(sub => {
+    ['11','12'].forEach(cls => {
+      Object.entries(DATA[sub][cls]).forEach(([unit, chapters]) => {
+        chapters.forEach(ch => {
+          const id    = `${sub}-${ch.s}`;
+          const stage = store[id]?.stage || 'Pending';
+          if (!isBehind(stage, filterVal)) return;
+          totalBehind++;
+          if (sub === 'physics')    phyBehind++;
+          if (sub === 'chemistry')  chemBehind++;
+          if (sub === 'mathematics') mathBehind++;
+          const gKey = `${sub}__${cls}__${unit}`;
+          if (!groups[gKey]) groups[gKey] = { sub, cls, unit, items: [] };
+          groups[gKey].items.push({ ch, stage });
+        });
+      });
+    });
+  });
+
+  const filterLabel = { Theory:'Theory', Examples:'Examples', Exercise:'Exercise', 'Mains PYQ':'Mains PYQ', 'Advance PYQ':'Advance PYQ', Mastery:'Mastery' }[filterVal];
+
+  if (chipsEl) {
+    chipsEl.innerHTML = [
+      { label:'Total Behind', val:totalBehind, color:'#94a3b8' },
+      { label:'⚡ Physics',   val:phyBehind,   color:'#60a5fa' },
+      { label:'🧪 Chemistry', val:chemBehind,  color:'#34d399' },
+      { label:'📐 Maths',     val:mathBehind,  color:'#f59e0b' }
+    ].map(c => `<div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:14px 18px;text-align:center;">
+      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-2);font-weight:800;margin-bottom:5px;">${c.label}</div>
+      <div style="font-size:1.8rem;font-weight:800;color:${c.color}">${c.val}</div>
+    </div>`).join('');
+  }
+
+  if (totalBehind === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-2)">
+      <div style="font-size:2.5rem;margin-bottom:12px">🎉</div>
+      <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px">No backlog for ${filterLabel}!</div>
+      <div style="font-size:0.82rem">All chapters have reached this stage. Keep it up!</div>
+    </div>`;
+    return;
+  }
+
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    const [subA, clsA] = a.split('__');
+    const [subB, clsB] = b.split('__');
+    const subOrder = ['physics','chemistry','mathematics'];
+    if (subA !== subB) return subOrder.indexOf(subA) - subOrder.indexOf(subB);
+    return clsA.localeCompare(clsB);
+  });
+
+  let html = '', lastSubCls = '';
+  sortedKeys.forEach(key => {
+    const grp = groups[key];
+    if (!grp.items.length) return;
+    const subClsKey = `${grp.sub}__${grp.cls}`;
+    if (subClsKey !== lastSubCls) {
+      lastSubCls = subClsKey;
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:14px 20px 10px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;backdrop-filter:blur(8px);">
+        <span style="font-size:1rem">${subIcon[grp.sub]}</span>
+        <span style="font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:${subColor[grp.sub]}">${grp.sub} · Class ${grp.cls}</span>
+      </div>`;
+    }
+    html += `<div style="padding:6px 20px 2px;font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-2);margin-top:8px;">${grp.unit}</div>`;
+    grp.items.forEach(({ ch, stage }) => {
+      const stageColor = { Pending:'#475569', Theory:'#3b82f6', Examples:'#6366f1', Exercise:'#10b981', 'Mains PYQ':'#f59e0b', 'Advance PYQ':'#3b82f6' }[stage] || '#475569';
+      html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;"
+        onmouseenter="this.style.background='rgba(255,255,255,0.03)'"
+        onmouseleave="this.style.background='transparent'">
+        <span style="font-size:0.88rem;font-weight:600;color:var(--text)">${ch.n}</span>
+        <span style="font-size:0.65rem;font-weight:800;padding:3px 10px;border-radius:20px;background:${stageColor}22;color:${stageColor};border:1px solid ${stageColor}44;white-space:nowrap;flex-shrink:0;">${stage}</span>
+      </div>`;
+    });
+  });
+  list.innerHTML = html;
+}
+
+/* ══════════════════════════════════════════
+   BACKLOG — SUBTAB SWITCHER
+══════════════════════════════════════════ */
+function switchBacklogTab(tab) {
+  const classic  = document.getElementById('backlog-classic-panel');
+  const coverage = document.getElementById('ai-coverage-panel');
+  const bstC     = document.getElementById('bst-classic');
+  const bstA     = document.getElementById('bst-coverage');
+  if (tab === 'classic') {
+    if (classic)  classic.style.display  = '';
+    if (coverage) coverage.style.display = 'none';
+    if (bstC) bstC.classList.add('active');
+    if (bstA) bstA.classList.remove('active');
+    renderBacklog();
+  } else {
+    if (classic)  classic.style.display  = 'none';
+    if (coverage) coverage.style.display = '';
+    if (bstC) bstC.classList.remove('active');
+    if (bstA) bstA.classList.add('active');
+  }
+}
+
+/* ══════════════════════════════════════════
+   AI PLANNER — TIMETABLE SCHEDULE TOGGLE
+══════════════════════════════════════════ */
+function onAiTtToggle() {
+  const on = document.getElementById('ai-tt-toggle-chk').checked;
+  const opts = document.getElementById('ai-tt-options');
+  const hoursGroup = document.getElementById('ai-hours-group');
+  opts.style.display = on ? '' : 'none';
+  hoursGroup.style.opacity = on ? '0.4' : '';
+  hoursGroup.style.pointerEvents = on ? 'none' : '';
+  if (on) populateAiTtCats();
+}
+
+function populateAiTtCats() {
+  const sel = document.getElementById('ai-tt-cat-sel');
+  const cats = [...new Set(ttSlots.map(s => s.category).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">— pick a category —</option>';
+  cats.forEach(c => {
+    const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o);
+  });
+  if (cats.length === 0) {
+    sel.innerHTML = '<option value="">No categories set yet — add them on the Timetable tab</option>';
+  }
+  renderAiTtPreview();
+}
+
+function getTtScheduleForCat(cat) {
+  // Returns {totalMins, byDay:[{day,slots:[{start,end,mins}]}]}
+  const matched = ttSlots.filter(s => s.category === cat);
+  const byDay = {};
+  matched.forEach(s => {
+    if (!byDay[s.day]) byDay[s.day] = [];
+    const startMins = s.startHour * 30;
+    const endMins   = s.endHour   * 30;
+    byDay[s.day].push({ start: fmtHour(s.startHour), end: fmtHour(s.endHour), mins: endMins - startMins });
+  });
+  let totalMins = 0;
+  const days = Object.keys(byDay).map(Number).sort().map(d => {
+    const slots = byDay[d];
+    const dayMins = slots.reduce((a, s) => a + s.mins, 0);
+    totalMins += dayMins;
+    return { day: DAY_FULL[d], slots, dayMins };
+  });
+  return { totalMins, days };
+}
+
+function renderAiTtPreview() {
+  const cat = document.getElementById('ai-tt-cat-sel').value;
+  const prev = document.getElementById('ai-tt-preview');
+  if (!cat) { prev.style.display = 'none'; return; }
+  const sched = getTtScheduleForCat(cat);
+  if (!sched.days.length) {
+    prev.style.display = '';
+    prev.textContent = 'No timetable slots found for this category.';
+    return;
+  }
+  const lines = sched.days.map(d =>
+    `<strong style="color:var(--text-2)">${d.day}</strong>: ` +
+    d.slots.map(s => `${s.start} – ${s.end}`).join(', ') +
+    ` <span style="color:var(--text-3)">(${d.dayMins}min)</span>`
+  ).join('<br>');
+  prev.style.display = '';
+  prev.innerHTML = `${lines}<br><span style="color:var(--accent);font-weight:700;">Total: ${(sched.totalMins/60).toFixed(1)}h / week</span>`;
+}
+
+/* ══════════════════════════════════════════
+   AI PLANNER — GENERATE PLAN
+══════════════════════════════════════════ */
+async function generateAIPlan() {
+  const hoursInput = document.getElementById('ai-hours-input');
+  const priority   = document.getElementById('ai-priority-select').value;
+  const stageGoal  = document.getElementById('ai-stage-select').value;
+  const btn        = document.getElementById('ai-gen-btn');
+  const output     = document.getElementById('ai-plan-output');
+  const hours      = parseFloat(hoursInput.value);
+
+  const useTt  = document.getElementById('ai-tt-toggle-chk')?.checked;
+  const ttCat  = useTt ? document.getElementById('ai-tt-cat-sel')?.value : '';
+
+  if (!useTt && (!hours || hours <= 0 || hours > 16)) {
+    hoursInput.style.borderColor = '#ef4444';
+    setTimeout(() => hoursInput.style.borderColor = '', 1200);
+    return;
+  }
+  if (useTt && !ttCat) {
+    document.getElementById('ai-tt-cat-sel').style.borderColor = '#ef4444';
+    setTimeout(() => document.getElementById('ai-tt-cat-sel').style.borderColor = '', 1200);
+    return;
+  }
+
+  const stageOrder     = ['Pending','Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];
+  const aiClassFilter  = document.getElementById('ai-class-select')?.value || 'both';
+  const allChapters    = [];
+
+  Object.keys(DATA).forEach(sub => {
+    ['11','12'].filter(c => aiClassFilter === 'both' || c === aiClassFilter).forEach(cls => {
+      Object.entries(DATA[sub][cls]).forEach(([unit, chapters]) => {
+        chapters.forEach(ch => {
+          const id       = `${sub}-${ch.s}`;
+          const stage    = store[id]?.stage || 'Pending';
+          const stageIdx = stageOrder.indexOf(stage);
+          allChapters.push({ subject: sub, cls, unit, name: ch.n, currentStage: stage, stageIndex: stageIdx, nextStage: stageOrder[stageIdx + 1] || null, isComplete: stage === 'Advance PYQ' });
+        });
+      });
+    });
+  });
+
+  const incomplete     = allChapters.filter(c => !c.isComplete);
+  const totalBehind    = incomplete.length;
+  const chapterSummary = incomplete.slice(0, 60).map(c => `- ${c.subject.toUpperCase()} Cl.${c.cls} | ${c.unit} | ${c.name} | Currently at: ${c.currentStage}`).join('\n');
+
+  const priorityDesc = { balanced:'balance all three subjects evenly', physics:'prioritise Physics chapters', chemistry:'prioritise Chemistry chapters', mathematics:'prioritise Mathematics chapters', weakest:'prioritise chapters that are at the earliest stage (most behind)', mains:'focus on getting chapters to Mains PYQ coverage', advanced:'focus on getting chapters to Advance PYQ coverage' }[priority];
+  const stageDesc    = stageGoal === 'next' ? 'move each chapter to its NEXT stage (e.g. Theory → Examples)' : `cover the "${stageGoal}" stage for selected chapters`;
+
+  // Timetable-aware mode
+  let scheduleContext = '';
+  let effectiveHours = hours;
+  if (useTt && ttCat) {
+    const sched = getTtScheduleForCat(ttCat);
+    if (sched.days.length) {
+      effectiveHours = parseFloat((sched.totalMins / 60).toFixed(1));
+      const schedLines = sched.days.map(d =>
+        `  ${d.day}: ` + d.slots.map(s => `${s.start}–${s.end} (${s.mins}min)`).join(', ')
+      ).join('\n');
+      scheduleContext = `\n\nTIMETABLE SCHEDULE (category: "${ttCat}"):\nThe student has fixed weekly study windows for this category:\n${schedLines}\nTotal: ${effectiveHours}h per week\n\nIMPORTANT: Build the plan specifically around these time windows. For each task, specify which day and time slot it fits into (e.g. "Monday 6:00 AM – 7:30 AM"). Do NOT recommend studying outside these windows.`;
+    }
+  }
+
+  const prompt = `You are an expert JEE 2026 study planner AI.\n\nThe student has ${effectiveHours} hours available. Their backlog has ${totalBehind} incomplete chapters.\n\nSTUDENT'S BACKLOG (up to 60 chapters shown):\n${chapterSummary}\n\nINSTRUCTIONS:\n- Priority: ${priorityDesc}\n- Target: ${stageDesc}\n- Total time: ${effectiveHours} hours (${Math.round(effectiveHours*60)} minutes)\n- Create a realistic plan fitting within ${effectiveHours} hours\n- Assign specific time blocks in minutes per task\n- Choose 4-8 tasks maximum\n- Time estimates: Theory=45-60min, Examples=30-45min, Exercise=60-90min, Mains PYQ=60-90min, Advance PYQ=90-120min\n- Include a short motivational tip for each task${scheduleContext}\n\nRespond ONLY with valid JSON array (no markdown, no explanation):\n[\n  {\n    "taskNumber": 1,\n    "chapterName": "chapter name",\n    "subject": "Physics/Chemistry/Mathematics",\n    "unit": "unit name",\n    "class": "11 or 12",\n    "currentStage": "current stage",\n    "targetStage": "stage to complete",\n    "timeMinutes": 60,\n    "scheduledSlot": "e.g. Monday 6:00 AM – 7:00 AM (or leave blank if no timetable used)",\n    "tip": "short tip",\n    "priority": "high/medium/low"\n  }\n]`;
+
+  btn.disabled   = true;
+  btn.innerHTML  = `<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 0.8s linear infinite"></div> Generating...`;
+  output.style.display = 'block';
+  const loadMsg = useTt && ttCat
+    ? `🤖 AI is reading your <strong>${escHtml(ttCat)}</strong> timetable slots and building a schedule…`
+    : `🤖 AI is analysing your backlog…`;
+  output.innerHTML = `<div class="ai-loading-state"><div class="ai-loading-ring"></div><div class="ai-loading-text">${loadMsg}</div><div class="ai-loading-sub">Scanning ${totalBehind} chapters · Building optimal ${effectiveHours}h plan</div></div>`;
+
+  try {
+    const _orKey = localStorage.getItem('openrouter_api_key') || '';
+    if (!_orKey) {
+      btn.disabled  = false;
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Generate Plan';
+      output.style.display = 'none';
+      if (typeof openAISettings === 'function') openAISettings();
+      return;
+    }
+
+    const _orModel   = localStorage.getItem('openrouter_model') || 'google/gemini-2.0-flash-001';
+    const _orPayload = { model: _orModel, max_tokens: 1500, messages: [{ role: 'user', content: prompt }] };
+
+    let response;
+    try {
+      response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _orKey },
+        body:    JSON.stringify(_orPayload)
+      });
+    } catch (netErr) {
+      throw new Error('Failed to reach OpenRouter.\n\n👉 Fix: Go to openrouter.ai → your account → Settings → "Allowed HTTP Referers" → add your site URL. Then try again.');
+    }
+
+    if (!response.ok) {
+      let errMsg = '';
+      try { const errData = await response.json(); errMsg = errData.error?.message || errData.message || ''; } catch(e) {}
+      throw new Error(`OpenRouter error ${response.status}: ${errMsg || response.statusText}. ${response.status===401?'Check your API key.':response.status===429?'Rate limit hit — wait and retry.':response.status===402?'Add credits at openrouter.ai/credits.':''}`);
+    }
+
+    const data    = await response.json();
+    if (data.error) throw new Error('OpenRouter: ' + (data.error.message || JSON.stringify(data.error)));
+    const rawText = data.choices?.[0]?.message?.content || '';
+
+    let tasks;
+    try { const cleaned = rawText.replace(/```json|```/g, '').trim(); tasks = JSON.parse(cleaned); }
+    catch(e) { throw new Error('AI returned unexpected format. Please try again.'); }
+    if (!Array.isArray(tasks) || tasks.length === 0) throw new Error('No tasks returned. Try adjusting your hours or priority.');
+
+    const totalMins      = tasks.reduce((a, t) => a + (t.timeMinutes || 0), 0);
+    const stageColors    = { 'Theory':{bg:'rgba(59,130,246,0.15)',border:'rgba(59,130,246,0.3)',text:'#60a5fa'}, 'Examples':{bg:'rgba(99,102,241,0.15)',border:'rgba(99,102,241,0.3)',text:'#818cf8'}, 'Exercise':{bg:'rgba(16,185,129,0.15)',border:'rgba(16,185,129,0.3)',text:'#34d399'}, 'Mains PYQ':{bg:'rgba(245,158,11,0.15)',border:'rgba(245,158,11,0.3)',text:'#fbbf24'}, 'Advance PYQ':{bg:'rgba(239,68,68,0.15)',border:'rgba(239,68,68,0.3)',text:'#f87171'} };
+    const subjectColors  = { Physics:'#60a5fa', Chemistry:'#34d399', Mathematics:'#f59e0b' };
+    const priorityColors = { high:'#ef4444', medium:'#f59e0b', low:'#94a3b8' };
+
+    let html = `<div class="ai-plan-header">
+      <div class="ai-plan-title">✅ Your ${effectiveHours}h Study Plan<span class="ai-badge-large">AI</span></div>
+      <div class="ai-plan-meta">${tasks.length} tasks · ${totalMins} min total · ${useTt && ttCat ? `📅 Scheduled by <strong>${escHtml(ttCat)}</strong> timetable` : 'Generated by AI'}</div>
+    </div>
+    <div class="ai-total-bar">
+      <div>
+        <div style="font-size:0.68rem;color:var(--text-2);font-weight:800;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px">Time Allocation</div>
+        <div style="display:flex;height:8px;border-radius:6px;overflow:hidden;width:300px;background:rgba(255,255,255,0.06);margin-top:6px;">
+          ${tasks.map(t => { const c = stageColors[t.targetStage] || stageColors['Theory']; const pct = ((t.timeMinutes/totalMins)*100).toFixed(1); return `<div style="width:${pct}%;background:${c.text};opacity:0.8;" title="${t.chapterName}: ${t.timeMinutes}min"></div>`; }).join('')}
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="ai-total-label">Total study time</div>
+        <div class="ai-total-val">${Math.floor(totalMins/60)}h ${totalMins%60}m</div>
+      </div>
+    </div>`;
+
+    tasks.forEach((t, i) => {
+      const sc      = stageColors[t.targetStage] || stageColors['Theory'];
+      const subColor = subjectColors[t.subject] || '#94a3b8';
+      const pColor   = priorityColors[t.priority] || '#94a3b8';
+      const slotBadge = t.scheduledSlot ? `<div style="margin-top:6px;font-size:0.68rem;font-weight:700;color:var(--accent);background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);border-radius:7px;padding:3px 9px;display:inline-block;">📅 ${escHtml(t.scheduledSlot)}</div>` : '';
+      html += `<div class="ai-task-card" style="animation-delay:${i*0.07}s">
+        <div class="ai-task-header">
+          <div class="ai-task-num">${t.taskNumber || i+1}</div>
+          <div class="ai-task-info">
+            <div class="ai-task-name">${t.chapterName}</div>
+            <div class="ai-task-sub"><span style="color:${subColor};font-weight:700">${t.subject}</span> &nbsp;·&nbsp; Class ${t.class} &nbsp;·&nbsp; ${t.unit}</div>
+          </div>
+          <div class="ai-task-time">⏱ ${t.timeMinutes} min</div>
+        </div>
+        <div class="ai-task-body">
+          <div class="ai-task-desc">${t.tip || ''}${slotBadge}</div>
+          <div class="ai-task-stages">
+            <span class="ai-stage-chip" style="background:rgba(100,116,139,0.15);color:#94a3b8;border:1px solid rgba(100,116,139,0.25)">From: ${t.currentStage}</span>
+            <span style="color:var(--text-2);font-size:0.7rem;align-self:center">→</span>
+            <span class="ai-stage-chip" style="background:${sc.bg};color:${sc.text};border:1px solid ${sc.border}">Target: ${t.targetStage}</span>
+            <span class="ai-stage-chip" style="background:${pColor}18;color:${pColor};border:1px solid ${pColor}33;margin-left:auto">${(t.priority||'MEDIUM').toUpperCase()} PRIORITY</span>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    html += `<div style="text-align:center;padding:16px;font-size:0.72rem;color:var(--text-2)">🤖 Plan generated by OpenRouter AI based on your actual progress data</div>`;
+    output.innerHTML = html;
+
+  } catch(err) {
+    console.error(err);
+    output.innerHTML = `<div class="ai-error-box">⚠️ <strong>Couldn't generate plan:</strong> ${err.message || 'Unknown error. Check your connection and try again.'}</div>`;
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Generate Plan';
+  }
+}
+
+/* ══════════════════════════════════════════
+   AI SETTINGS MODAL — KEY & MODEL
+══════════════════════════════════════════ */
+function openAISettings() {
+  const modal = document.getElementById('ai-settings-modal');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  const saved = localStorage.getItem('openrouter_api_key') || '';
+  const inp   = document.getElementById('ai-key-input');
+  if (inp) { inp.value = saved; inp.style.borderColor = saved ? '#10b981' : 'rgba(255,255,255,0.1)'; }
+  const modelSel = document.getElementById('ai-model-select');
+  if (modelSel) { const savedModel = localStorage.getItem('openrouter_model'); if (savedModel) modelSel.value = savedModel; }
+  const status = document.getElementById('ai-key-status');
+  if (status) status.innerHTML = saved ? '<span style="color:#10b981;">✓ API key is set</span>' : '<span style="color:#f59e0b;">No key set yet</span>';
+  const warn = document.getElementById('ai-local-warning');
+  if (warn) warn.style.display = location.protocol === 'file:' ? 'block' : 'none';
+}
+
+function closeAISettings() {
+  const modal = document.getElementById('ai-settings-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveAISettings() {
+  const key   = document.getElementById('ai-key-input').value.trim();
+  const model = document.getElementById('ai-model-select').value;
+  const status = document.getElementById('ai-key-status');
+  if (!key) { if (status) status.innerHTML = '<span style="color:#ef4444;">Please enter a key first.</span>'; return; }
+  localStorage.setItem('openrouter_api_key', key);
+  localStorage.setItem('openrouter_model', model);
+  if (status) status.innerHTML = '<span style="color:#10b981;">✓ Saved! You can now use the AI Planner.</span>';
+  const btn = document.querySelector('.ai-key-btn');
+  if (btn) btn.classList.add('key-set');
+  setTimeout(closeAISettings, 1200);
+}
+
+function clearAISettings() {
+  localStorage.removeItem('openrouter_api_key');
+  localStorage.removeItem('openrouter_model');
+  const inp    = document.getElementById('ai-key-input');
+  const status = document.getElementById('ai-key-status');
+  if (inp)    inp.value = '';
+  if (status) status.innerHTML = '<span style="color:#94a3b8;">Key cleared.</span>';
+  const btn = document.querySelector('.ai-key-btn');
+  if (btn) btn.classList.remove('key-set');
+}
+
+// Mark API key button as set if key already saved
+(function() {
+  if (localStorage.getItem('openrouter_api_key')) {
+    setTimeout(() => { const btn = document.querySelector('.ai-key-btn'); if (btn) btn.classList.add('key-set'); }, 100);
+  }
+})();
+
+// Close AI settings modal on backdrop click
+document.addEventListener('click', e => {
+  const modal = document.getElementById('ai-settings-modal');
+  if (modal && e.target === modal) closeAISettings();
+});
+
+/* ══════════════════════════════════════════
+   SYLLABUS TRACKER — FULL ENGINE
+   All functions prefixed syl* to avoid
+   conflicts with timetable/calendar code.
+══════════════════════════════════════════ */
+
+// ── State ──
+var sylCurTab = 'physics';
+var sylCurCls = '11';
+var sylOpenUnits = new Set();
+
+// ── Subtopics data ──
+const SUBTOPICS = {
+  'units-and-measurements':['Physical Quantities & Units','SI Units & Dimensions','Errors & Accuracy','Significant Figures','Dimensional Analysis'],
+  'motion-in-a-straight-line':['Distance & Displacement','Speed & Velocity','Acceleration','Equations of Motion','Motion under Gravity','Relative Motion (1D)'],
+  'motion-in-a-plane':['Vectors & Scalars','Addition & Resolution of Vectors','Projectile Motion','Circular Motion (Uniform)','Relative Velocity (2D)'],
+  'laws-of-motion':["Newton's Laws",'Free Body Diagrams','Friction (Static & Kinetic)','Pseudo Force & Non-inertial Frames','Pulley Systems','Connected Bodies'],
+  'work-power-and-energy':['Work by Constant & Variable Force','Work-Energy Theorem','Kinetic & Potential Energy','Conservation of Energy','Power','Collisions (Elastic & Inelastic)'],
+  'rotational-motion':['Centre of Mass','Linear Momentum & Impulse','Collisions','Torque & Moment of Inertia','Angular Momentum','Rolling Motion'],
+  'gravitation':["Kepler's Laws","Newton's Law of Gravitation",'Gravitational Field & Potential','Satellites & Orbital Velocity','Escape Velocity'],
+  'properties-of-solids':['Stress & Strain',"Young's Modulus",'Bulk & Rigidity Modulus','Elastic Potential Energy',"Poisson's Ratio"],
+  'properties-of-matter':['Pressure & Buoyancy',"Archimedes' Principle","Bernoulli's Equation","Viscosity & Stokes' Law",'Surface Tension & Capillarity'],
+  'thermal-properties-of-matter':['Temperature & Heat','Thermal Expansion','Specific Heat Capacity','Calorimetry','Heat Transfer (Conduction, Convection, Radiation)',"Newton's Law of Cooling"],
+  'thermodynamics':['Zeroth & First Law','Work done in Thermodynamic Processes','Second Law & Entropy','Carnot Engine','Heat Engines & Refrigerators'],
+  'kinetic-theory-of-gases':['Ideal Gas Equation','Kinetic Theory Assumptions','RMS Speed & Kinetic Energy','Degrees of Freedom','Mean Free Path'],
+  'oscillations':['SHM: Displacement, Velocity, Acceleration','Energy in SHM','Spring-Mass System','Simple & Physical Pendulum','Damped & Forced Oscillations'],
+  'waves':['Wave Equation & Speed','Superposition & Interference','Standing Waves','Beats','Doppler Effect'],
+  'electrostatics':["Coulomb's Law",'Electric Field (Point & Extended)',"Gauss's Law & Applications",'Electric Flux','Conductors & Insulators'],
+  'electrostatic-potential-and-capacitance':['Electric Potential & Potential Difference','Equipotential Surfaces','Potential Energy of System','Capacitors & Capacitance','Energy Stored in Capacitor','Dielectrics'],
+  'current-electricity':["Ohm's Law & Resistance",'Resistivity & Conductivity',"Kirchhoff's Laws",'Wheatstone Bridge','RC Circuits','Electrical Power & Energy'],
+  'magnetic-effect-of-current':['Biot-Savart Law',"Ampere's Law",'Force on Moving Charge (Lorentz)','Force on Current-Carrying Conductor','Cyclotron','Solenoid & Toroid'],
+  'magnetism-and-matter':['Bar Magnet & Magnetic Dipole',"Earth's Magnetism",'Diamagnetic, Paramagnetic, Ferromagnetic'],
+  'electromagnetic-induction':["Faraday's & Lenz's Laws",'Motional EMF','Self & Mutual Inductance','Energy Stored in Inductor','AC Generator'],
+  'alternating-current':['AC Quantities (Peak, RMS)','Phasors','R, L, C in AC Circuits','Series LCR & Resonance','Power Factor','Transformer'],
+  'electromagnetic-waves':["Maxwell's Equations (conceptual)",'EM Spectrum','Properties of EM Waves'],
+  'ray-optics':['Reflection & Mirror Formula',"Refraction & Snell's Law",'Total Internal Reflection','Prism & Dispersion','Lenses & Lens Formula','Optical Instruments'],
+  'wave-optics':["Huygens' Principle","Young's Double Slit Experiment",'Interference','Diffraction','Polarisation'],
+  'dual-nature-of-radiation-and-matter':['Photoelectric Effect',"Einstein's Equation","de Broglie Wavelength",'Davisson-Germer Experiment'],
+  'atoms':["Rutherford's Model","Bohr's Model",'Spectral Series','Hydrogen Spectrum'],
+  'nuclei':['Nuclear Size & Density','Binding Energy','Radioactivity (Alpha, Beta, Gamma)','Nuclear Fission & Fusion','Half-Life & Decay Law'],
+  'semiconductor':['Energy Bands','p-n Junction Diode','Rectifier Circuits','Zener Diode','Transistor (CB, CE)','Logic Gates'],
+  'some-basic-concepts-of-chemistry':['Mole Concept','Stoichiometry','Empirical & Molecular Formula','Limiting Reagent','Concentration Terms'],
+  'structure-of-atom':['Atomic Models (Bohr)','Quantum Numbers','Orbitals & Shapes','Aufbau, Hund\'s, Pauli','Electronic Configuration'],
+  'classification-of-elements-and-periodicity-in-properties':['Periodic Table History','s, p, d, f Blocks','Atomic Radius & Ionisation Energy','Electron Affinity','Electronegativity & Metallic Character'],
+  'chemical-bonding-and-molecular-structure':['Ionic & Covalent Bonding','Lewis Structures','VSEPR Theory','Polarity & Dipole Moment','Hybridisation','MO Theory (basics)','Hydrogen Bonding'],
+  'chemical-thermodynamics':['System & Surroundings',"Enthalpy & Hess's Law",'Bond Enthalpy','Entropy & Spontaneity','Gibbs Free Energy'],
+  'chemical-equilibrium':['Law of Mass Action & Kc, Kp',"Le Chatelier's Principle",'Ionic Equilibrium','pH & Buffer Solutions','Solubility Product'],
+  'redox-reactions':['Oxidation States','Half-Reaction Method','Balancing Redox (Acidic/Basic)'],
+  'p-block-elements':['Group 13 (Boron Family)','Group 14 (Carbon Family)','Group 15 (Nitrogen Family)','Group 16 (Oxygen Family)','Group 17 (Halogens)','Group 18 (Noble Gases)'],
+  'basics-of-organic-chemistry':['Hybridisation & Shapes','IUPAC Nomenclature','Isomerism','Inductive & Resonance Effects','Reaction Intermediates'],
+  'hydrocarbons':['Alkanes (Conformations, Reactions)','Alkenes (Addition, Markovnikov)','Alkynes','Aromatic Hydrocarbons (Benzene, EAS)'],
+  'solutions':["Types of Solutions","Raoult's Law",'Colligative Properties',"Van't Hoff Factor"],
+  'electrochemistry':['Electrochemical Cells','Nernst Equation','Electrolysis',"Kohlrausch's Law",'Batteries & Fuel Cells'],
+  'chemical-kinetics':['Rate of Reaction','Rate Law & Order','Integrated Rate Equations','Arrhenius Equation','Mechanisms & Catalysis'],
+  'd-and-f-block-elements':['General Properties of d-block','Important Compounds (KMnO4, K2Cr2O7)','Lanthanides & Actinides'],
+  'coordination-compounds':['Ligands & Coordination Number','IUPAC Nomenclature','Isomerism','Bonding (VBT & CFT)','Stability Constants'],
+  'haloalkanes-and-haloarenes':['Nomenclature','SN1 & SN2 Mechanisms','Elimination Reactions','Polyhalogen Compounds'],
+  'alcohols-phenols-and-ethers':['Preparation & Properties of Alcohols','Phenols (Acidity, Reactions)','Ethers (Preparation, Reactions)'],
+  'aldehydes-ketones-and-carboxylic-acids':['Nucleophilic Addition (Aldehydes/Ketones)','Aldol Condensation','Cannizzaro Reaction','Carboxylic Acid Derivatives'],
+  'amines':['Classification & Nomenclature','Preparation & Properties','Basicity of Amines','Diazonium Salts'],
+  'biomolecules':['Carbohydrates (Mono, Di, Poly)','Proteins & Amino Acids','Enzymes','Nucleic Acids (DNA, RNA)','Vitamins & Hormones'],
+  'sets-and-relations':['Sets & Operations','Venn Diagrams','Relations & Functions','Domain & Range','Types of Functions'],
+  'complex-numbers':['Algebra of Complex Numbers','Argument & Modulus','Polar Form',"De Moivre's Theorem",'nth Roots of Unity'],
+  'quadratic-equation-and-inequalities':['Nature of Roots (Discriminant)','Sum & Product of Roots','Quadratic Inequalities','Location of Roots','Common Roots'],
+  'permutations-and-combinations':['Fundamental Counting Principle','Permutations (with/without repetition)','Combinations','Circular Arrangements','Division into Groups'],
+  'binomial-theorem':['Binomial Expansion','General & Middle Term','Properties of Binomial Coefficients','Multinomial (basic)'],
+  'sequences-and-series':['AP: nth Term & Sum','GP: nth Term & Sum','Sum to Infinity of GP','AGP','Special Series (Σr, Σr²)'],
+  'straight-lines-and-pair-of-straight-lines':['Distance & Section Formulae','Slope & Equations of Line','Angle between Lines','Pair of Straight Lines'],
+  'circle':['Standard & General Equation','Tangent & Normal','Chord of Contact','Radical Axis','Family of Circles'],
+  'conic-sections':['Parabola (Standard Forms)','Ellipse (Foci, Eccentricity)','Hyperbola (Asymptotes)','Tangents & Normals','Chord of Contact'],
+  'trigonometric-functions':['Trigonometric Ratios & Identities','Compound Angle Formulae','Multiple & Sub-Multiple Angles','Trigonometric Equations','Properties of Triangles (Sine/Cosine Rule)'],
+  'limits-continuity-and-differentiability':["Limits (Standard Results, L'Hôpital)",'Continuity & Types of Discontinuity','Differentiability','Derivatives (Standard, Chain Rule)','Implicit & Parametric Differentiation'],
+  'applications-of-derivatives':['Tangent & Normal','Monotonicity','Maxima & Minima','Mean Value Theorems','Approximation & Rate of Change'],
+  'indefinite-integration':['Standard Integrals','Substitution Method','Integration by Parts','Partial Fractions','Special Integrals'],
+  'definite-integration':['Definite Integral Properties',"King's Property",'Gamma & Beta Functions (basic)',"Walli's Formula",'Area under Curves'],
+  'differential-equations':['Order & Degree','Variable Separable','Homogeneous Equations','Linear Differential Equations','Applications'],
+  'vector-algebra':['Vector Addition & Scalar Mult','Dot Product & Cross Product','Scalar Triple Product','Vector Triple Product'],
+  '3d-geometry':['Direction Cosines & Ratios','Equation of Line in 3D','Equation of Plane','Distance Formulae','Angle between Line & Plane'],
+  'matrices':['Types of Matrices','Matrix Operations','Transpose & Adjoint','Inverse of Matrix','Elementary Transformations'],
+  'determinants':['Properties of Determinants','Expansion (Cofactors)',"Cramer's Rule",'Area of Triangle'],
+  'probability':['Classical Probability','Conditional Probability',"Bayes' Theorem",'Random Variables & Distributions','Binomial Distribution']
+};
+
+// ── Stage colours & sequence ──
+const SYL_STAGE_COLORS = {
+  'Pending':'rgba(255,255,255,0.06)',
+  'Theory':'#3b82f6',
+  'Examples':'#6366f1',
+  'Exercise':'#10b981',
+  'Mains PYQ':'#f59e0b',
+  'Advance PYQ':'#e879f9'
+};
+const SYL_STAGE_SEQ = ['Pending','Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];
+
+// ── Save helper (shared localStorage key with main app) ──
+function sylSave() {
+  localStorage.setItem('jee_command_v10', JSON.stringify(store));
+  if (window._fbUser && window._fbDb) scheduleSave();
+}
+
+// ── Unit progress bar builder ──
+function sylGetUnitProgress(chapters) {
+  const counts = { Pending:0, Theory:0, Examples:0, Exercise:0, 'Mains PYQ':0, 'Advance PYQ':0 };
+  const MAINS_W = { Theory:0.75, Examples:1, Exercise:1, 'Mains PYQ':2.25 };
+  const ADV_W   = { Theory:0.5,  Examples:0.75, Exercise:0.75, 'Mains PYQ':1, 'Advance PYQ':2 };
+  let totalPts = 0, maxPts = 0;
+  chapters.forEach(ch => {
+    const entry  = store[sylCurTab + '-' + ch.s] || {};
+    const stages = new Set(entry.stages || (entry.stage && entry.stage !== 'Pending' ? [entry.stage] : []));
+    if (stages.size === 0) counts['Pending']++;
+    else stages.forEach(s => { counts[s] = (counts[s] || 0) + 1; });
+    stages.forEach(s => { totalPts += (MAINS_W[s] || 0) + (ADV_W[s] || 0); });
+    maxPts += 10;
+  });
+  const total = chapters.length;
+  const done  = total - counts['Pending'];
+  const pct   = maxPts > 0 ? Math.round((totalPts / maxPts) * 100) : 0;
+  return { counts, total, done, pct };
+}
+
+function sylBuildUnitProgressBar(chapters) {
+  const { counts, total, done, pct } = sylGetUnitProgress(chapters);
+  const pctColor = pct === 100 ? '#10b981' : pct >= 50 ? '#f59e0b' : '#3b82f6';
+  const legendItems = [
+    { label:'Theory',   color:SYL_STAGE_COLORS['Theory'],      count:counts['Theory'] },
+    { label:'Examples', color:SYL_STAGE_COLORS['Examples'],    count:counts['Examples'] },
+    { label:'Exercise', color:SYL_STAGE_COLORS['Exercise'],    count:counts['Exercise'] },
+    { label:'Mains PYQ',color:SYL_STAGE_COLORS['Mains PYQ'],  count:counts['Mains PYQ'] },
+    { label:'Adv PYQ',  color:SYL_STAGE_COLORS['Advance PYQ'],count:counts['Advance PYQ'] }
+  ].filter(l => l.count > 0);
+  const allChecks = SYL_STAGE_SEQ.filter(s => s !== 'Pending').reduce((a, s) => a + counts[s], 0);
+  const barTotal  = Math.max(allChecks, 1);
+  const segs = SYL_STAGE_SEQ.filter(s => s !== 'Pending' && counts[s] > 0).map(s => {
+    const w = ((counts[s] / barTotal) * 100).toFixed(2);
+    return `<div class="syl-unit-progress-seg" style="width:${w}%;background:${SYL_STAGE_COLORS[s]}" title="${s}: ${counts[s]} ch"></div>`;
+  }).join('');
+  const pendSeg = counts['Pending'] > 0
+    ? `<div class="syl-unit-progress-seg" style="width:${((counts['Pending']/total)*100).toFixed(2)}%;background:rgba(255,255,255,0.04)"></div>` : '';
+  const legHtml = legendItems.map(l =>
+    `<span class="syl-unit-progress-legend-item"><span class="syl-upl-dot" style="background:${l.color}"></span>${l.label} (${l.count})</span>`
+  ).join('');
+  return `<div class="syl-unit-progress-wrap">
+    <div class="syl-unit-progress-header">
+      <span class="syl-unit-progress-label">Progress</span>
+      <div class="syl-unit-progress-right">
+        <div class="syl-unit-progress-legend">${legHtml}</div>
+        <span class="syl-unit-progress-pct" style="color:${pctColor}">${pct}%</span>
+      </div>
+    </div>
+    <div class="syl-unit-progress-bar">${segs}${pendSeg}</div>
+    <div class="syl-unit-ch-count">${done} of ${total} chapters started</div>
+  </div>`;
+}
+
+// ── Main render ──
+function sylRender() {
+  const containerId = sylCurCls === '12' ? 'syl-view-12' : 'syl-view-11';
+  const container   = document.getElementById(containerId);
+  if (!container) return;
+  const units = DATA[sylCurTab]?.[sylCurCls];
+  if (!units) return;
+  container.innerHTML = '';
+
+  for (const [uName, chapters] of Object.entries(units)) {
+    const uId   = `${sylCurTab}-${sylCurCls}-${uName}`;
+    const isOpen = sylOpenUnits.has(uId);
+    const card   = document.createElement('div');
+    card.className = 'syl-unit-card' + (isOpen ? ' open' : '');
+
+    const chapsHtml = chapters.map(ch => {
+      const id       = `${sylCurTab}-${ch.s}`;
+      const heat     = sylGetHeatClass(id);
+      const revLabel = sylGetRevLabel(id);
+      const subs     = SUBTOPICS[ch.s] || [];
+      const doneSubs = subs.filter(t => store[id]?.subtopics?.[t]).length;
+      const subjectName = sylCurTab.charAt(0).toUpperCase() + sylCurTab.slice(1);
+
+      const stageBtns = ['Theory','Examples','Exercise','Mains PYQ','Advance PYQ'].map(s => {
+        const stages   = store[id]?.stages || [];
+        const isActive = stages.includes(s) || (stages.length === 0 && store[id]?.stage === s && s !== 'Pending');
+        return `<button class="syl-stage-btn${isActive ? ' active' : ''}" data-s="${s}"
+          onclick="sylSetStage('${id}','${s.replace(/'/g,"\\'")}',event)"
+          title="${s} · Shift+click to select all up to this stage">${s}</button>`;
+      }).join('');
+
+      const subsHtml = subs.length ? (() => {
+        const rows = subs.map(t => {
+          const checked = !!(store[id]?.subtopics?.[t]);
+          const tSafe   = t.replace(/'/g, "\\'");
+          const qUrl    = 'https://chatgpt.com/?q=' + encodeURIComponent('5 most important JEE questions on subtopic "' + t + '" from ' + ch.n + ' ' + subjectName);
+          const fUrl    = 'https://chatgpt.com/?q=' + encodeURIComponent('All formulas for subtopic "' + t + '" from ' + ch.n + ' ' + subjectName + ' JEE');
+          return `<div class="syl-subtopic-item${checked ? ' done' : ''}">
+            <input type="checkbox" ${checked ? 'checked' : ''} onchange="sylSetSubtopic('${id}','${tSafe}',this)">
+            <span class="syl-subtopic-label">${escHtml(t)}</span>
+            <div class="syl-st-actions">
+              <a class="syl-st-btn st-q" href="${qUrl}" target="_blank" title="Questions">❓</a>
+              <a class="syl-st-btn st-f" href="${fUrl}" target="_blank" title="Formulas">📝</a>
+            </div>
+          </div>`;
+        }).join('');
+        return `<div>
+          <button id="stb-${id}" class="syl-subtopics-toggle" onclick="sylToggleSubtopics('${id}')">
+            <span>📋 Subtopics</span>
+            <span class="syl-st-progress" id="stc-${id}">${doneSubs}/${subs.length}</span>
+            <span class="st-arrow">▾</span>
+          </button>
+          <div id="stl-${id}" class="syl-subtopics-list">${rows}</div>
+        </div>`;
+      })() : '';
+
+      const pyqUrl   = `https://questions.examside.com/past-years/jee/jee-main/${sylCurTab === 'mathematics' ? 'maths' : sylCurTab}/${ch.s}`;
+      const frmUrl   = 'https://chatgpt.com/?q=' + encodeURIComponent('JEE 2027 formula sheet for ' + ch.n + ' in ' + subjectName + '. List every important formula with variable definitions, units, and note which appear most in JEE Mains & Advanced.');
+      const qstUrl   = 'https://chatgpt.com/?q=' + encodeURIComponent('10 most important JEE-level questions from ' + ch.n + ' in ' + subjectName + ', covering all major subtopics.');
+
+      return `<div class="syl-chapter-item ${heat}">
+        <div>
+          <div class="syl-ch-title">${escHtml(ch.n)}</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:4px">
+            <div class="syl-note-preview" onclick="sylEditNote('${id}')" title="Click to edit note">${store[id]?.note ? '📝 ' + escHtml(store[id].note) : '📝 Note'}</div>
+            <button class="syl-rev-badge ${heat.replace('heat-','rev-')}" onclick="sylMarkRevised('${id}')" title="Mark revised today">${revLabel}</button>
+          </div>
+        </div>
+        <div>
+          <div class="syl-stage-box">${stageBtns}</div>
+          <div class="syl-action-row">
+            <a href="${pyqUrl}" target="_blank" class="syl-action-btn">PYQs</a>
+            <a href="${frmUrl}" target="_blank" class="syl-action-btn" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.35);color:#f59e0b;">📝 Formulae</a>
+            <a href="${qstUrl}" target="_blank" class="syl-action-btn" style="background:rgba(99,102,241,0.12);border-color:rgba(99,102,241,0.35);color:#818cf8;">❓ Questions</a>
+          </div>
+          ${subsHtml}
+        </div>
+      </div>`;
+    }).join('');
+
+    card.innerHTML = `
+      <button class="syl-unit-trigger" onclick="sylToggleUnit('${uId}')">
+        <span>${escHtml(uName)}</span>
+        <span style="color:var(--accent)">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      ${sylBuildUnitProgressBar(chapters)}
+      <div class="syl-unit-content">${chapsHtml}</div>`;
+    container.appendChild(card);
+  }
+
+  // Bottom stats / heat-legend bar
+  let bottomBar = container.querySelector('.syl-bottom-stats');
+  if (!bottomBar) {
+    bottomBar = document.createElement('div');
+    bottomBar.className = 'syl-bottom-stats';
+    bottomBar.style.cssText = 'background:var(--surface-1);border:1px solid var(--border);border-radius:18px;padding:16px 22px;margin-top:2rem;';
+  }
+  const subLabel = sylCurTab.charAt(0).toUpperCase() + sylCurTab.slice(1);
+  bottomBar.innerHTML = `
+    <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-3);margin-bottom:14px;">📊 ${subLabel} · Class ${sylCurCls} · Progress Breakdown</div>
+    <div class="syl-psb-grid">
+      <div>
+        <div class="syl-psb-section-title" style="color:#6366f1">📝 Mains · ${subLabel} Cl.${sylCurCls}</div>
+        <div class="syl-psb-pts-row">
+          <span class="syl-psb-pts-val" id="syl-psb-mains-pts" style="color:#6366f1">0</span>
+          <span class="syl-psb-pts-max">/ <span id="syl-psb-mains-max">—</span> pts</span>
+          <span class="syl-psb-pct" id="syl-psb-mains-pct" style="color:#6366f1">0%</span>
+        </div>
+        <div class="syl-psb-bar-wrap"><div class="syl-psb-bar-fill" id="syl-psb-mains-bar" style="background:#6366f1;width:0%"></div></div>
+        <div class="syl-psb-weights-row">
+          <span class="syl-psb-weight-chip" style="background:rgba(59,130,246,0.12);color:#60a5fa">Theory ×0.75</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(99,102,241,0.12);color:#818cf8">Examples ×1</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(16,185,129,0.12);color:#34d399">Exercise ×1</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(245,158,11,0.12);color:#fbbf24">Mains PYQ ×2.25</span>
+        </div>
+      </div>
+      <div>
+        <div class="syl-psb-section-title" style="color:#f59e0b">🏆 Advanced · ${subLabel} Cl.${sylCurCls}</div>
+        <div class="syl-psb-pts-row">
+          <span class="syl-psb-pts-val" id="syl-psb-adv-pts" style="color:#f59e0b">0</span>
+          <span class="syl-psb-pts-max">/ <span id="syl-psb-adv-max">—</span> pts</span>
+          <span class="syl-psb-pct" id="syl-psb-adv-pct" style="color:#f59e0b">0%</span>
+        </div>
+        <div class="syl-psb-bar-wrap"><div class="syl-psb-bar-fill" id="syl-psb-adv-bar" style="background:#f59e0b;width:0%"></div></div>
+        <div class="syl-psb-weights-row">
+          <span class="syl-psb-weight-chip" style="background:rgba(59,130,246,0.12);color:#60a5fa">Theory ×0.5</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(99,102,241,0.12);color:#818cf8">Examples ×0.75</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(16,185,129,0.12);color:#34d399">Exercise ×0.75</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(245,158,11,0.12);color:#fbbf24">Mains PYQ ×1</span>
+          <span class="syl-psb-weight-chip" style="background:rgba(232,121,249,0.12);color:#f0abfc">Adv PYQ ×2</span>
+        </div>
+      </div>
+    </div>
+    <div class="syl-heat-legend">
+      <span style="font-weight:800;color:var(--text);margin-right:4px">🔥 Revision Heat:</span>
+      <span><span class="syl-hm-dot" style="background:#10b981"></span>Revised today</span>
+      <span><span class="syl-hm-dot" style="background:#f59e0b"></span>1–7 days ago</span>
+      <span><span class="syl-hm-dot" style="background:#ef4444"></span>8–21 days (cold)</span>
+      <span><span class="syl-hm-dot" style="background:#334155"></span>Never / >21 days</span>
+      <span style="margin-left:auto;font-size:0.65rem;color:var(--text-3)">Click heat badge to mark revised</span>
+    </div>`;
+  container.appendChild(bottomBar);
+  sylUpdatePageStats();
+}
+
+// ── Tab / class switchers ──
+function sylSetClass(cls, btn) {
+  sylCurCls = cls;
+  document.getElementById('syl-btn11').classList.toggle('active', cls === '11');
+  document.getElementById('syl-btn12').classList.toggle('active', cls === '12');
+  document.getElementById('syl-class11-view').style.display = cls === '11' ? '' : 'none';
+  document.getElementById('syl-class12-view').style.display = cls === '12' ? '' : 'none';
+  sylRender();
+}
+
+function sylSetTab(cls, subject, btn) {
+  sylCurCls = cls;
+  sylCurTab = subject;
+  const subtabsId = cls === '11' ? 'syl11-subtabs' : 'syl12-subtabs';
+  document.querySelectorAll('#' + subtabsId + ' .syl-subtab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  sylRender();
+}
+
+// ── Interactive functions ──
+function sylToggleUnit(id) {
+  if (sylOpenUnits.has(id)) sylOpenUnits.delete(id); else sylOpenUnits.add(id);
+  sylRender();
+}
+
+function sylSetStage(id, s, event) {
+  if (!store[id]) store[id] = {};
+  const ORDER = ['Theory','Examples','Exercise','Mains PYQ','Advance PYQ'];
+  const cur   = new Set(store[id].stages || []);
+  if (event && event.shiftKey) {
+    const idx    = ORDER.indexOf(s);
+    const upto   = ORDER.slice(0, idx + 1);
+    const allOn  = upto.every(x => cur.has(x));
+    if (allOn) upto.forEach(x => cur.delete(x));
+    else       upto.forEach(x => cur.add(x));
+  } else {
+    if (cur.has(s)) cur.delete(s); else cur.add(s);
+  }
+  store[id].stages = [...cur];
+  store[id].stage  = ORDER.filter(x => cur.has(x)).pop() || 'Pending';
+  sylSave(); sylRender();
+}
+
+function sylToggleSubtopics(id) {
+  const list = document.getElementById('stl-' + id);
+  const btn  = document.getElementById('stb-' + id);
+  if (!list || !btn) return;
+  const open = list.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+
+function sylSetSubtopic(id, topic, cb) {
+  if (!store[id]) store[id] = {};
+  if (!store[id].subtopics) store[id].subtopics = {};
+  store[id].subtopics[topic] = cb.checked;
+  // Find slug from id: e.g. "physics-units-and-measurements" → "units-and-measurements"
+  const slug = id.replace(/^[^-]+-/, '');
+  const allSubs = SUBTOPICS[slug] || [];
+  const done    = allSubs.filter(t => store[id].subtopics[t]).length;
+  const badge   = document.getElementById('stc-' + id);
+  if (badge) badge.textContent = done + '/' + allSubs.length;
+  const item = cb.closest('.syl-subtopic-item');
+  if (item) item.classList.toggle('done', cb.checked);
+  sylSave();
+}
+
+function sylEditNote(id) {
+  const val = prompt('Chapter Note/Formula:', store[id]?.note || '');
+  if (val !== null) { store[id] = { ...store[id], note: val }; sylSave(); sylRender(); }
+}
+
+function sylMarkRevised(id) {
+  store[id] = { ...store[id], lastRevised: Date.now() };
+  sylSave(); sylRender();
+}
+
+function sylDaysSince(id) {
+  const ts = store[id]?.lastRevised;
+  if (!ts) return null;
+  return Math.floor((Date.now() - ts) / 86400000);
+}
+
+function sylGetHeatClass(id) {
+  const d = sylDaysSince(id);
+  if (d === null) return 'heat-never';
+  if (d === 0)   return 'heat-fresh';
+  if (d <= 7)    return 'heat-warm';
+  return 'heat-cold';
+}
+
+function sylGetRevLabel(id) {
+  const d = sylDaysSince(id);
+  if (d === null) return '🔥 Never revised — click!';
+  if (d === 0)   return '✅ Revised today';
+  if (d === 1)   return '☀️ 1 day ago';
+  if (d <= 7)    return `☀️ ${d} days ago`;
+  return `❄️ ${d} days ago — revise now!`;
+}
+
+function sylUpdatePageStats() {
+  const MAINS_W = { Theory:0.75, Examples:1, Exercise:1, 'Mains PYQ':2.25 };
+  const ADV_W   = { Theory:0.5,  Examples:0.75, Exercise:0.75, 'Mains PYQ':1, 'Advance PYQ':2 };
+  let mPts=0, aPts=0, mMax=0, aMax=0;
+  const units = DATA[sylCurTab]?.[sylCurCls];
+  if (!units) return;
+  Object.values(units).forEach(chs => {
+    chs.forEach(ch => {
+      const entry  = store[`${sylCurTab}-${ch.s}`] || {};
+      const stages = new Set(entry.stages || (entry.stage && entry.stage !== 'Pending' ? [entry.stage] : []));
+      stages.forEach(s => { mPts += MAINS_W[s]||0; aPts += ADV_W[s]||0; });
+      mMax += 5; aMax += 5;
+    });
+  });
+  const mPct = mMax > 0 ? Math.round((mPts/mMax)*100) : 0;
+  const aPct = aMax > 0 ? Math.round((aPts/aMax)*100) : 0;
+  const el = id => document.getElementById(id);
+  if (el('syl-psb-mains-pts')) el('syl-psb-mains-pts').innerText = Math.round(mPts*10)/10;
+  if (el('syl-psb-mains-max')) el('syl-psb-mains-max').innerText = mMax;
+  if (el('syl-psb-mains-pct')) el('syl-psb-mains-pct').innerText = mPct + '%';
+  if (el('syl-psb-mains-bar')) el('syl-psb-mains-bar').style.width = mPct + '%';
+  if (el('syl-psb-adv-pts'))   el('syl-psb-adv-pts').innerText   = Math.round(aPts*10)/10;
+  if (el('syl-psb-adv-max'))   el('syl-psb-adv-max').innerText   = aMax;
+  if (el('syl-psb-adv-pct'))   el('syl-psb-adv-pct').innerText   = aPct + '%';
+  if (el('syl-psb-adv-bar'))   el('syl-psb-adv-bar').style.width  = aPct + '%';
+}
+
+// Mobile double-tap on stage buttons = Shift+click
+(function() {
+  var _lastTapBtn = null, _lastTapTime = 0;
+  document.addEventListener('touchend', function(e) {
+    var btn = e.target.closest('.syl-stage-btn');
+    if (!btn) return;
+    var now = Date.now();
+    if (_lastTapBtn === btn && now - _lastTapTime < 300) {
+      e.preventDefault();
+      var m = btn.getAttribute('onclick').match(/sylSetStage\('([^']+)'/);
+      if (m) { sylSetStage(m[1], btn.getAttribute('data-s'), { shiftKey: true }); _lastTapBtn = null; }
+    } else { _lastTapBtn = btn; _lastTapTime = now; }
+  }, { passive: false });
+})();
+
+// Init syllabus tracker on page load
+(function() {
+  setTimeout(function() {
+    sylSetTab('11', 'physics', document.getElementById('syl11-phy'));
+  }, 50);
+})();
 
 </script>
 
