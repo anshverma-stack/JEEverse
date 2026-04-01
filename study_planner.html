@@ -382,6 +382,19 @@ body::before {
 .tt-slot-del:hover { background: rgba(239,68,68,0.55); }
 .edit-mode .tt-slot-del { display: flex; }
 
+/* ── Resize handles (edit mode only) ── */
+.tt-resize-handle {
+  display: none; position: absolute;
+  left: 0; right: 0; height: 10px;
+  cursor: ns-resize; z-index: 25;
+  align-items: center; justify-content: center;
+}
+.tt-resize-handle-top { top: 0; border-radius: 7px 7px 0 0; }
+.tt-resize-handle-bottom { bottom: 0; border-radius: 0 0 7px 7px; }
+.tt-resize-grip { width: 28px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.55); pointer-events: none; }
+.edit-mode .tt-resize-handle { display: flex; }
+.edit-mode .tt-slot-block { transition: none !important; }
+
 /* ══════════════════════════════════════════
    SLOT DETAIL PANEL (bottom sheet)
 ══════════════════════════════════════════ */
@@ -653,7 +666,7 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
 
 /* ══════════════════════════════════════════
    AUTH / SYNC UI
-══════════════════════════════════════════ */
+══════b;�═══════════════════════════════════ */
 .auth-btn {
   display: flex; align-items: center; gap: 7px;
   padding: 6px 14px; border-radius: 9px;
@@ -1668,6 +1681,7 @@ let isEditMode = false;
 // selState: rectangular selection across days and hours
 let selState = { active: false, startDay: null, endDay: null, startHour: null, endHour: null };
 let dragState = { dragging: false, startDay: null, startHour: null };
+let resizeDrag = null; // {slotId, edge, startY, origStart, origEnd, day}
 let editingSlotId = null;
 let selSlColor = COLORS[2].hex;
 
@@ -1739,6 +1753,24 @@ function clearAllGoals() {
   saveWeekData(weekData);
   scheduleSave();
   renderTimetable();
+}
+
+/* ══════════════════════════════════════════
+   BLOCK RESIZE (edit mode)
+══════════════════════════════════════════ */
+function startTTResize(e, slotId, edge) {
+  if (!isEditMode) return;
+  const slot = ttSlots.find(s => s.id === slotId);
+  if (!slot) return;
+  resizeDrag = {
+    slotId, edge,
+    startY: e.clientY,
+    origStart: slot.startHour,
+    origEnd: slot.endHour,
+    day: slot.day,
+  };
+  document.body.style.userSelect = 'none';
+  document.body.style.cursor = 'ns-resize';
 }
 
 /* ══════════════════════════════════════════
@@ -1842,10 +1874,22 @@ function renderTimetable() {
 
       const isHalfHour = (slot.endHour - slot.startHour) <= 1;
       block.innerHTML=`
+        <div class="tt-resize-handle tt-resize-handle-top"><div class="tt-resize-grip"></div></div>
         <div class="tt-slot-name">${escHtml(slot.label)}</div>
         ${slot.category ? `<div class="tt-slot-cat">${escHtml(slot.category)}</div>` : ''}
         ${isHalfHour ? '' : `<div class="tt-slot-time">${fmtHour(slot.startHour)} – ${fmtHour(slot.endHour)}</div>`}
-        <button class="tt-slot-del" onclick="event.stopPropagation();deleteSlotById('${slot.id}')">×</button>`;
+        <button class="tt-slot-del" onclick="event.stopPropagation();deleteSlotById('${slot.id}')">×</button>
+        <div class="tt-resize-handle tt-resize-handle-bottom"><div class="tt-resize-grip"></div></div>`;
+
+      // Wire up resize handle mousedown listeners
+      block.querySelector('.tt-resize-handle-top').addEventListener('mousedown', e => {
+        e.stopPropagation(); e.preventDefault();
+        startTTResize(e, slot.id, 'top');
+      });
+      block.querySelector('.tt-resize-handle-bottom').addEventListener('mousedown', e => {
+        e.stopPropagation(); e.preventDefault();
+        startTTResize(e, slot.id, 'bottom');
+      });
 
       if(isEditMode){
         block.onclick=()=>openSlotModalEdit(slot.id);
@@ -1882,6 +1926,69 @@ function fmtHour(s) { // s = half-hour slot index (0 = 12:00 AM, 1 = 12:30 AM, 2
    DRAG SELECTION — global mousemove + mouseup
 ══════════════════════════════════════════ */
 document.addEventListener('mousemove',(e)=>{
+  /* ── Resize drag ── */
+  if (resizeDrag) {
+    e.preventDefault();
+    const deltaSlots = Math.round((e.clientY - resizeDrag.startY) / SLOT_H);
+
+    // Build a mutable working copy of all slots
+    const map = {};
+    for (const s of ttSlots) map[s.id] = {...s};
+    const slot = map[resizeDrag.slotId];
+
+    // Same-day siblings sorted by startHour ascending
+    const siblings = ttSlots
+      .filter(s => s.day === resizeDrag.day && s.id !== resizeDrag.slotId)
+      .sort((a,b) => a.startHour - b.startHour);
+
+    if (resizeDrag.edge === 'top') {
+      let newStart = resizeDrag.origStart + deltaSlots;
+      if (newStart >= slot.endHour) newStart = slot.endHour - 1; // min 1 slot tall
+      if (newStart < 0) newStart = 0;
+      map[resizeDrag.slotId] = {...slot, startHour: newStart};
+
+      // Shrink the block immediately above: move its endHour down to newStart
+      // (it doesn't move as a whole — its bottom edge is trimmed)
+      const above = siblings
+        .filter(s => s.endHour > newStart && s.startHour < newStart)
+        .sort((a,b) => b.endHour - a.endHour); // nearest first
+      let ceiling = newStart;
+      for (const ab of above) {
+        const cur = map[ab.id];
+        if (cur.endHour <= ceiling) break;
+        const newEnd = ceiling;
+        // Ensure minimum 1 slot remains
+        map[ab.id] = {...cur, endHour: Math.max(newEnd, cur.startHour + 1)};
+        ceiling = map[ab.id].startHour;
+      }
+    } else {
+      let newEnd = resizeDrag.origEnd + deltaSlots;
+      if (newEnd <= slot.startHour) newEnd = slot.startHour + 1; // min 1 slot tall
+      if (newEnd > 48) newEnd = 48;
+      map[resizeDrag.slotId] = {...slot, endHour: newEnd};
+
+      // Shrink the block immediately below: move its startHour up to newEnd
+      // (it doesn't move as a whole — its top edge is trimmed)
+      const below = siblings
+        .filter(s => s.startHour < newEnd && s.endHour > newEnd)
+        .sort((a,b) => a.startHour - b.startHour); // nearest first
+      let floor = newEnd;
+      for (const bl of below) {
+        const cur = map[bl.id];
+        if (cur.startHour >= floor) break;
+        const newStart = floor;
+        // Ensure minimum 1 slot remains
+        map[bl.id] = {...cur, startHour: Math.min(newStart, cur.endHour - 1)};
+        floor = map[bl.id].endHour;
+      }
+    }
+
+    ttSlots = ttSlots.map(s => map[s.id] || s);
+    renderTimetable();
+    return;
+  }
+
+  /* ── Create-drag selection ── */
   if(!dragState.dragging||!isEditMode) return;
   // Find zone element under cursor
   const el=document.elementFromPoint(e.clientX,e.clientY);
@@ -1904,7 +2011,14 @@ document.addEventListener('mousemove',(e)=>{
     renderTimetable();
   }
 });
-document.addEventListener('mouseup',()=>{ dragState.dragging=false; });
+document.addEventListener('mouseup',()=>{
+  if (resizeDrag) {
+    resizeDrag = null;
+    document.body.style.userSelect = '';
+    document.body.style.cursor = '';
+  }
+  dragState.dragging=false;
+});
 
 /* ══════════════════════════════════════════
    SELECTION PILL
