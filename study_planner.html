@@ -92,6 +92,26 @@ body::before {
   cursor: pointer; text-decoration: none; transition: all 0.15s;
 }
 .nav-back:hover { color: var(--text-2); border-color: var(--border-2); }
+.streak-badge {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 9px;
+  border: 1px solid rgba(245,158,11,0.35);
+  background: rgba(245,158,11,0.08);
+  font-family: 'DM Mono', monospace; font-size: 0.75rem; font-weight: 700;
+  color: #fbbf24; white-space: nowrap; flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: default; user-select: none;
+}
+.streak-badge.streak-hot {
+  border-color: rgba(245,158,11,0.55);
+  background: rgba(245,158,11,0.14);
+  box-shadow: 0 0 10px rgba(245,158,11,0.18);
+}
+.streak-badge .streak-num {
+  font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 800;
+  letter-spacing: -0.02em;
+}
+html.light .streak-badge { border-color: rgba(180,83,9,0.3); background: rgba(180,83,9,0.07); color: #b45309; }
 
 /* ══════════════════════════════════════════
    PAGES
@@ -970,7 +990,7 @@ html.light #theme-toggle:hover { background: rgba(0,0,0,0.09); }
 ══════════════════════════════════════════ */
 .cal-header { display:flex; align-items:center; gap:12px; margin-bottom:1.6rem; flex-wrap:wrap; }
 .cal-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; letter-spacing:-0.02em; }
-.cal-view-toggle { display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:3px; margin-left:auto; }
+.cal-view-toggle { display:flex; gap:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:3px; margin-left:auto; margin-right:0; }
 .cal-view-btn { padding:5px 18px; border-radius:7px; border:none; background:transparent; color:var(--text-3); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.15s; }
 .cal-view-btn.active { background:var(--accent); color:white; box-shadow:0 2px 8px var(--accent-glow); }
 .cal-nav-row { display:flex; align-items:center; gap:10px; margin-bottom:1.4rem; }
@@ -1391,10 +1411,12 @@ html.light .cal-goal-cb:checked { box-shadow:0 2px 8px rgba(79,70,229,0.3); }
     <button class="nav-tab" id="tab-calendar" onclick="switchPage('calendar')">
       <span>📅</span> Calendar
     </button>
+    <div class="streak-badge" id="streak-badge" title="Daily goals streak">🔥 <span class="streak-num" id="streak-num">0</span></div>
     <button class="nav-tab" id="tab-dq" onclick="switchPage('dq')">
       <span>☑️</span> Daily Questions
     </button>
   </div>
+
   <button class="auth-btn" id="auth-btn" onclick="handleAuthClick()">Sign in with Google</button>
   <div class="sync-dot" id="sync-dot" style="display:none" title="Synced"></div>
   <a href="index.html" class="nav-back">← Back to JEEverse</a>
@@ -2767,6 +2789,7 @@ document.getElementById('sl-name').addEventListener('keydown',e=>{if(e.key==='En
 ══════════════════════════════════════════ */
 renderTimetableToolbar();
 renderTimetable();
+updateStreakBadge();
 
 /* ══════════════════════════════════════════
    FIREBASE AUTH + CLOUD SYNC
@@ -2830,6 +2853,7 @@ async function loadFromCloud(user) {
     if (activePage && activePage.id === 'page-timetable') renderTimetable();
     if (activePage && activePage.id === 'page-syllabus')  { if(typeof sylRender==='function') sylRender(); }
     if (activePage && activePage.id === 'page-backlog')   { if(typeof renderBacklog==='function') renderBacklog(); }
+    updateStreakBadge();
   } catch(e) { console.warn('Cloud load error:', e); setSyncDot('error'); }
 }
 
@@ -4460,6 +4484,55 @@ function getISOWeek(d) {
   return 1 + Math.round(((date-week1)/86400000 - 3 + (week1.getDay()+6)%7)/7);
 }
 
+/* ── Streak helpers ── */
+function calDayIsComplete(dateStr) {
+  // Find the Monday of the week containing dateStr, then build the week key
+  const d = new Date(dateStr + 'T00:00:00');
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - (d.getDay() + 6) % 7);
+  const y = mon.getFullYear();
+  const w = getISOWeek(mon);
+  const wKey = 'cal_week_' + y + '_' + String(w).padStart(2, '0');
+  let wData;
+  try { wData = JSON.parse(localStorage.getItem(wKey)) || {}; } catch(e) { wData = {}; }
+  const dayGoals = wData.days?.[dateStr]?.goals;
+  if (!dayGoals || dayGoals.length === 0) return false;
+  return dayGoals.every(g => g.done);
+}
+
+function calComputeGoalStreak() {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  let streak = 0;
+  // Walk backwards from today. Stop when a day has no goals or incomplete goals.
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().slice(0, 10);
+    if (calDayIsComplete(ds)) {
+      streak++;
+    } else {
+      // If today itself has no/incomplete goals, don't break the streak yet —
+      // just skip today and start counting from yesterday
+      if (i === 0) continue;
+      break;
+    }
+  }
+  return streak;
+}
+
+function updateStreakBadge() {
+  const n = calComputeGoalStreak();
+  const numEl = document.getElementById('streak-num');
+  const badge  = document.getElementById('streak-badge');
+  if (!numEl || !badge) return;
+  numEl.textContent = n;
+  badge.classList.toggle('streak-hot', n >= 3);
+  badge.title = n === 0
+    ? 'No streak yet — complete all goals on a day to start one!'
+    : n === 1
+      ? '1-day streak — keep it going!'
+      : n + '-day streak — on fire!';
+}
+
 function calLoad(key) {
   try { return JSON.parse(localStorage.getItem(key)) || {}; } catch(e) { return {}; }
 }
@@ -4667,6 +4740,7 @@ function calWeekGoalToggle(key, idx, done) {
   }
   calSave(key, data);
   calRenderWeek();
+  updateStreakBadge();
 }
 
 function calWeekGoalDel(key, idx) {
@@ -4899,6 +4973,7 @@ function calDayGoalToggle(key, ds, gi, done) {
   });
   calSave(key, data);
   calRenderWeek();
+  updateStreakBadge();
 }
 
 function calDayGoalDel(key, ds, gi) {
