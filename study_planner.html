@@ -2891,15 +2891,7 @@ document.getElementById('sl-name').addEventListener('keydown',e=>{if(e.key==='En
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-// ── Hash-based routing: boot to the right page ──
-(function initRouting() {
-  const startPage = pageFromHash();
-  // Stamp the initial history entry so popstate has state on the first back
-  try { history.replaceState({ page: startPage }, '', '#' + startPage); } catch(e) { /* srcdoc iframe — hash routing unavailable */ }
-  // Activate the correct page without pushing another history entry
-  switchPage(startPage, false);
-  updateStreakBadge();
-})();
+
 
 /* ══════════════════════════════════════════
    FIREBASE AUTH + CLOUD SYNC
@@ -5340,6 +5332,16 @@ function calMonthGoalDel(key, idx) {
   calRenderMonth();
 }
 
+// ── Hash-based routing: boot to the right page ──
+// Runs AFTER all functions are defined so calRender / sylRender / etc. exist.
+(function initRouting() {
+  const startPage = pageFromHash();
+  // Stamp the initial history entry so popstate has state on the first back
+  try { history.replaceState({ page: startPage }, '', '#' + startPage); } catch(e) { /* srcdoc iframe — hash routing unavailable */ }
+  // Activate the correct page without pushing another history entry
+  switchPage(startPage, false);
+  updateStreakBadge();
+})();
 </script>
 
 <!-- Firebase loaded via static module imports — works in all environments -->
