@@ -1442,9 +1442,20 @@ html.light .cal-goal-tooltip { background:var(--surface-0); box-shadow:0 6px 24p
   background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.04);
   cursor: default; transition: transform 0.1s;
   position: relative;
+  display: flex; align-items: center; justify-content: center;
 }
 .dq-heatmap-cell:hover { transform: scale(1.1); z-index: 2; }
 .dq-heatmap-cell[title] { cursor: pointer; }
+.dq-heatmap-cell-num {
+  font-family: 'DM Mono', monospace;
+  font-size: clamp(0.42rem, 1.2vw, 0.62rem);
+  font-weight: 700;
+  color: rgba(255,255,255,0.82);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
 
 @media (max-width:600px) {
   .dq-stats-row { grid-template-columns: 1fr; }
@@ -2048,7 +2059,10 @@ function escHtml(s) {
 /* ══════════════════════════════════════════
    PAGE SWITCHING
 ══════════════════════════════════════════ */
-function switchPage(p) {
+const VALID_PAGES = ['timetable','syllabus','backlog','calendar','dq'];
+
+function switchPage(p, pushState = true) {
+  if (!VALID_PAGES.includes(p)) p = 'timetable';
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
@@ -2061,6 +2075,21 @@ function switchPage(p) {
   // Hide stats FAB when not on syllabus tab
   const fab = document.getElementById('syl-stats-fab');
   if (fab) fab.style.display = (p === 'syllabus') ? '' : 'none';
+  // Update URL hash without triggering another switchPage call
+  if (pushState && location.hash !== '#' + p) {
+    try { history.pushState({ page: p }, '', '#' + p); } catch(e) { /* srcdoc iframe — hash routing unavailable */ }
+  }
+}
+
+// Handle browser back / forward
+window.addEventListener('popstate', e => {
+  const p = (e.state && e.state.page) || pageFromHash();
+  switchPage(p, false);
+});
+
+function pageFromHash() {
+  const h = location.hash.replace('#', '').trim();
+  return VALID_PAGES.includes(h) ? h : 'timetable';
 }
 
 function sylStatsSheetOpen() {
@@ -2862,9 +2891,15 @@ document.getElementById('sl-name').addEventListener('keydown',e=>{if(e.key==='En
 /* ══════════════════════════════════════════
    INIT
 ══════════════════════════════════════════ */
-renderTimetableToolbar();
-renderTimetable();
-updateStreakBadge();
+// ── Hash-based routing: boot to the right page ──
+(function initRouting() {
+  const startPage = pageFromHash();
+  // Stamp the initial history entry so popstate has state on the first back
+  try { history.replaceState({ page: startPage }, '', '#' + startPage); } catch(e) { /* srcdoc iframe — hash routing unavailable */ }
+  // Activate the correct page without pushing another history entry
+  switchPage(startPage, false);
+  updateStreakBadge();
+})();
 
 /* ══════════════════════════════════════════
    FIREBASE AUTH + CLOUD SYNC
@@ -4450,6 +4485,10 @@ function dqRenderHeatmap() {
       const color = (target > 0 && total >= target) ? `rgba(16,185,129,${alpha})` : `rgba(99,102,241,${alpha})`;
       cell.style.background = color;
       cell.style.borderColor = color;
+      const numEl = document.createElement('span');
+      numEl.className = 'dq-heatmap-cell-num';
+      numEl.textContent = total >= 1000 ? Math.round(total/1000)+'k' : total;
+      cell.appendChild(numEl);
     }
     container.appendChild(cell);
   }
