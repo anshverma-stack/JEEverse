@@ -1086,6 +1086,81 @@ html.light .cal-goal-cb:checked { box-shadow:0 2px 8px rgba(79,70,229,0.3); }
 .cal-goal-drag-handle:hover { color:var(--accent); }
 .cal-goal-drag-handle:active { cursor:grabbing; }
 .cal-goal-item.dragging { opacity:0.35; background:rgba(99,102,241,0.12); }
+
+/* ── Custom div-checkboxes with done-date coloring ── */
+.cal-goal-cb-custom {
+  width:17px; height:17px; flex-shrink:0; cursor:pointer;
+  border-radius:5px;
+  border:1.5px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.04);
+  position:relative; transition:all 0.18s;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.cal-goal-cb-custom:hover { border-color:var(--accent); background:rgba(99,102,241,0.1); }
+.cal-goal-cb-custom.done-ontime {
+  border-color:#10b981 !important;
+  background:rgba(16,185,129,0.18) !important;
+}
+.cal-goal-cb-custom.done-ontime::after {
+  content:'';
+  position:absolute;
+  left:4px; top:1.5px;
+  width:5px; height:9px;
+  border:2px solid #10b981;
+  border-top:none; border-left:none;
+  transform:rotate(45deg);
+}
+.cal-goal-cb-custom.done-late {
+  border-color:#f59e0b !important;
+  background:rgba(245,158,11,0.18) !important;
+}
+.cal-goal-cb-custom.done-late::after {
+  content:'';
+  position:absolute;
+  left:4px; top:1.5px;
+  width:5px; height:9px;
+  border:2px solid #f59e0b;
+  border-top:none; border-left:none;
+  transform:rotate(45deg);
+}
+html.light .cal-goal-cb-custom { border-color:rgba(0,0,0,0.2); background:rgba(0,0,0,0.03); }
+html.light .cal-goal-cb-custom:hover { border-color:var(--accent); background:rgba(79,70,229,0.06); }
+
+/* ── Goal status badges ── */
+.cal-goal-badge {
+  font-family:'DM Mono',monospace; font-size:0.55rem; font-weight:700;
+  padding:2px 7px; border-radius:20px;
+  display:inline-flex; align-items:center; gap:3px;
+  flex-shrink:0; white-space:nowrap; line-height:1.5;
+}
+.cal-goal-badge.ontime {
+  background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.28); color:#34d399;
+}
+.cal-goal-badge.late {
+  background:rgba(245,158,11,0.13); border:1px solid rgba(245,158,11,0.3); color:#fbbf24;
+}
+.cal-goal-badge-dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.cal-goal-badge.ontime .cal-goal-badge-dot { background:#10b981; }
+.cal-goal-badge.late .cal-goal-badge-dot { background:#f59e0b; }
+
+/* ── Goal row tooltip ── */
+.cal-goal-item { position:relative; }
+.cal-goal-tooltip {
+  position:absolute; bottom:calc(100% + 7px); right:0;
+  background:var(--surface-3); border:1px solid var(--border-2);
+  border-radius:9px; padding:8px 13px;
+  font-size:0.68rem; line-height:1.75; white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,0.4);
+  opacity:0; pointer-events:none;
+  transition:opacity 0.18s ease;
+  z-index:200;
+}
+.cal-goal-item:hover .cal-goal-tooltip { opacity:1; }
+.cal-goal-tooltip-label { color:var(--text-3); }
+.cal-goal-tooltip-val { color:var(--text-2); font-weight:600; }
+.cal-goal-tooltip-val.ontime { color:#34d399; }
+.cal-goal-tooltip-val.late { color:#fbbf24; }
+html.light .cal-goal-tooltip { background:var(--surface-0); box-shadow:0 6px 24px rgba(0,0,0,0.14); }
 .cal-day-goals-zone { border:1.5px dashed transparent; border-radius:10px; transition:all 0.18s; padding:3px; margin-top:6px; }
 .cal-day-goals-zone.drop-ready { border-color:rgba(99,102,241,0.28); background:rgba(99,102,241,0.03); }
 .cal-day-goals-zone.drag-over { border-color:var(--accent) !important; background:rgba(99,102,241,0.1) !important; box-shadow:0 0 0 2px rgba(99,102,241,0.18); }
@@ -4497,7 +4572,17 @@ function calDayIsComplete(dateStr) {
   try { wData = JSON.parse(localStorage.getItem(wKey)) || {}; } catch(e) { wData = {}; }
   const dayGoals = wData.days?.[dateStr]?.goals;
   if (!dayGoals || dayGoals.length === 0) return false;
-  return dayGoals.every(g => g.done);
+  // A day counts toward streak only if ALL goals are done AND each was completed
+  // within 1 day of its assigned date (doneDate <= assignedDate + 1 day).
+  // Goals with no doneDate (legacy) count as on-time.
+  return dayGoals.every(g => {
+    if (!g.done) return false;
+    if (!g.doneDate) return true; // legacy entry — no doneDate stored, give benefit of doubt
+    const assignedMs  = new Date(dateStr + 'T00:00:00').getTime();
+    const completedMs = new Date(g.doneDate + 'T00:00:00').getTime();
+    const diffDays = Math.round((completedMs - assignedMs) / 86400000);
+    return diffDays <= 1; // on time or 1 day late counts; 2+ days late breaks streak
+  });
 }
 
 function calComputeGoalStreak() {
@@ -4599,13 +4684,45 @@ function calRenderWeek() {
   // Each day: header + textarea + goals grouped together as one column
   const dayCols = dayMeta.map(({ dn, d, isToday, ds, past, dayData }) => {
     const dayGoals = dayData.goals || [];
-    const dayGoalsHtml = dayGoals.map((g, gi) => `
+    const dayGoalsHtml = dayGoals.map((g, gi) => {
+      // ── custom checkbox class ──
+      let cbClass = 'cal-goal-cb-custom';
+      if (g.done && g.doneDate) {
+        cbClass += (g.doneDate === ds) ? ' done-ontime' : ' done-late';
+      }
+      // ── status badge ──
+      let badgeHtml = '';
+      if (g.done && g.doneDate) {
+        const assignedMs  = new Date(ds + 'T00:00:00').getTime();
+        const completedMs = new Date(g.doneDate + 'T00:00:00').getTime();
+        const diffDays = Math.round((completedMs - assignedMs) / 86400000);
+        if (diffDays <= 0) {
+          badgeHtml = `<span class="cal-goal-badge ontime"><span class="cal-goal-badge-dot"></span>on time</span>`;
+        } else {
+          badgeHtml = `<span class="cal-goal-badge late"><span class="cal-goal-badge-dot"></span>+${diffDays}d</span>`;
+        }
+      }
+      // ── hover tooltip ──
+      let tooltipHtml = '';
+      if (g.done && g.doneDate) {
+        const assignedFmt   = new Date(ds + 'T00:00:00').toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'});
+        const completedFmt  = new Date(g.doneDate + 'T00:00:00').toLocaleDateString('en', {weekday:'short', month:'short', day:'numeric'});
+        const isLate = new Date(g.doneDate + 'T00:00:00') > new Date(ds + 'T00:00:00');
+        tooltipHtml = `<div class="cal-goal-tooltip">
+          <div><span class="cal-goal-tooltip-label">Assigned:&nbsp;</span><span class="cal-goal-tooltip-val">${assignedFmt}</span></div>
+          <div><span class="cal-goal-tooltip-label">Completed:&nbsp;</span><span class="cal-goal-tooltip-val ${isLate?'late':'ontime'}">${completedFmt}</span></div>
+        </div>`;
+      }
+      return `
       <div class="cal-goal-item">
-        <input type="checkbox" class="cal-goal-cb" ${g.done?'checked':''} onchange="calDayGoalToggle('${key}','${ds}',${gi},this.checked)">
-        <span class="cal-goal-text${g.done?' done':''}" onclick="this.previousElementSibling.click()">${escHtml(g.text)}</span>
+        <div class="${cbClass}" onclick="calDayGoalToggle('${key}','${ds}',${gi},${g.done?'false':'true'})"></div>
+        <span class="cal-goal-text${g.done?' done':''}">${escHtml(g.text)}</span>
+        ${badgeHtml}
         <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
         <button class="cal-goal-del" onclick="calDayGoalDel('${key}','${ds}',${gi})" title="Remove">✕</button>
-      </div>`).join('');
+        ${tooltipHtml}
+      </div>`;
+    }).join('');
 
     return `<div class="cal-day-col">
       <div class="cal-day-name-cell">
@@ -4964,12 +5081,23 @@ function calDayGoalToggle(key, ds, gi, done) {
   if (data.days?.[ds]?.goals?.[gi] === undefined) return;
   const text = data.days[ds].goals[gi].text;
   data.days[ds].goals[gi].done = done;
-  // Sync to the matching week-level goal
+  // Store/clear completion date on the specific day's goal
+  if (done) {
+    data.days[ds].goals[gi].doneDate = new Date().toISOString().slice(0, 10);
+  } else {
+    delete data.days[ds].goals[gi].doneDate;
+  }
+  // Sync done status to the matching week-level goal (doneDate stays per-day)
   (data.goals || []).forEach(g => { if (g.text === text) g.done = done; });
-  // Sync to the same goal in all other days too
+  // Sync done status to the same goal in all other days (preserve their own doneDates)
   Object.entries(data.days).forEach(([dayKey, dayData]) => {
     if (dayKey === ds) return;
-    (dayData.goals || []).forEach(g => { if (g.text === text) g.done = done; });
+    (dayData.goals || []).forEach(g => {
+      if (g.text === text) {
+        g.done = done;
+        if (!done) delete g.doneDate;
+      }
+    });
   });
   calSave(key, data);
   calRenderWeek();
