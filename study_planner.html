@@ -1464,6 +1464,121 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
   .dq-root { padding: 1rem 1rem 2rem; }
 }
 
+/* ══════════════════════════════════════════
+   FOCUS PAGE
+══════════════════════════════════════════ */
+.focus-header { display:flex; align-items:center; gap:14px; padding:1.4rem 0 1rem; border-bottom:1px solid var(--border); margin-bottom:1.6rem; flex-wrap:wrap; }
+.focus-mode-toggle { display:flex; gap:4px; padding:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:11px; margin-left:auto; }
+.focus-mode-btn { padding:6px 16px; border-radius:8px; border:none; background:transparent; color:var(--text-3); font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.14s; }
+.focus-mode-btn.active { background:var(--accent); color:white; box-shadow:0 3px 10px var(--accent-glow); }
+.focus-mode-btn:hover:not(.active) { color:var(--text); }
+
+.focus-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:1.6rem; }
+@media (max-width:1000px) { .focus-grid { grid-template-columns:1fr; } }
+
+.focus-card { background:var(--surface-1); border:1px solid var(--border); border-radius:18px; padding:1.8rem; }
+.focus-display-card { display:flex; flex-direction:column; align-items:center; text-align:center; }
+
+.focus-mode-label { font-family:'DM Mono',monospace; font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-3); margin-bottom:1rem; }
+.focus-time-display {
+  font-family:'Syne',sans-serif; font-size:6.5rem; font-weight:800; line-height:1;
+  letter-spacing:-0.04em;
+  background:linear-gradient(135deg,#6366f1,#3b82f6,#e879f9);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  margin:0.6rem 0 1.4rem;
+  font-variant-numeric:tabular-nums;
+}
+@media (max-width:700px) { .focus-time-display { font-size:4.5rem; } }
+.focus-time-display.warning { background:linear-gradient(135deg,#f59e0b,#ef4444); -webkit-background-clip:text; background-clip:text; }
+.focus-time-display.done { background:linear-gradient(135deg,#10b981,#059669); -webkit-background-clip:text; background-clip:text; }
+
+.focus-section-label { font-family:'DM Mono',monospace; font-size:0.62rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-3); display:block; margin-bottom:8px; }
+.focus-duration-row { width:100%; margin-bottom:1.4rem; }
+.focus-preset-row { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.focus-preset-btn { padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); color:var(--text-2); font-family:'DM Mono',monospace; font-size:0.78rem; font-weight:700; cursor:pointer; transition:all 0.14s; }
+.focus-preset-btn:hover { border-color:var(--accent); color:var(--text); }
+.focus-preset-btn.active { background:rgba(99,102,241,0.15); border-color:var(--accent); color:var(--accent); }
+.focus-custom-input { width:84px; padding:6px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-family:'DM Mono',monospace; font-size:0.78rem; outline:none; }
+.focus-custom-input:focus { border-color:var(--accent); }
+
+.focus-controls { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:1rem; }
+.focus-btn { padding:10px 22px; border-radius:11px; border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.86rem; font-weight:700; cursor:pointer; transition:all 0.14s; }
+.focus-btn:hover:not(:disabled) { border-color:var(--border-2); transform:translateY(-1px); }
+.focus-btn:disabled { opacity:0.35; cursor:not-allowed; }
+.focus-btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:white; border-color:transparent; box-shadow:0 4px 14px var(--accent-glow); }
+.focus-btn-primary:hover:not(:disabled) { box-shadow:0 6px 20px var(--accent-glow); }
+.focus-btn-success { width:100%; background:linear-gradient(135deg,#10b981,#059669); color:white; border-color:transparent; margin-top:14px; padding:12px; }
+.focus-btn-success:hover:not(:disabled) { box-shadow:0 6px 20px rgba(16,185,129,0.35); }
+.focus-btn-danger { background:rgba(239,68,68,0.1); color:#ef4444; border-color:rgba(239,68,68,0.3); }
+.focus-btn-danger:hover:not(:disabled) { background:rgba(239,68,68,0.18); border-color:rgba(239,68,68,0.5); }
+
+.focus-lock-warning {
+  width:100%; margin-top:0.8rem; padding:12px 16px; border-radius:11px;
+  background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3);
+  color:#fbbf24; font-size:0.78rem; line-height:1.5;
+}
+
+.focus-goal-select {
+  width:100%; padding:12px 36px 12px 14px; border-radius:11px;
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text);
+  font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; outline:none;
+  cursor:pointer; appearance:none;
+  background-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%2210%22 viewBox=%220 0 10 10%22><path d=%22M1 3l4 4 4-4%22 stroke=%22%2394a3b8%22 stroke-width=%221.5%22 fill=%22none%22/></svg>');
+  background-repeat:no-repeat; background-position:right 12px center;
+  transition:border-color 0.14s; margin-bottom:1rem;
+}
+.focus-goal-select:focus { border-color:var(--accent); }
+.focus-goal-select:disabled { opacity:0.5; cursor:not-allowed; }
+.focus-goal-select option { background:var(--surface-2); color:var(--text); }
+
+.focus-selected-goal { padding:14px 16px; border-radius:12px; background:rgba(99,102,241,0.08); border:1px solid rgba(99,102,241,0.25); margin-bottom:1rem; }
+.focus-selected-label { font-family:'DM Mono',monospace; font-size:0.58rem; font-weight:700; letter-spacing:0.16em; color:var(--accent); margin-bottom:6px; }
+.focus-selected-text { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:6px; line-height:1.4; }
+.focus-selected-status { font-size:0.72rem; color:var(--text-3); }
+.focus-selected-status.done { color:var(--green); font-weight:700; }
+.focus-selected-status.locked { color:#fbbf24; font-weight:700; }
+
+.focus-lock-toggle {
+  display:flex; align-items:flex-start; gap:11px; padding:14px;
+  border-radius:12px; background:var(--surface-2); border:1px solid var(--border);
+  cursor:pointer; transition:border-color 0.14s; margin-bottom:0.4rem;
+}
+.focus-lock-toggle:hover { border-color:var(--border-2); }
+.focus-lock-toggle input[type=checkbox] {
+  width:18px; height:18px; margin-top:2px; accent-color:#f59e0b; cursor:pointer; flex-shrink:0;
+}
+.focus-lock-title { font-size:0.86rem; font-weight:700; color:var(--text); margin-bottom:3px; }
+.focus-lock-desc { font-size:0.72rem; color:var(--text-3); line-height:1.5; }
+
+.focus-history-list { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.focus-history-item {
+  padding:10px 12px; border-radius:9px; background:var(--surface-2); border:1px solid var(--border);
+  display:flex; align-items:center; gap:10px; font-size:0.78rem;
+}
+.focus-history-time { font-family:'DM Mono',monospace; font-weight:700; color:var(--accent); min-width:60px; }
+.focus-history-goal { color:var(--text-2); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.focus-history-empty { font-size:0.76rem; color:var(--text-3); padding:8px 0; }
+
+/* Locked-done indicator on calendar goals */
+.cal-goal-locked-icon {
+  font-size:0.78rem; color:#fbbf24; margin-right:4px;
+  cursor:help;
+}
+.cal-goal-cb:disabled, .cal-goal-cb-custom.locked-done {
+  cursor:not-allowed !important;
+}
+.cal-goal-cb-custom.locked-done {
+  border-color:#f59e0b !important;
+  background:#f59e0b !important;
+  position:relative;
+}
+.cal-goal-cb-custom.locked-done::after {
+  content:'🔒'; position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; line-height:1;
+}
+.cal-goal-del.disabled-locked { opacity:0.25; cursor:not-allowed !important; pointer-events:none; }
+
 </style>
 
 <body>
@@ -1496,6 +1611,9 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
     </button>
     <button class="nav-tab" id="tab-calendar" onclick="switchPage('calendar')">
       <span>📅</span> Calendar
+    </button>
+    <button class="nav-tab" id="tab-focus" onclick="switchPage('focus')">
+      <span>⏱️</span> Focus
     </button>
     <div class="streak-badge" id="streak-badge" title="Daily goals streak">🔥 <span class="streak-num" id="streak-num">0</span></div>
     <button class="nav-tab" id="tab-dq" onclick="switchPage('dq')">
@@ -1711,7 +1829,93 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
 </div>
 
 <!-- ════════════════════════════════════════
-     PAGE 5: DAILY QUESTIONS
+     PAGE 5: FOCUS — Timer / Stopwatch with Goal Lock
+════════════════════════════════════════ -->
+<div id="page-focus" class="page">
+  <div style="flex:1;overflow-y:auto;min-height:0;">
+  <div class="syl-page-inner">
+    <div class="focus-header">
+      <span class="cal-title">⏱️ Focus Session</span>
+      <div class="focus-mode-toggle">
+        <button class="focus-mode-btn active" id="fmode-timer" onclick="focusSetMode('timer')">⏲️ Timer</button>
+        <button class="focus-mode-btn" id="fmode-stopwatch" onclick="focusSetMode('stopwatch')">⏱️ Stopwatch</button>
+      </div>
+    </div>
+
+    <div class="focus-grid">
+      <!-- Left: Timer / Display -->
+      <div class="focus-card focus-display-card">
+        <div class="focus-mode-label" id="focus-mode-label">Pomodoro Timer</div>
+
+        <div class="focus-time-display" id="focus-time-display">25:00</div>
+
+        <!-- Timer-only: duration picker -->
+        <div class="focus-duration-row" id="focus-duration-row">
+          <span class="focus-section-label">Duration</span>
+          <div class="focus-preset-row">
+            <button class="focus-preset-btn" onclick="focusSetDuration(15)">15m</button>
+            <button class="focus-preset-btn active" onclick="focusSetDuration(25)">25m</button>
+            <button class="focus-preset-btn" onclick="focusSetDuration(45)">45m</button>
+            <button class="focus-preset-btn" onclick="focusSetDuration(60)">60m</button>
+            <button class="focus-preset-btn" onclick="focusSetDuration(90)">90m</button>
+            <input type="number" class="focus-custom-input" id="focus-custom-min" min="1" max="600" placeholder="Custom" onchange="focusSetDuration(this.value)">
+          </div>
+        </div>
+
+        <div class="focus-controls">
+          <button class="focus-btn focus-btn-primary" id="focus-start-btn" onclick="focusStart()">▶ Start</button>
+          <button class="focus-btn" id="focus-pause-btn" onclick="focusPause()" disabled>⏸ Pause</button>
+          <button class="focus-btn focus-btn-danger" id="focus-stop-btn" onclick="focusStop()" disabled>■ Stop</button>
+          <button class="focus-btn" id="focus-reset-btn" onclick="focusReset()">↺ Reset</button>
+        </div>
+
+        <div class="focus-lock-warning" id="focus-lock-warning" style="display:none;">
+          🔒 <strong>Lock Mode active</strong> — pause and stop are disabled until you mark your selected goal as done.
+        </div>
+      </div>
+
+      <!-- Right: Goal selection + lock mode -->
+      <div class="focus-card">
+        <div class="cal-card-header" style="margin-bottom:14px;">
+          <span style="font-size:1.1rem;">🎯</span>
+          <span class="cal-section-title" style="margin-bottom:0;">Linked Week Goal</span>
+        </div>
+
+        <div class="focus-section-label">Pick a goal from this week</div>
+        <select class="focus-goal-select" id="focus-goal-select" onchange="focusSelectGoal(this.value)">
+          <option value="">— No goal selected —</option>
+        </select>
+
+        <div class="focus-selected-goal" id="focus-selected-goal" style="display:none;">
+          <div class="focus-selected-label">SELECTED GOAL</div>
+          <div class="focus-selected-text" id="focus-selected-text"></div>
+          <div class="focus-selected-status" id="focus-selected-status"></div>
+        </div>
+
+        <label class="focus-lock-toggle">
+          <input type="checkbox" id="focus-lock-mode" onchange="focusToggleLockMode(this.checked)">
+          <div>
+            <div class="focus-lock-title">🔒 Lock Mode</div>
+            <div class="focus-lock-desc">Disables pause &amp; stop until your selected goal is marked done. Once you finish in lock mode, the goal is <strong>permanently completed</strong> everywhere — it can't be unmarked.</div>
+          </div>
+        </label>
+
+        <button class="focus-btn focus-btn-success" id="focus-mark-done-btn" onclick="focusMarkGoalDone()" disabled>
+          ✓ Mark Selected Goal as Done
+        </button>
+
+        <div class="focus-history" id="focus-history">
+          <div class="focus-section-label" style="margin-top:18px;">Recent Sessions</div>
+          <div class="focus-history-list" id="focus-history-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div><!-- end scroll wrapper -->
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 6: DAILY QUESTIONS
 ════════════════════════════════════════ -->
 <div id="page-dq" class="page">
   <div style="flex:1;overflow-y:auto;min-height:0;">
@@ -2060,7 +2264,7 @@ function escHtml(s) {
 /* ══════════════════════════════════════════
    PAGE SWITCHING
 ══════════════════════════════════════════ */
-const VALID_PAGES = ['timetable','syllabus','backlog','calendar','dq'];
+const VALID_PAGES = ['timetable','syllabus','backlog','calendar','focus','dq'];
 
 function switchPage(p, pushState = true) {
   if (!VALID_PAGES.includes(p)) p = 'timetable';
@@ -2072,6 +2276,7 @@ function switchPage(p, pushState = true) {
   if (p === 'syllabus')  { sylRender(); }
   if (p === 'backlog')   { renderBacklog(); }
   if (p === 'calendar')  { calRender(); }
+  if (p === 'focus')     { focusRender(); }
   if (p === 'dq')        { dqRender(); }
   // Hide stats FAB when not on syllabus tab
   const fab = document.getElementById('syl-stats-fab');
@@ -4856,13 +5061,15 @@ function calRenderWeek() {
           <div><span class="cal-goal-tooltip-label">Completed:&nbsp;</span><span class="cal-goal-tooltip-val ${isLate?'late':'ontime'}">${completedFmt}</span></div>
         </div>`;
       }
+      const isLockedDay = !!g.lockedDone;
+      const cbClassFinal = isLockedDay ? cbClass + ' locked-done' : cbClass;
       return `
       <div class="cal-goal-item">
-        <div class="${cbClass}" onclick="calDayGoalToggle('${key}','${ds}',${gi},${g.done?'false':'true'})"></div>
+        <div class="${cbClassFinal}" onclick="${isLockedDay?'_calShowToast(\'🔒 Permanently locked — completed in Focus Lock Mode.\')':`calDayGoalToggle('${key}','${ds}',${gi},${g.done?'false':'true'})`}" title="${isLockedDay?'Permanently locked':''}"></div>
         <span class="cal-goal-text${g.done?' done':''}">${escHtml(g.text)}</span>
         ${badgeHtml}
         <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
-        <button class="cal-goal-del" onclick="calDayGoalDel('${key}','${ds}',${gi})" title="Remove">✕</button>
+        <button class="cal-goal-del${isLockedDay?' disabled-locked':''}" onclick="calDayGoalDel('${key}','${ds}',${gi})" title="${isLockedDay?'Locked':'Remove'}">✕</button>
         ${tooltipHtml}
       </div>`;
     }).join('');
@@ -4904,16 +5111,17 @@ function calRenderWeek() {
     const dayChipsHtml = assignedDays.map(abbr =>
       `<span class="cal-goal-day-chip">${abbr}</span>`
     ).join('');
+    const isLocked = !!g.lockedDone;
     return `
-    <div class="cal-goal-item" id="wcg-${key}-${gi}" draggable="true"
-      ondragstart="calGoalDragStart(event,'${key}',${gi})"
-      ondragend="calGoalDragEnd(event)">
-      <span class="cal-goal-drag-handle" title="Drag to assign to a day">⠿</span>
-      <input type="checkbox" class="cal-goal-cb" ${g.done?'checked':''} onchange="calWeekGoalToggle('${key}',${gi},this.checked)">
-      <span class="cal-goal-text${g.done?' done':''}" onclick="this.previousElementSibling.click()">${escHtml(g.text)}</span>
+    <div class="cal-goal-item" id="wcg-${key}-${gi}" ${isLocked?'':'draggable="true"'}
+      ${isLocked?'':`ondragstart="calGoalDragStart(event,'${key}',${gi})" ondragend="calGoalDragEnd(event)"`}>
+      <span class="cal-goal-drag-handle" title="${isLocked?'Locked goal cannot be moved':'Drag to assign to a day'}" style="${isLocked?'opacity:0.2;cursor:not-allowed':''}">⠿</span>
+      ${isLocked?'<span class="cal-goal-locked-icon" title="Permanently locked — completed in Focus Lock Mode">🔒</span>':''}
+      <input type="checkbox" class="cal-goal-cb" ${g.done?'checked':''} ${isLocked?'disabled':''} onchange="calWeekGoalToggle('${key}',${gi},this.checked)">
+      <span class="cal-goal-text${g.done?' done':''}" ${isLocked?'':"onclick=\"this.previousElementSibling.click()\""}>${escHtml(g.text)}</span>
       ${assignedDays.length ? `<span class="cal-goal-day-chips">${dayChipsHtml}</span>` : ''}
       <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
-      <button class="cal-goal-del" onclick="calWeekGoalDel('${key}',${gi})" title="Remove">✕</button>
+      <button class="cal-goal-del${isLocked?' disabled-locked':''}" onclick="calWeekGoalDel('${key}',${gi})" title="${isLocked?'Locked goals can\\'t be deleted':'Remove'}">✕</button>
     </div>`;
   }).join('');
 
@@ -4990,12 +5198,18 @@ function calWeekGoalAdd(key) {
 function calWeekGoalToggle(key, idx, done) {
   const data = calLoad(key);
   if (!data.goals?.[idx]) return;
+  // Refuse to unmark a permanently-locked goal
+  if (data.goals[idx].lockedDone && !done) {
+    calRenderWeek();
+    _calShowToast('🔒 This goal was completed in Focus Lock Mode and can\'t be unmarked.');
+    return;
+  }
   const text = data.goals[idx].text;
   data.goals[idx].done = done;
   // Sync to all matching day goals
   if (data.days) {
     Object.values(data.days).forEach(dayData => {
-      (dayData.goals || []).forEach(g => { if (g.text === text) g.done = done; });
+      (dayData.goals || []).forEach(g => { if (g.text === text && !g.lockedDone) g.done = done; });
     });
   }
   calSave(key, data);
@@ -5005,6 +5219,10 @@ function calWeekGoalToggle(key, idx, done) {
 
 function calWeekGoalDel(key, idx) {
   const data = calLoad(key);
+  if (data.goals?.[idx]?.lockedDone) {
+    _calShowToast('🔒 This goal is permanently locked and can\'t be deleted.');
+    return;
+  }
   if (data.goals) { data.goals.splice(idx,1); calSave(key, data); }
   calRenderWeek();
 }
@@ -5222,6 +5440,12 @@ function calGoalDrop(e, key, ds) {
 function calDayGoalToggle(key, ds, gi, done) {
   const data = calLoad(key);
   if (data.days?.[ds]?.goals?.[gi] === undefined) return;
+  // Refuse to unmark a permanently-locked goal
+  if (data.days[ds].goals[gi].lockedDone && !done) {
+    _calShowToast('🔒 This goal was completed in Focus Lock Mode and can\'t be unmarked.');
+    calRenderWeek();
+    return;
+  }
   const text = data.days[ds].goals[gi].text;
   data.days[ds].goals[gi].done = done;
   // Store/clear completion date on the specific day's goal
@@ -5231,12 +5455,12 @@ function calDayGoalToggle(key, ds, gi, done) {
     delete data.days[ds].goals[gi].doneDate;
   }
   // Sync done status to the matching week-level goal (doneDate stays per-day)
-  (data.goals || []).forEach(g => { if (g.text === text) g.done = done; });
+  (data.goals || []).forEach(g => { if (g.text === text && !g.lockedDone) g.done = done; });
   // Sync done status to the same goal in all other days (preserve their own doneDates)
   Object.entries(data.days).forEach(([dayKey, dayData]) => {
     if (dayKey === ds) return;
     (dayData.goals || []).forEach(g => {
-      if (g.text === text) {
+      if (g.text === text && !g.lockedDone) {
         g.done = done;
         if (!done) delete g.doneDate;
       }
@@ -5249,6 +5473,10 @@ function calDayGoalToggle(key, ds, gi, done) {
 
 function calDayGoalDel(key, ds, gi) {
   const data = calLoad(key);
+  if (data.days?.[ds]?.goals?.[gi]?.lockedDone) {
+    _calShowToast('🔒 This goal is permanently locked and can\'t be deleted.');
+    return;
+  }
   if (data.days?.[ds]?.goals) {
     data.days[ds].goals.splice(gi, 1);
     calSave(key, data);
@@ -5442,6 +5670,504 @@ function calMonthGoalDel(key, idx) {
   const data = calLoad(key);
   if (data.goals) { data.goals.splice(idx,1); calSave(key, data); }
   calRenderMonth();
+}
+
+/* ══════════════════════════════════════════
+   FOCUS — Timer / Stopwatch with Goal Lock
+══════════════════════════════════════════ */
+var focusState = {
+  mode:           'timer',          // 'timer' | 'stopwatch'
+  durationMs:     25 * 60 * 1000,   // for timer mode
+  remainingMs:    25 * 60 * 1000,   // for timer mode
+  elapsedMs:      0,                // for stopwatch
+  running:        false,
+  startTimestamp: 0,                // wall-clock time when current run segment began
+  intervalId:     null,
+  selectedKey:    null,             // weekKey of selected goal
+  selectedIdx:    null,             // index into data.goals
+  selectedText:   null,             // remembered text in case index shifts
+  lockMode:       false,
+  goalDoneInLock: false,            // user marked done while in lock-mode current run
+  history:        []                // array of {time, text, mode, ts}
+};
+
+// Persist a few settings across reloads
+(function focusBoot() {
+  try {
+    const s = JSON.parse(localStorage.getItem('focus_state') || '{}');
+    if (s.mode)        focusState.mode        = s.mode;
+    if (s.durationMs)  focusState.durationMs  = s.durationMs;
+    if (s.history)     focusState.history     = s.history;
+    if (typeof s.lockMode === 'boolean') focusState.lockMode = s.lockMode;
+    focusState.remainingMs = focusState.durationMs;
+  } catch(e) {}
+})();
+
+function _focusPersist() {
+  try {
+    localStorage.setItem('focus_state', JSON.stringify({
+      mode: focusState.mode,
+      durationMs: focusState.durationMs,
+      lockMode: focusState.lockMode,
+      history: focusState.history.slice(-20)
+    }));
+  } catch(e) {}
+}
+
+function _focusFmtTime(ms) {
+  if (ms < 0) ms = 0;
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  const pad = n => String(n).padStart(2, '0');
+  return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+}
+
+function _focusUpdateDisplay() {
+  const el = document.getElementById('focus-time-display');
+  if (!el) return;
+  let ms;
+  if (focusState.mode === 'timer') {
+    ms = focusState.remainingMs;
+    el.classList.toggle('warning', ms <= 60_000 && ms > 0 && focusState.running);
+    el.classList.toggle('done', ms === 0);
+  } else {
+    ms = focusState.elapsedMs;
+    el.classList.remove('warning', 'done');
+  }
+  el.textContent = _focusFmtTime(ms);
+}
+
+function _focusGetSelectedGoal() {
+  if (!focusState.selectedKey || focusState.selectedIdx == null) return null;
+  const data = calLoad(focusState.selectedKey);
+  const g = data.goals?.[focusState.selectedIdx];
+  // If index shifted (e.g., user deleted other goals), try locating by text
+  if (g && focusState.selectedText && g.text === focusState.selectedText) return { data, goal: g, idx: focusState.selectedIdx };
+  if (focusState.selectedText && data.goals) {
+    const newIdx = data.goals.findIndex(x => x.text === focusState.selectedText);
+    if (newIdx !== -1) {
+      focusState.selectedIdx = newIdx;
+      return { data, goal: data.goals[newIdx], idx: newIdx };
+    }
+  }
+  return g ? { data, goal: g, idx: focusState.selectedIdx } : null;
+}
+
+function focusSetMode(m) {
+  if (focusState.running) {
+    if (!confirm('A session is running. Switch mode and discard it?')) return;
+    _focusStopInterval();
+    focusState.running = false;
+  }
+  focusState.mode = m;
+  focusState.remainingMs = focusState.durationMs;
+  focusState.elapsedMs = 0;
+  focusState.goalDoneInLock = false;
+  document.getElementById('fmode-timer').classList.toggle('active', m === 'timer');
+  document.getElementById('fmode-stopwatch').classList.toggle('active', m === 'stopwatch');
+  document.getElementById('focus-mode-label').textContent = m === 'timer' ? 'Pomodoro Timer' : 'Stopwatch';
+  document.getElementById('focus-duration-row').style.display = m === 'timer' ? '' : 'none';
+  _focusPersist();
+  focusRender();
+}
+
+function focusSetDuration(min) {
+  const n = parseInt(min, 10);
+  if (!n || n < 1) return;
+  focusState.durationMs = n * 60 * 1000;
+  if (!focusState.running) focusState.remainingMs = focusState.durationMs;
+  // Update active preset highlight
+  document.querySelectorAll('#focus-duration-row .focus-preset-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent, 10) === n);
+  });
+  _focusPersist();
+  _focusUpdateDisplay();
+}
+
+function focusStart() {
+  // Clear "goal done in lock" flag when starting a fresh session
+  if (focusState.mode === 'timer' && focusState.remainingMs <= 0) {
+    focusState.remainingMs = focusState.durationMs;
+  }
+  if (focusState.mode === 'stopwatch' && focusState.elapsedMs === 0) {
+    focusState.goalDoneInLock = false;
+  }
+  if (focusState.mode === 'timer' && focusState.remainingMs === focusState.durationMs) {
+    focusState.goalDoneInLock = false;
+  }
+  focusState.running = true;
+  focusState.startTimestamp = Date.now();
+  _focusStartInterval();
+  _focusUpdateButtons();
+}
+
+function focusPause() {
+  if (focusState.lockMode && !focusState.goalDoneInLock) {
+    _calShowToast('🔒 Lock Mode: pause/stop disabled until the goal is marked done.');
+    return;
+  }
+  if (!focusState.running) return;
+  // Capture elapsed segment
+  const segMs = Date.now() - focusState.startTimestamp;
+  if (focusState.mode === 'timer') {
+    focusState.remainingMs -= segMs;
+    if (focusState.remainingMs < 0) focusState.remainingMs = 0;
+  } else {
+    focusState.elapsedMs += segMs;
+  }
+  focusState.running = false;
+  _focusStopInterval();
+  _focusUpdateButtons();
+  _focusUpdateDisplay();
+}
+
+function focusStop() {
+  if (focusState.lockMode && !focusState.goalDoneInLock) {
+    _calShowToast('🔒 Lock Mode: pause/stop disabled until the goal is marked done.');
+    return;
+  }
+  _focusFinishSession(/*manualStop*/true);
+}
+
+function focusReset() {
+  if (focusState.lockMode && focusState.running && !focusState.goalDoneInLock) {
+    _calShowToast('🔒 Lock Mode: can\'t reset until the goal is marked done.');
+    return;
+  }
+  _focusStopInterval();
+  focusState.running = false;
+  focusState.remainingMs = focusState.durationMs;
+  focusState.elapsedMs = 0;
+  focusState.goalDoneInLock = false;
+  _focusUpdateButtons();
+  _focusUpdateDisplay();
+}
+
+function _focusFinishSession(manualStop) {
+  // Compute final elapsed time
+  let totalElapsedMs;
+  if (focusState.running) {
+    const segMs = Date.now() - focusState.startTimestamp;
+    if (focusState.mode === 'timer') {
+      focusState.remainingMs -= segMs;
+      if (focusState.remainingMs < 0) focusState.remainingMs = 0;
+      totalElapsedMs = focusState.durationMs - focusState.remainingMs;
+    } else {
+      focusState.elapsedMs += segMs;
+      totalElapsedMs = focusState.elapsedMs;
+    }
+  } else {
+    totalElapsedMs = focusState.mode === 'timer'
+      ? (focusState.durationMs - focusState.remainingMs)
+      : focusState.elapsedMs;
+  }
+  _focusStopInterval();
+  focusState.running = false;
+
+  // If lock mode + selected goal + goal was marked done during this session
+  // → permanently lock the goal everywhere.
+  if (focusState.lockMode && focusState.goalDoneInLock) {
+    _focusLockGoalPermanent();
+  } else if (focusState.selectedKey && focusState.selectedText) {
+    // Even outside lock mode: if the user marked goal done during the session,
+    // ensure the goal is recorded as done (without permanent lock).
+    const sel = _focusGetSelectedGoal();
+    if (sel && sel.goal.done) {
+      // already done — nothing to do
+    }
+  }
+
+  // Add to history
+  if (totalElapsedMs >= 5000) {
+    focusState.history.unshift({
+      time: _focusFmtTime(totalElapsedMs),
+      text: focusState.selectedText || '(no goal)',
+      mode: focusState.mode,
+      ts: Date.now()
+    });
+    if (focusState.history.length > 20) focusState.history.length = 20;
+    _focusPersist();
+  }
+
+  // Reset display values for the next run
+  focusState.remainingMs = focusState.durationMs;
+  focusState.elapsedMs = 0;
+  focusState.goalDoneInLock = false;
+
+  _focusUpdateButtons();
+  _focusUpdateDisplay();
+  _focusRenderHistory();
+  _focusRenderSelectedGoalCard();
+}
+
+function _focusLockGoalPermanent() {
+  if (!focusState.selectedKey || !focusState.selectedText) return;
+  const data = calLoad(focusState.selectedKey);
+  if (!data.goals) return;
+  let mutated = false;
+  data.goals.forEach(g => {
+    if (g.text === focusState.selectedText) {
+      g.done = true;
+      g.lockedDone = true;
+      g.lockedAt = new Date().toISOString();
+      mutated = true;
+    }
+  });
+  if (data.days) {
+    Object.values(data.days).forEach(dayData => {
+      (dayData.goals || []).forEach(g => {
+        if (g.text === focusState.selectedText) {
+          g.done = true;
+          g.lockedDone = true;
+          if (!g.doneDate) g.doneDate = new Date().toISOString().slice(0,10);
+          mutated = true;
+        }
+      });
+    });
+  }
+  if (mutated) {
+    calSave(focusState.selectedKey, data);
+    _calShowToast('🔒 Goal permanently locked as done.');
+    if (typeof updateStreakBadge === 'function') updateStreakBadge();
+  }
+}
+
+function _focusStartInterval() {
+  _focusStopInterval();
+  focusState.intervalId = setInterval(_focusTick, 250);
+  _focusUpdateDisplay();
+}
+
+function _focusStopInterval() {
+  if (focusState.intervalId) {
+    clearInterval(focusState.intervalId);
+    focusState.intervalId = null;
+  }
+}
+
+function _focusTick() {
+  if (!focusState.running) return;
+  const segMs = Date.now() - focusState.startTimestamp;
+  if (focusState.mode === 'timer') {
+    const liveRemaining = focusState.remainingMs - segMs;
+    const el = document.getElementById('focus-time-display');
+    if (el) {
+      el.textContent = _focusFmtTime(liveRemaining);
+      el.classList.toggle('warning', liveRemaining <= 60_000 && liveRemaining > 0);
+      el.classList.toggle('done', liveRemaining <= 0);
+    }
+    if (liveRemaining <= 0) {
+      // Timer ran out
+      focusState.remainingMs = 0;
+      // Try to play a beep
+      try { _focusBeep(); } catch(e) {}
+      // If lock mode + goal not yet marked done, just hold at 00:00 and keep "running" state
+      if (focusState.lockMode && !focusState.goalDoneInLock && focusState.selectedKey) {
+        focusState.running = false;
+        _focusStopInterval();
+        _focusUpdateButtons();
+        _calShowToast('⏰ Time\'s up! Mark your goal as done to release lock mode.');
+        return;
+      }
+      _focusFinishSession(false);
+    }
+  } else {
+    const liveElapsed = focusState.elapsedMs + segMs;
+    const el = document.getElementById('focus-time-display');
+    if (el) el.textContent = _focusFmtTime(liveElapsed);
+  }
+}
+
+function _focusBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 880;
+    o.connect(g); g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+    o.start(); o.stop(ctx.currentTime + 0.6);
+    setTimeout(() => ctx.close(), 800);
+  } catch(e) {}
+}
+
+function _focusUpdateButtons() {
+  const startBtn = document.getElementById('focus-start-btn');
+  const pauseBtn = document.getElementById('focus-pause-btn');
+  const stopBtn  = document.getElementById('focus-stop-btn');
+  const resetBtn = document.getElementById('focus-reset-btn');
+  const markBtn  = document.getElementById('focus-mark-done-btn');
+  const lockWarn = document.getElementById('focus-lock-warning');
+  const modeBtns = document.querySelectorAll('.focus-mode-btn');
+  const goalSel  = document.getElementById('focus-goal-select');
+  if (!startBtn) return;
+
+  startBtn.disabled = focusState.running;
+  // In lock mode + running + goal not yet done → pause/stop disabled
+  const lockBlock = focusState.lockMode && focusState.running && !focusState.goalDoneInLock;
+  pauseBtn.disabled = !focusState.running || lockBlock;
+  stopBtn.disabled  = !focusState.running || lockBlock;
+  resetBtn.disabled = focusState.running && lockBlock;
+
+  // Mode switching disabled while running
+  modeBtns.forEach(b => b.disabled = focusState.running);
+  if (goalSel) goalSel.disabled = focusState.running;
+
+  // Mark-done button enabled if a goal is selected, lock mode is on, and timer is running
+  const sel = _focusGetSelectedGoal();
+  const canMark = !!(sel && focusState.lockMode && focusState.running && !sel.goal.done);
+  markBtn.disabled = !canMark;
+
+  lockWarn.style.display = lockBlock ? '' : 'none';
+}
+
+function focusToggleLockMode(checked) {
+  if (focusState.running) {
+    // Don't allow toggling lock during run
+    document.getElementById('focus-lock-mode').checked = focusState.lockMode;
+    _calShowToast('Stop the session before changing Lock Mode.');
+    return;
+  }
+  focusState.lockMode = !!checked;
+  _focusPersist();
+  _focusUpdateButtons();
+}
+
+function focusSelectGoal(val) {
+  if (focusState.running) return;
+  if (!val) {
+    focusState.selectedKey = null;
+    focusState.selectedIdx = null;
+    focusState.selectedText = null;
+  } else {
+    const [key, idxStr] = val.split('|');
+    const idx = parseInt(idxStr, 10);
+    const data = calLoad(key);
+    if (data.goals?.[idx]) {
+      focusState.selectedKey  = key;
+      focusState.selectedIdx  = idx;
+      focusState.selectedText = data.goals[idx].text;
+    }
+  }
+  _focusRenderSelectedGoalCard();
+  _focusUpdateButtons();
+}
+
+function focusMarkGoalDone() {
+  const sel = _focusGetSelectedGoal();
+  if (!sel) return;
+  if (sel.goal.done) return;
+  // Mark the goal done in week + day data
+  sel.goal.done = true;
+  if (focusState.lockMode) {
+    sel.goal.lockedDone = true;
+    sel.goal.lockedAt = new Date().toISOString();
+  }
+  if (sel.data.days) {
+    Object.values(sel.data.days).forEach(dayData => {
+      (dayData.goals || []).forEach(g => {
+        if (g.text === focusState.selectedText) {
+          g.done = true;
+          if (focusState.lockMode) g.lockedDone = true;
+          if (!g.doneDate) g.doneDate = new Date().toISOString().slice(0,10);
+        }
+      });
+    });
+  }
+  calSave(focusState.selectedKey, sel.data);
+  focusState.goalDoneInLock = true;
+  if (typeof updateStreakBadge === 'function') updateStreakBadge();
+  _calShowToast(focusState.lockMode ? '✓ Goal marked done — lock released. You can stop now.' : '✓ Goal marked done.');
+  _focusUpdateButtons();
+  _focusRenderSelectedGoalCard();
+}
+
+function _focusRenderSelectedGoalCard() {
+  const card = document.getElementById('focus-selected-goal');
+  if (!card) return;
+  const sel = _focusGetSelectedGoal();
+  if (!sel) {
+    card.style.display = 'none';
+    return;
+  }
+  card.style.display = '';
+  document.getElementById('focus-selected-text').textContent = sel.goal.text;
+  const status = document.getElementById('focus-selected-status');
+  status.classList.remove('done', 'locked');
+  if (sel.goal.lockedDone) {
+    status.classList.add('locked');
+    status.textContent = '🔒 Permanently locked as done';
+  } else if (sel.goal.done) {
+    status.classList.add('done');
+    status.textContent = '✓ Marked done';
+  } else {
+    status.textContent = 'Not done yet';
+  }
+}
+
+function _focusRenderGoalDropdown() {
+  const sel = document.getElementById('focus-goal-select');
+  if (!sel) return;
+  // Build options from current week + adjacent weeks (so user has context)
+  const opts = ['<option value="">— No goal selected —</option>'];
+  const offsets = [0, -1, 1]; // current, last, next
+  const labels  = { 0: 'This Week', '-1': 'Last Week', '1': 'Next Week' };
+  offsets.forEach(off => {
+    const key = calWeekKey(off);
+    const data = calLoad(key);
+    const goals = data.goals || [];
+    if (goals.length === 0) return;
+    opts.push(`<optgroup label="${labels[off]}">`);
+    goals.forEach((g, i) => {
+      const val = `${key}|${i}`;
+      const isSel = focusState.selectedKey === key && focusState.selectedIdx === i;
+      const status = g.lockedDone ? ' 🔒' : (g.done ? ' ✓' : '');
+      const txt = g.text.length > 60 ? g.text.slice(0,60) + '…' : g.text;
+      opts.push(`<option value="${val}"${isSel?' selected':''}${g.lockedDone?' disabled':''}>${escHtml(txt)}${status}</option>`);
+    });
+    opts.push('</optgroup>');
+  });
+  sel.innerHTML = opts.join('');
+}
+
+function _focusRenderHistory() {
+  const list = document.getElementById('focus-history-list');
+  if (!list) return;
+  if (!focusState.history.length) {
+    list.innerHTML = '<div class="focus-history-empty">No sessions yet — finish one to see it here.</div>';
+    return;
+  }
+  list.innerHTML = focusState.history.map(h => `
+    <div class="focus-history-item">
+      <span class="focus-history-time">${h.time}</span>
+      <span class="focus-history-goal">${escHtml(h.text)}</span>
+    </div>`).join('');
+}
+
+function focusRender() {
+  // Reflect persisted mode buttons
+  document.getElementById('fmode-timer').classList.toggle('active', focusState.mode === 'timer');
+  document.getElementById('fmode-stopwatch').classList.toggle('active', focusState.mode === 'stopwatch');
+  document.getElementById('focus-mode-label').textContent = focusState.mode === 'timer' ? 'Pomodoro Timer' : 'Stopwatch';
+  document.getElementById('focus-duration-row').style.display = focusState.mode === 'timer' ? '' : 'none';
+  // Reflect duration preset selection
+  const minutes = Math.round(focusState.durationMs / 60000);
+  document.querySelectorAll('#focus-duration-row .focus-preset-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent, 10) === minutes);
+  });
+  document.getElementById('focus-lock-mode').checked = focusState.lockMode;
+  _focusRenderGoalDropdown();
+  _focusRenderSelectedGoalCard();
+  _focusRenderHistory();
+  _focusUpdateButtons();
+  _focusUpdateDisplay();
+  // If a session is running, restart the interval (in case user navigated away)
+  if (focusState.running && !focusState.intervalId) _focusStartInterval();
 }
 
 // ── Hash-based routing: boot to the right page ──
