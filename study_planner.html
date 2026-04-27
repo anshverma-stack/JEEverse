@@ -5121,7 +5121,7 @@ function calRenderWeek() {
       <span class="cal-goal-text${g.done?' done':''}" ${isLocked?'':"onclick=\"this.previousElementSibling.click()\""}>${escHtml(g.text)}</span>
       ${assignedDays.length ? `<span class="cal-goal-day-chips">${dayChipsHtml}</span>` : ''}
       <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
-      <button class="cal-goal-del${isLocked?' disabled-locked':''}" onclick="calWeekGoalDel('${key}',${gi})" title="${isLocked?'Locked goals can\\'t be deleted':'Remove'}">✕</button>
+      <button class="cal-goal-del${isLocked?' disabled-locked':''}" onclick="calWeekGoalDel('${key}',${gi})" title="${isLocked?'Locked goals cannot be deleted':'Remove'}">✕</button>
     </div>`;
   }).join('');
 
