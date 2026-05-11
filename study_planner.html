@@ -1567,6 +1567,12 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
 .focus-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:1.6rem; }
 @media (max-width:1000px) { .focus-grid { grid-template-columns:1fr; } }
 
+/* Daily panel */
+.focus-daily-panel-inner { display:grid; grid-template-columns:1fr 1.4fr; gap:1.6rem; }
+@media (max-width:900px) { .focus-daily-panel-inner { grid-template-columns:1fr; } }
+.focus-daily-left-card { text-align:left; }
+.focus-daily-right-card { }
+
 .focus-card { background:var(--surface-1); border:1px solid var(--border); border-radius:18px; padding:1.8rem; }
 .focus-display-card { display:flex; flex-direction:column; align-items:center; text-align:center; }
 
@@ -1790,11 +1796,78 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
 .focus-history-time { font-family:'DM Mono',monospace; font-weight:700; color:var(--accent); min-width:60px; }
 .focus-history-goal { color:var(--text-2); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .focus-history-empty { font-size:0.76rem; color:var(--text-3); padding:8px 0; }
+.focus-history-tag { font-size:0.68rem; background:rgba(99,102,241,0.15); color:var(--accent); border-radius:5px; padding:1px 5px; flex-shrink:0; }
+.focus-history-date { font-size:0.65rem; color:var(--text-3); flex-shrink:0; }
+
+/* ── Daily Study Tracker ── */
+.focus-daily-tracker {
+  margin-top:18px; padding:14px 16px; border-radius:14px;
+  background:var(--surface-2); border:1px solid var(--border);
+}
+.focus-daily-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+.focus-daily-header-title {
+  font-family:'DM Mono',monospace; font-size:0.6rem; font-weight:700;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--text-3); flex:1;
+}
+.focus-daily-time-big {
+  font-family:'Syne',sans-serif; font-size:1.45rem; font-weight:800;
+  letter-spacing:-0.03em; color:var(--text);
+}
+.focus-daily-time-big.goal-reached { color:var(--green); }
+.focus-daily-goal-row {
+  display:flex; align-items:center; gap:7px; margin-top:9px; margin-bottom:9px;
+}
+.focus-daily-goal-label {
+  font-family:'DM Mono',monospace; font-size:0.62rem; font-weight:600;
+  color:var(--text-3); white-space:nowrap;
+}
+.focus-daily-goal-input {
+  width:62px; padding:5px 8px; border-radius:8px;
+  border:1px solid var(--border); background:rgba(255,255,255,0.04);
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.82rem;
+  outline:none; transition:border-color 0.14s; text-align:center;
+}
+.focus-daily-goal-input:focus { border-color:rgba(99,102,241,0.45); background:rgba(99,102,241,0.05); }
+.focus-daily-goal-unit { font-family:'DM Mono',monospace; font-size:0.62rem; color:var(--text-3); }
+.focus-daily-progress-wrap { margin-bottom:4px; }
+.focus-daily-progress-bar {
+  height:7px; border-radius:100px; background:rgba(255,255,255,0.07); overflow:hidden; margin-bottom:5px;
+}
+.focus-daily-progress-fill {
+  height:100%; border-radius:100px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-2));
+  transition:width 0.4s ease, background 0.3s;
+}
+.focus-daily-progress-text {
+  font-family:'DM Mono',monospace; font-size:0.65rem; color:var(--text-3);
+}
+.focus-daily-celebration {
+  margin-top:7px; padding:7px 11px; border-radius:9px;
+  background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+  font-size:0.75rem; font-weight:700; color:#34d399; display:none; text-align:center;
+}
+.focus-daily-celebration.show { display:block; }
+.focus-log-offline-btn {
+  width:100%; margin-top:10px; padding:8px 12px; border-radius:10px;
+  border:1px solid var(--border); background:transparent;
+  color:var(--text-3); font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:600;
+  cursor:pointer; transition:all 0.15s; text-align:center;
+}
+.focus-log-offline-btn:hover { border-color:var(--border-2); color:var(--text-2); background:rgba(255,255,255,0.04); }
+
+/* ── Offline Modal extras ── */
+.offline-dur-row { display:flex; align-items:center; gap:8px; }
+.offline-dur-sep { color:var(--text-3); font-weight:700; font-size:0.9rem; }
+html.light .focus-daily-tracker { background:var(--surface-2); border-color:var(--border); }
+html.light .focus-daily-goal-input { background:rgba(90,65,40,0.04); border-color:var(--border); }
+html.light .focus-daily-goal-input:focus { border-color:rgba(80,70,228,0.4); background:rgba(80,70,228,0.04); }
+html.light .focus-log-offline-btn { border-color:var(--border); color:var(--text-3); }
+html.light .focus-log-offline-btn:hover { border-color:var(--border-2); color:var(--text-2); }
 
 /* ── Stopwatch mode: simplified UI ── */
 .stopwatch-mode .focus-subtab-row { display:none !important; }
 .stopwatch-mode .focus-right-card { display:none !important; }
-.stopwatch-mode .focus-grid { grid-template-columns:1fr !important; max-width:520px; margin:0 auto; }
+.stopwatch-mode #focus-grid { grid-template-columns:1fr !important; max-width:520px; margin:0 auto; }
 .stopwatch-mode #focus-pause-btn { display:none !important; }
 .stopwatch-mode #focus-reset-btn { display:none !important; }
 .stopwatch-mode #focus-duration-row { display:none !important; }
@@ -2122,10 +2195,11 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
       <div class="focus-mode-toggle">
         <button class="focus-mode-btn active" id="fmode-timer" onclick="focusSetMode('timer')">⏲️ Timer</button>
         <button class="focus-mode-btn" id="fmode-stopwatch" onclick="focusSetMode('stopwatch')">⏱️ Stopwatch</button>
+        <button class="focus-mode-btn" id="fmode-daily" onclick="focusSetMode('daily')">📊 Daily</button>
       </div>
     </div>
 
-    <div class="focus-grid">
+    <div class="focus-grid" id="focus-grid">
       <!-- Left: Timer / Display -->
       <div class="focus-card focus-display-card">
         <!-- Sub-tabs: Timer vs Pomodoro -->
@@ -2239,7 +2313,62 @@ html.light .dq-heatmap-cell-num { color: rgba(0,0,0,0.72); }
           <div class="focus-history-list" id="focus-history-list"></div>
         </div>
       </div>
+
+    </div><!-- end focus-grid -->
+
+    <!-- ── Daily Progress Panel (shown when "Daily" mode is active) ── -->
+    <div id="focus-daily-panel" style="display:none;">
+      <div class="focus-daily-panel-inner">
+
+        <!-- Left: Big time + goal + progress -->
+        <div class="focus-card focus-daily-left-card">
+          <div class="cal-card-header" style="margin-bottom:20px;">
+            <span style="font-size:1.2rem;">&#x1F4CA;</span>
+            <span class="cal-section-title" style="margin-bottom:0;">Today's Progress</span>
+          </div>
+
+          <div style="text-align:center;padding:20px 0 18px;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.58rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-3);margin-bottom:10px;">STUDIED TODAY</div>
+            <div class="focus-daily-time-big" id="focus-daily-time">0h 0m</div>
+          </div>
+
+          <div class="focus-daily-goal-row" style="margin-bottom:14px;justify-content:center;">
+            <span class="focus-daily-goal-label">Daily Goal:</span>
+            <input type="number" class="focus-daily-goal-input" id="focus-daily-goal-input"
+              min="0.5" max="24" step="0.5" placeholder="&#x2014;"
+              oninput="saveDailyGoal(this.value)" title="Set your daily study goal in hours">
+            <span class="focus-daily-goal-unit">hrs</span>
+          </div>
+
+          <div class="focus-daily-progress-wrap" id="focus-daily-progress-wrap" style="display:none;margin-bottom:14px;">
+            <div class="focus-daily-progress-bar" style="height:10px;">
+              <div class="focus-daily-progress-fill" id="focus-daily-progress-fill" style="width:0%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+              <span class="focus-daily-progress-text" id="focus-daily-progress-text"></span>
+            </div>
+          </div>
+
+          <div class="focus-daily-celebration" id="focus-daily-celebration">&#x1F389; Daily goal reached! Great work!</div>
+
+          <button class="focus-log-offline-btn" onclick="openOfflineModal()" style="margin-top:16px;">&#x1F4DD; + Log Offline Time</button>
+        </div>
+
+        <!-- Right: Sessions list -->
+        <div class="focus-card focus-daily-right-card">
+          <div class="cal-card-header" style="margin-bottom:16px;">
+            <span style="font-size:1.1rem;">&#x1F4CB;</span>
+            <span class="cal-section-title" style="margin-bottom:0;">Sessions Today</span>
+          </div>
+          <div id="focus-today-sessions" class="focus-history-list"></div>
+
+          <div class="focus-section-label" style="margin-top:20px;">All Recent Sessions</div>
+          <div class="focus-history-list" id="focus-history-list-daily" style="margin-top:8px;"></div>
+        </div>
+
+      </div>
     </div>
+
   </div>
   </div><!-- end scroll wrapper -->
 </div>
@@ -6200,24 +6329,42 @@ function _focusGetSelectedGoal() {
 }
 
 function focusSetMode(m) {
-  if (focusState.running) {
+  if (m !== 'daily' && focusState.running) {
     if (!confirm('A session is running. Switch mode and discard it?')) return;
     _focusStopInterval();
     focusState.running = false;
   }
-  focusState.mode = m;
-  focusState.remainingMs = focusState.durationMs;
-  focusState.elapsedMs = 0;
-  focusState.goalDoneInLock = false;
+
+  // If switching to daily, just show the daily panel — don't reset session state
+  const isDaily = m === 'daily';
+  const grid        = document.getElementById('focus-grid');
+  const dailyPanel  = document.getElementById('focus-daily-panel');
+  if (grid)       grid.style.display       = isDaily ? 'none' : '';
+  if (dailyPanel) dailyPanel.style.display  = isDaily ? ''     : 'none';
+
+  // Update toggle buttons
   document.getElementById('fmode-timer').classList.toggle('active', m === 'timer');
   document.getElementById('fmode-stopwatch').classList.toggle('active', m === 'stopwatch');
-  document.getElementById('focus-mode-label').textContent = m === 'timer' ? 'Pomodoro Timer' : 'Stopwatch';
-  document.getElementById('focus-duration-row').style.display = m === 'timer' ? '' : 'none';
-  // Stopwatch mode: simplified layout
-  const focusPage = document.getElementById('page-focus');
-  if (focusPage) focusPage.classList.toggle('stopwatch-mode', m === 'stopwatch');
-  _focusPersist();
-  focusRender();
+  document.getElementById('fmode-daily').classList.toggle('active', m === 'daily');
+
+  if (!isDaily) {
+    focusState.mode = m;
+    focusState.remainingMs = focusState.durationMs;
+    focusState.elapsedMs = 0;
+    focusState.goalDoneInLock = false;
+    document.getElementById('focus-mode-label').textContent = m === 'timer' ? 'Pomodoro Timer' : 'Stopwatch';
+    document.getElementById('focus-duration-row').style.display = m === 'timer' ? '' : 'none';
+    const focusPage = document.getElementById('page-focus');
+    if (focusPage) focusPage.classList.toggle('stopwatch-mode', m === 'stopwatch');
+    _focusPersist();
+  }
+
+  if (isDaily) {
+    _focusRenderDailyTracker();
+    _focusRenderDailySessionList();
+  } else {
+    focusRender();
+  }
 }
 
 function focusSetDuration(min) {
@@ -6338,6 +6485,17 @@ function _focusFinishSession(manualStop) {
     });
     if (focusState.history.length > 20) focusState.history.length = 20;
     _focusPersist();
+
+    // ── Log to daily study tracker ──
+    _slAddSession(_slTodayKey(), {
+      label:    focusState.selectedText || '(no goal)',
+      ms:       totalElapsedMs,
+      isManual: false,
+      ts:       Date.now(),
+      mode:     focusState.mode
+    });
+    _focusRenderDailyTracker();
+    _focusRenderDailySessionList();
   }
 
   // Reset display values for the next run
@@ -7001,18 +7159,243 @@ function _focusRenderHistory() {
     <div class="focus-history-item">
       <span class="focus-history-time">${h.time}</span>
       <span class="focus-history-goal">${escHtml(h.text)}</span>
+      ${h.isManual ? '<span class="focus-history-tag">&#x1F4DD; offline</span>' : ''}
+      ${h.dateKey && h.dateKey !== _slTodayKey() ? `<span class="focus-history-date">${h.dateKey}</span>` : ''}
     </div>`).join('');
 }
 
+// ══════════════════════════════════════════
+//   DAILY STUDY LOG
+// ══════════════════════════════════════════
+const _SL_KEY   = 'study_log';
+const _GOAL_KEY = 'daily_goal_minutes';
+
+function _slTodayKey() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
+
+function _slLoad() {
+  try { return JSON.parse(localStorage.getItem(_SL_KEY) || '{}'); } catch(e) { return {}; }
+}
+function _slSave(log) {
+  try { localStorage.setItem(_SL_KEY, JSON.stringify(log)); } catch(e) {}
+}
+function _slGetDay(dateKey) {
+  const log = _slLoad();
+  return log[dateKey] || { totalMs: 0, sessions: [] };
+}
+function _slAddSession(dateKey, session) {
+  const log = _slLoad();
+  if (!log[dateKey]) log[dateKey] = { totalMs: 0, sessions: [] };
+  log[dateKey].sessions.push(session);
+  log[dateKey].totalMs = (log[dateKey].totalMs || 0) + session.ms;
+  _slSave(log);
+}
+
+function _slGetGoalMinutes() {
+  try { return parseFloat(localStorage.getItem(_GOAL_KEY) || '0') || 0; } catch(e) { return 0; }
+}
+
+function saveDailyGoal(val) {
+  const v = parseFloat(val);
+  try {
+    if (v > 0) localStorage.setItem(_GOAL_KEY, String(Math.round(v * 60)));
+    else localStorage.removeItem(_GOAL_KEY);
+  } catch(e) {}
+  _focusRenderDailyTracker();
+}
+
+function _focusRenderDailyTracker() {
+  const todayKey = _slTodayKey();
+  const dayData  = _slGetDay(todayKey);
+  const totalMs  = dayData.totalMs || 0;
+  const totalMin = Math.floor(totalMs / 60000);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+
+  const timeEl = document.getElementById('focus-daily-time');
+  if (timeEl) {
+    timeEl.textContent = h + 'h ' + m + 'm';
+  }
+
+  // Goal input — only pre-fill once (don't clobber while user types)
+  const goalMin = _slGetGoalMinutes();
+  const goalInput = document.getElementById('focus-daily-goal-input');
+  if (goalInput && document.activeElement !== goalInput) {
+    goalInput.value = goalMin > 0 ? (goalMin / 60).toString() : '';
+  }
+
+  const progressWrap = document.getElementById('focus-daily-progress-wrap');
+  const progressFill = document.getElementById('focus-daily-progress-fill');
+  const progressText = document.getElementById('focus-daily-progress-text');
+  const celebration  = document.getElementById('focus-daily-celebration');
+
+  if (goalMin > 0) {
+    if (progressWrap) progressWrap.style.display = '';
+    const pct     = Math.min(100, Math.round((totalMin / goalMin) * 100));
+    const reached = pct >= 100;
+    if (progressFill) {
+      progressFill.style.width = pct + '%';
+      progressFill.style.background = reached
+        ? 'var(--green)'
+        : 'linear-gradient(90deg, var(--accent), var(--accent-2))';
+    }
+    if (progressText) {
+      const gH = Math.floor(goalMin / 60);
+      const gM = goalMin % 60;
+      const goalStr = gH > 0 ? (gH + 'h ' + (gM ? gM + 'm' : '')) : gM + 'm';
+      progressText.textContent = (h > 0 ? h + 'h ' : '') + m + 'm / ' + goalStr.trim() + ' (' + pct + '%)';
+      progressText.style.color = reached ? 'var(--green)' : 'var(--text-3)';
+    }
+    if (timeEl) timeEl.classList.toggle('goal-reached', reached);
+    if (celebration) celebration.classList.toggle('show', reached);
+  } else {
+    if (progressWrap)  progressWrap.style.display = 'none';
+    if (celebration)   celebration.classList.remove('show');
+    if (timeEl)        timeEl.classList.remove('goal-reached');
+  }
+
+  // Populate today's session breakdown list
+  const todayList = document.getElementById('focus-today-sessions');
+  if (todayList) {
+    const sessions = (dayData.sessions || []).slice().reverse();
+    if (!sessions.length) {
+      todayList.innerHTML = '<div class="focus-history-empty">No sessions yet today.</div>';
+    } else {
+      todayList.innerHTML = sessions.map(s => {
+        const sm = Math.floor(s.ms / 60000);
+        const sh = Math.floor(sm / 60); const smm = sm % 60;
+        const dur = sh > 0 ? sh + 'h ' + smm + 'm' : smm + 'm';
+        return `<div class="focus-history-item">
+          <span class="focus-history-time">${dur}</span>
+          <span class="focus-history-goal">${escHtml(s.label)}</span>
+          ${s.isManual ? '<span class="focus-history-tag">&#x1F4DD;</span>' : ''}
+        </div>`;
+      }).join('');
+    }
+  }
+}
+
+// ── Offline Modal ──────────────────────
+function openOfflineModal() {
+  const today = _slTodayKey();
+  document.getElementById('offline-date').value    = today;
+  document.getElementById('offline-label').value   = '';
+  document.getElementById('offline-hours').value   = '0';
+  document.getElementById('offline-minutes').value = '30';
+  document.getElementById('offline-modal-backdrop').classList.add('open');
+  setTimeout(() => document.getElementById('offline-label').focus(), 60);
+}
+
+function closeOfflineModal(e) {
+  if (e && e.target !== document.getElementById('offline-modal-backdrop')) return;
+  document.getElementById('offline-modal-backdrop').classList.remove('open');
+}
+
+function saveOfflineEntry() {
+  const label = document.getElementById('offline-label').value.trim() || '(offline session)';
+  const hours = parseInt(document.getElementById('offline-hours').value, 10) || 0;
+  const mins  = parseInt(document.getElementById('offline-minutes').value, 10) || 0;
+  const date  = document.getElementById('offline-date').value || _slTodayKey();
+  const totalMs = (hours * 60 + mins) * 60 * 1000;
+
+  if (totalMs <= 0) {
+    const hEl = document.getElementById('offline-hours');
+    const mEl = document.getElementById('offline-minutes');
+    hEl.style.borderColor = '#ef4444';
+    mEl.style.borderColor = '#ef4444';
+    setTimeout(() => { hEl.style.borderColor = ''; mEl.style.borderColor = ''; }, 1400);
+    return;
+  }
+
+  // Add to persistent study log
+  _slAddSession(date, { label, ms: totalMs, isManual: true, ts: Date.now() });
+
+  // Mirror into focusState.history for display in "Recent Sessions"
+  focusState.history.unshift({
+    time:     _focusFmtTime(totalMs),
+    text:     label,
+    mode:     'manual',
+    ts:       Date.now(),
+    isManual: true,
+    dateKey:  date
+  });
+  if (focusState.history.length > 20) focusState.history.length = 20;
+  _focusPersist();
+
+  document.getElementById('offline-modal-backdrop').classList.remove('open');
+  _focusRenderHistory();
+  _focusRenderDailyTracker();
+  _focusRenderDailySessionList();
+  _calShowToast('&#x1F4DD; Offline session logged!');
+}
+
+function _focusRenderDailySessionList() {
+  const todayKey  = _slTodayKey();
+  const dayData   = _slGetDay(todayKey);
+  const sessions  = (dayData.sessions || []).slice().reverse(); // newest first
+
+  // Today's sessions (in daily panel)
+  const todayEl = document.getElementById('focus-today-sessions');
+  if (todayEl) {
+    if (!sessions.length) {
+      todayEl.innerHTML = '<div class="focus-history-empty">No sessions yet today.</div>';
+    } else {
+      todayEl.innerHTML = sessions.map(s => {
+        const ms  = s.ms || 0;
+        const h   = Math.floor(ms / 3600000);
+        const m   = Math.floor((ms % 3600000) / 60000);
+        const dur = (h > 0 ? h + 'h ' : '') + m + 'm';
+        const tag = s.isManual ? '<span class="focus-history-tag">&#x1F4DD; offline</span>' : '';
+        return `<div class="focus-history-item">
+          <span class="focus-history-time">${dur}</span>
+          <span class="focus-history-goal">${escHtml(s.label || '(session)')}</span>
+          ${tag}
+        </div>`;
+      }).join('');
+    }
+  }
+
+  // All recent sessions mirror (also in daily panel)
+  const allEl = document.getElementById('focus-history-list-daily');
+  if (allEl) {
+    if (!focusState.history.length) {
+      allEl.innerHTML = '<div class="focus-history-empty">No sessions recorded yet.</div>';
+    } else {
+      allEl.innerHTML = focusState.history.map(h => `
+        <div class="focus-history-item">
+          <span class="focus-history-time">${h.time}</span>
+          <span class="focus-history-goal">${escHtml(h.text)}</span>
+          ${h.isManual ? '<span class="focus-history-tag">&#x1F4DD; offline</span>' : ''}
+          ${h.dateKey && h.dateKey !== _slTodayKey() ? `<span class="focus-history-date">${h.dateKey}</span>` : ''}
+        </div>`).join('');
+    }
+  }
+}
+
 function focusRender() {
-  // Reflect persisted mode buttons
-  document.getElementById('fmode-timer').classList.toggle('active', focusState.mode === 'timer');
-  document.getElementById('fmode-stopwatch').classList.toggle('active', focusState.mode === 'stopwatch');
-  document.getElementById('focus-mode-label').textContent = focusState.mode === 'timer' ? 'Pomodoro Timer' : 'Stopwatch';
-  document.getElementById('focus-duration-row').style.display = focusState.mode === 'timer' ? '' : 'none';
-  // Stopwatch mode: simplified layout
-  const focusPage = document.getElementById('page-focus');
-  if (focusPage) focusPage.classList.toggle('stopwatch-mode', focusState.mode === 'stopwatch');
+  const m = focusState.mode;
+
+  // Show/hide grid vs daily panel
+  const grid       = document.getElementById('focus-grid');
+  const dailyPanel = document.getElementById('focus-daily-panel');
+  if (grid)       grid.style.display       = (m === 'daily') ? 'none' : '';
+  if (dailyPanel) dailyPanel.style.display  = (m === 'daily') ? ''     : 'none';
+
+  // Reflect mode buttons
+  document.getElementById('fmode-timer').classList.toggle('active', m === 'timer');
+  document.getElementById('fmode-stopwatch').classList.toggle('active', m === 'stopwatch');
+  document.getElementById('fmode-daily').classList.toggle('active', m === 'daily');
+
+  if (m === 'daily') {
+    _focusRenderDailyTracker();
+    _focusRenderDailySessionList();
+    return;
+  }
+
   // Reflect duration preset selection
   const minutes = Math.round(focusState.durationMs / 60000);
   document.querySelectorAll('#focus-duration-row .focus-preset-btn').forEach(b => {
@@ -7022,6 +7405,7 @@ function focusRender() {
   _focusRenderGoalDropdown();
   _focusRenderSelectedGoalCard();
   _focusRenderHistory();
+  _focusRenderDailyTracker();
   _focusUpdateButtons();
   _focusUpdateDisplay();
   // If a session is running, restart the interval (in case user navigated away)
@@ -7039,6 +7423,34 @@ function focusRender() {
   updateStreakBadge();
 })();
 </script>
+
+<!-- ── Offline Time Entry Modal ── -->
+<div class="modal-backdrop" id="offline-modal-backdrop" onclick="closeOfflineModal(event)">
+  <div class="modal">
+    <div class="modal-title">&#x1F4DD; Log Offline Study Time</div>
+    <div class="form-group">
+      <label class="form-label">Subject / Label</label>
+      <input class="form-input" id="offline-label" type="text" placeholder="e.g. Physics — Optics revision">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duration</label>
+      <div class="offline-dur-row">
+        <input class="form-input" id="offline-hours" type="number" min="0" max="23" value="0" style="width:80px;text-align:center;">
+        <span class="offline-dur-sep">h</span>
+        <input class="form-input" id="offline-minutes" type="number" min="0" max="59" value="30" style="width:80px;text-align:center;">
+        <span class="offline-dur-sep">m</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input class="form-input" id="offline-date" type="date">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveOfflineEntry()">&#x2713; Save</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('offline-modal-backdrop').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- Firebase loaded via static module imports — works in all environments -->
 <script type="module">
