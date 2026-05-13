@@ -3644,6 +3644,23 @@ async function loadFromCloud(user) {
         try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {}
       });
     }
+    // Load syllabus store
+    if (p.sylStore && typeof p.sylStore === 'object') {
+      try {
+        localStorage.setItem('jee_command_v10', JSON.stringify(p.sylStore));
+        store = p.sylStore;
+      } catch(e) {}
+    }
+    // Load focus study log & daily goal
+    if (p.studyLog && typeof p.studyLog === 'object') {
+      try { localStorage.setItem('study_log', JSON.stringify(p.studyLog)); } catch(e) {}
+    }
+    if (p.dailyGoalMin) {
+      try { localStorage.setItem('daily_goal_minutes', String(p.dailyGoalMin)); } catch(e) {}
+    }
+    if (p.focusStateSaved && typeof p.focusStateSaved === 'object') {
+      try { localStorage.setItem('focus_state', JSON.stringify(p.focusStateSaved)); } catch(e) {}
+    }
     saveWeekData(weekData);
     renderCal();
     const activePage = document.querySelector('.page.active');
@@ -3666,11 +3683,25 @@ async function saveToCloud() {
         try { calJournal[k] = JSON.parse(localStorage.getItem(k)); } catch(e2) {}
       }
     }
+    // Collect syllabus store
+    let sylStore = null;
+    try { sylStore = JSON.parse(localStorage.getItem('jee_command_v10')); } catch(e2) {}
+
+    // Collect focus history (study_log + daily goal)
+    let studyLog = null, dailyGoalMin = null, focusStateSaved = null;
+    try { studyLog = JSON.parse(localStorage.getItem('study_log') || 'null'); } catch(e2) {}
+    try { dailyGoalMin = localStorage.getItem('daily_goal_minutes'); } catch(e2) {}
+    try { focusStateSaved = JSON.parse(localStorage.getItem('focus_state') || 'null'); } catch(e2) {}
+
     await window._fbSet(window._fbRef(_fbDb, 'users/' + _fbUser.uid + '/planner'), {
       ttSlots,
       calEvents,
       weekData: { weekKey: getWeekKey(), entries: weekData },
       calJournal,
+      ...(sylStore          !== null ? { sylStore }         : {}),
+      ...(studyLog          !== null ? { studyLog }         : {}),
+      ...(dailyGoalMin             ? { dailyGoalMin }      : {}),
+      ...(focusStateSaved   !== null ? { focusStateSaved }  : {}),
     });
     setSyncDot('synced');
   } catch(e) { console.warn('Cloud save error:', e); setSyncDot('error'); }
@@ -6285,6 +6316,7 @@ function _focusPersist() {
       history: focusState.history.slice(-20)
     }));
   } catch(e) {}
+  if (window._fbUser && window._fbDb) scheduleSave();
 }
 
 function _focusFmtTime(ms) {
@@ -7182,6 +7214,7 @@ function _slLoad() {
 }
 function _slSave(log) {
   try { localStorage.setItem(_SL_KEY, JSON.stringify(log)); } catch(e) {}
+  if (window._fbUser && window._fbDb) scheduleSave();
 }
 function _slGetDay(dateKey) {
   const log = _slLoad();
@@ -7205,6 +7238,7 @@ function saveDailyGoal(val) {
     if (v > 0) localStorage.setItem(_GOAL_KEY, String(Math.round(v * 60)));
     else localStorage.removeItem(_GOAL_KEY);
   } catch(e) {}
+  if (window._fbUser && window._fbDb) scheduleSave();
   _focusRenderDailyTracker();
 }
 
