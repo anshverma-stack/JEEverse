@@ -2203,7 +2203,7 @@ html.light .inc-date-input { background:var(--surface-1); }
 .inc-task-age.overdue-hot { color:#ef4444; }
 .inc-task-age.overdue-warn { color:#f59e0b; }
 .inc-copy-btn {
-  margin-left:auto; flex-shrink:0;
+  flex-shrink:0;
   padding:3px 10px; border-radius:7px; border:1px solid var(--border);
   background:transparent; color:var(--text-3);
   font-size:0.7rem; font-weight:700; cursor:pointer;
@@ -2211,6 +2211,15 @@ html.light .inc-date-input { background:var(--surface-1); }
 }
 .inc-task-row:hover .inc-copy-btn { opacity:1; }
 .inc-copy-btn:hover { border-color:rgba(99,102,241,0.4); color:var(--accent); background:rgba(99,102,241,0.08); }
+.inc-done-btn {
+  flex-shrink:0;
+  padding:3px 11px; border-radius:7px; border:1px solid rgba(16,185,129,0.3);
+  background:rgba(16,185,129,0.08); color:#34d399;
+  font-size:0.7rem; font-weight:700; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.14s; opacity:0;
+}
+.inc-task-row:hover .inc-done-btn { opacity:1; }
+.inc-done-btn:hover { border-color:rgba(16,185,129,0.6); background:rgba(16,185,129,0.18); color:#6ee7b7; }
 
 </style>
 
@@ -4735,10 +4744,12 @@ function renderIncomplete() {
     grouped[ds].forEach(t => {
       const srcClass = t.source === 'day' ? 'day' : 'week';
       const srcLabel = t.source === 'day' ? 'Day' : 'Week';
-      html += `<div class="inc-task-row">
+      const safeText = escHtml(t.text).replace(/'/g,"\\'");
+      html += `<div class="inc-task-row" id="inc-row-${escHtml(t.weekKey)}-${t.source}-${t.dateStr}-${encodeURIComponent(t.text)}">
         <span class="inc-task-source-chip ${srcClass}">${srcLabel}</span>
         <span style="font-size:0.88rem;font-weight:600;color:var(--text);flex:1;">${escHtml(t.text)}</span>
-        <button class="inc-copy-btn" onclick="incCopyToClipboard('${escHtml(t.text).replace(/'/g,"\\'")}')">Copy</button>
+        <button class="inc-copy-btn" onclick="incCopyToClipboard('${safeText}')">Copy</button>
+        <button class="inc-done-btn" onclick="markIncDone('${escHtml(t.weekKey)}','${t.source}','${t.dateStr}','${safeText}',this)">✓ Done</button>
       </div>`;
     });
   });
@@ -4756,6 +4767,37 @@ function isoWeekToDate(year, week) {
 
 function incCopyToClipboard(text) {
   navigator.clipboard?.writeText(text).then(() => _calShowToast('✓ Copied to clipboard'));
+}
+
+function markIncDone(weekKey, source, dateStr, text, btn) {
+  try {
+    const data = JSON.parse(localStorage.getItem(weekKey));
+    if (!data) return;
+    let marked = false;
+    if (source === 'day' && data.days && data.days[dateStr]) {
+      (data.days[dateStr].goals || []).forEach(g => {
+        if (g.text === text && !g.done) { g.done = true; marked = true; }
+      });
+    } else if (source === 'week' && data.goals) {
+      (data.goals || []).forEach(g => {
+        if (g.text === text && !g.done) { g.done = true; marked = true; }
+      });
+    }
+    if (marked) {
+      localStorage.setItem(weekKey, JSON.stringify(data));
+      // Animate row out then re-render
+      const row = btn.closest('.inc-task-row');
+      if (row) {
+        row.style.transition = 'opacity 0.3s, transform 0.3s';
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(20px)';
+        setTimeout(() => renderIncomplete(), 320);
+      } else {
+        renderIncomplete();
+      }
+      _calShowToast('✅ Task marked as done!');
+    }
+  } catch(e) { console.warn('markIncDone error', e); }
 }
 
 /* ══════════════════════════════════════════
