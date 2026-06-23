@@ -1263,6 +1263,78 @@ html.light .cal-goal-tooltip { background:var(--surface-0); box-shadow:0 6px 24p
 .cal-drag-hint { display:flex; align-items:center; gap:5px; font-size:0.67rem; color:var(--text-3); margin-bottom:8px; padding:5px 8px; background:rgba(99,102,241,0.05); border:1px dashed rgba(99,102,241,0.2); border-radius:8px; }
 .cal-goal-day-chips { display:flex; gap:3px; flex-shrink:0; margin-left:auto; margin-right:4px; }
 .cal-goal-day-chip { font-family:'DM Mono',monospace; font-size:0.55rem; font-weight:700; letter-spacing:0.04em; padding:2px 5px; border-radius:5px; background:rgba(99,102,241,0.18); color:var(--accent); border:1px solid rgba(99,102,241,0.3); line-height:1.4; }
+/* Month-goal → week-card drag-and-drop */
+.cal-week-card { transition: border-color 0.15s, background 0.15s, box-shadow 0.15s; }
+.cal-week-card.drop-ready { border-color: rgba(99,102,241,0.35); background: rgba(99,102,241,0.04); }
+.cal-week-card.drag-over  { border-color: var(--accent) !important; background: rgba(99,102,241,0.12) !important; box-shadow: 0 0 0 2px rgba(99,102,241,0.25); transform: translateY(-2px); }
+.cal-month-drag-hint { display:flex; align-items:center; gap:5px; font-size:0.67rem; color:var(--text-3); margin-bottom:8px; padding:5px 8px; background:rgba(99,102,241,0.05); border:1px dashed rgba(99,102,241,0.2); border-radius:8px; }
+.cal-week-card-drop-hint { font-size:0.6rem; color:var(--accent); opacity:0; transition:opacity 0.2s; margin-top:4px; text-align:center; }
+.cal-week-card.drop-ready .cal-week-card-drop-hint,
+.cal-week-card.drag-over .cal-week-card-drop-hint { opacity:1; }
+
+/* ── Sub-goals ── */
+.cal-goal-expand-btn {
+  background:none; border:none; color:var(--text-3);
+  font-size:0.65rem; cursor:pointer; padding:2px 5px; flex-shrink:0;
+  border-radius:5px; transition:all 0.15s; line-height:1;
+  display:flex; align-items:center; gap:3px; font-family:'DM Mono',monospace; font-weight:700;
+}
+.cal-goal-expand-btn:hover { color:var(--accent); background:rgba(99,102,241,0.1); }
+.cal-goal-expand-btn .exp-arrow { display:inline-block; transition:transform 0.18s; font-style:normal; }
+.cal-goal-expand-btn.open .exp-arrow { transform:rotate(90deg); }
+.cal-subgoals-panel {
+  display:none; flex-direction:column; gap:4px;
+  margin:4px 0 2px 28px; padding:6px 8px 6px 10px;
+  border-left:2px solid rgba(99,102,241,0.25);
+  border-radius:0 8px 8px 0;
+  background:rgba(99,102,241,0.03);
+}
+.cal-subgoals-panel.open { display:flex; }
+.cal-subgoal-item {
+  display:flex; align-items:center; gap:7px;
+  padding:3px 6px; border-radius:7px;
+  cursor:grab; transition:background 0.12s;
+}
+.cal-subgoal-item:hover { background:rgba(255,255,255,0.04); }
+.cal-subgoal-item.dragging { opacity:0.45; }
+.cal-subgoal-drag { font-size:0.6rem; color:var(--text-3); flex-shrink:0; cursor:grab; }
+.cal-subgoal-cb { width:13px; height:13px; flex-shrink:0; accent-color:var(--accent); cursor:pointer; }
+.cal-subgoal-text {
+  flex:1; font-size:0.75rem; color:var(--text-2);
+  cursor:pointer; transition:color 0.12s;
+}
+.cal-subgoal-text.done { text-decoration:line-through; color:var(--text-3); }
+.cal-subgoal-del {
+  background:none; border:none; color:var(--text-3); font-size:0.72rem;
+  cursor:pointer; padding:1px 4px; border-radius:4px; opacity:0;
+  transition:opacity 0.15s, color 0.15s; flex-shrink:0;
+}
+.cal-subgoal-item:hover .cal-subgoal-del { opacity:0.6; }
+.cal-subgoal-del:hover { opacity:1 !important; color:var(--red); }
+.cal-subgoal-add-row {
+  display:flex; gap:5px; margin-top:4px;
+}
+.cal-subgoal-add-inp {
+  flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  border-radius:7px; padding:4px 9px; color:var(--text);
+  font-size:0.74rem; font-family:'DM Sans',sans-serif; outline:none;
+  transition:border-color 0.14s;
+}
+.cal-subgoal-add-inp:focus { border-color:rgba(99,102,241,0.45); background:rgba(99,102,241,0.05); }
+.cal-subgoal-add-inp::placeholder { color:var(--text-3); }
+.cal-subgoal-add-btn {
+  padding:4px 10px; border-radius:7px; border:none;
+  background:rgba(99,102,241,0.15); color:var(--accent);
+  font-size:0.74rem; font-weight:700; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.14s; flex-shrink:0;
+}
+.cal-subgoal-add-btn:hover { background:rgba(99,102,241,0.28); }
+.cal-goal-sub-count {
+  font-size:0.58rem; font-family:'DM Mono',monospace; font-weight:700;
+  padding:1px 6px; border-radius:20px; flex-shrink:0;
+  background:rgba(99,102,241,0.14); color:var(--accent);
+  border:1px solid rgba(99,102,241,0.25); line-height:1.5;
+}
 /* ── Goal clipboard (copy / paste) ── */
 .cal-goal-copy {
   background:none; border:none; color:var(--text-3);
@@ -2079,6 +2151,67 @@ html.light .focus-log-offline-btn:hover { border-color:var(--border-2); color:va
 }
 .cal-goal-del.disabled-locked { opacity:0.25; cursor:not-allowed !important; pointer-events:none; }
 
+/* ── Incomplete Tasks panel ── */
+.inc-preset-btn {
+  padding:5px 13px; border-radius:8px; border:1px solid var(--border);
+  background:transparent; color:var(--text-3);
+  font-family:'DM Sans',sans-serif; font-size:0.76rem; font-weight:700;
+  cursor:pointer; transition:all 0.14s;
+}
+.inc-preset-btn:hover { border-color:var(--border-2); color:var(--text-2); }
+.inc-preset-btn.active { background:rgba(99,102,241,0.15); border-color:rgba(99,102,241,0.45); color:var(--accent); }
+.inc-src-btn {
+  padding:5px 12px; border-radius:8px; border:1px solid var(--border);
+  background:transparent; color:var(--text-3);
+  font-family:'DM Sans',sans-serif; font-size:0.74rem; font-weight:700;
+  cursor:pointer; transition:all 0.14s;
+}
+.inc-src-btn:hover { border-color:var(--border-2); color:var(--text-2); }
+.inc-src-btn.active { background:rgba(99,102,241,0.15); border-color:rgba(99,102,241,0.45); color:var(--accent); }
+.inc-date-input {
+  padding:6px 12px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text);
+  font-family:'DM Sans',sans-serif; font-size:0.8rem; outline:none;
+  transition:border-color 0.14s; cursor:pointer;
+}
+.inc-date-input:focus { border-color:rgba(99,102,241,0.45); }
+html.light .inc-date-input { background:var(--surface-1); }
+.inc-group-header {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 20px 9px;
+  background:rgba(255,255,255,0.025);
+  border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:2; backdrop-filter:blur(8px);
+}
+.inc-task-row {
+  display:flex; align-items:center; gap:12px;
+  padding:10px 20px; border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:background 0.12s; cursor:default;
+}
+.inc-task-row:last-child { border-bottom:none; }
+.inc-task-row:hover { background:rgba(255,255,255,0.025); }
+.inc-task-source-chip {
+  font-size:0.55rem; font-weight:800; letter-spacing:0.06em;
+  padding:2px 7px; border-radius:20px; flex-shrink:0; text-transform:uppercase;
+}
+.inc-task-source-chip.day  { background:rgba(99,102,241,0.15); color:var(--accent); border:1px solid rgba(99,102,241,0.3); }
+.inc-task-source-chip.week { background:rgba(16,185,129,0.12); color:#34d399; border:1px solid rgba(16,185,129,0.3); }
+.inc-task-age {
+  font-family:'DM Mono',monospace; font-size:0.62rem; font-weight:700;
+  color:var(--text-3); flex-shrink:0;
+}
+.inc-task-age.overdue-hot { color:#ef4444; }
+.inc-task-age.overdue-warn { color:#f59e0b; }
+.inc-copy-btn {
+  margin-left:auto; flex-shrink:0;
+  padding:3px 10px; border-radius:7px; border:1px solid var(--border);
+  background:transparent; color:var(--text-3);
+  font-size:0.7rem; font-weight:700; cursor:pointer;
+  font-family:'DM Sans',sans-serif; transition:all 0.14s; opacity:0;
+}
+.inc-task-row:hover .inc-copy-btn { opacity:1; }
+.inc-copy-btn:hover { border-color:rgba(99,102,241,0.4); color:var(--accent); background:rgba(99,102,241,0.08); }
+
 </style>
 
 <body>
@@ -2228,6 +2361,7 @@ html.light .focus-log-offline-btn:hover { border-color:var(--border-2); color:va
     <div class="backlog-subtabs">
       <button class="backlog-subtab active" id="bst-classic" onclick="switchBacklogTab('classic')">📋 Backlog</button>
       <button class="backlog-subtab" id="bst-coverage" onclick="switchBacklogTab('coverage')">🤖 AI Coverage <span class="nav-ai-badge" style="font-size:0.5rem;padding:1px 5px;">AI</span></button>
+      <button class="backlog-subtab" id="bst-incomplete" onclick="switchBacklogTab('incomplete')">⏰ Incomplete Tasks</button>
     </div>
 
     <!-- Classic Backlog Panel -->
@@ -2306,6 +2440,61 @@ html.light .focus-log-offline-btn:hover { border-color:var(--border-2); color:va
       </div>
       <div id="ai-plan-output"></div>
     </div>
+
+    <!-- Incomplete Tasks Panel -->
+    <div id="incomplete-tasks-panel" style="display:none;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:1.6rem;">
+        <div>
+          <h2 style="font-size:1.4rem;font-weight:800;margin-bottom:4px;">⏰ Incomplete Past Tasks</h2>
+          <p style="font-size:0.78rem;color:var(--text-2);">Goals from past days and weeks that were never marked done.</p>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:18px;padding:1.2rem 1.4rem;margin-bottom:1.4rem;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);">Show tasks from</span>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;" id="inc-preset-btns">
+            <button class="inc-preset-btn active" data-preset="7"  onclick="incSetPreset(this,7)">Last 7 days</button>
+            <button class="inc-preset-btn"        data-preset="14" onclick="incSetPreset(this,14)">Last 14 days</button>
+            <button class="inc-preset-btn"        data-preset="30" onclick="incSetPreset(this,30)">Last 30 days</button>
+            <button class="inc-preset-btn"        data-preset="90" onclick="incSetPreset(this,90)">Last 3 months</button>
+            <button class="inc-preset-btn"        data-preset="0"  onclick="incSetPreset(this,0)">All time</button>
+            <button class="inc-preset-btn"        data-preset="custom" onclick="incSetPreset(this,'custom')">Custom range</button>
+          </div>
+        </div>
+        <div id="inc-custom-range" style="display:none;margin-top:10px;display:none;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:0.72rem;color:var(--text-3);font-weight:600;">From</span>
+          <input type="date" id="inc-from-date" class="inc-date-input" onchange="renderIncomplete()">
+          <span style="font-size:0.72rem;color:var(--text-3);font-weight:600;">to</span>
+          <input type="date" id="inc-to-date"   class="inc-date-input" onchange="renderIncomplete()">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;">
+          <span style="font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-3);">Source</span>
+          <div style="display:flex;gap:4px;">
+            <button class="inc-src-btn active" id="inc-src-both"  onclick="incSetSrc('both')">All</button>
+            <button class="inc-src-btn"        id="inc-src-day"   onclick="incSetSrc('day')">Day goals</button>
+            <button class="inc-src-btn"        id="inc-src-week"  onclick="incSetSrc('week')">Week goals</button>
+          </div>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;">
+            <span style="font-size:0.68rem;color:var(--text-3);font-weight:600;">Sort</span>
+            <select id="inc-sort-sel" onchange="renderIncomplete()" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:9px;font-family:inherit;font-size:0.75rem;outline:none;cursor:pointer;">
+              <option value="date-desc">Newest first</option>
+              <option value="date-asc">Oldest first</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div id="inc-stats-row" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:1.4rem;"></div>
+
+      <!-- Results list -->
+      <div style="background:var(--surface-1);border:1px solid var(--border);border-radius:20px;overflow:hidden;">
+        <div id="inc-list"></div>
+      </div>
+    </div>
+
   </div>
   </div><!-- end scroll wrapper -->
 </div>
@@ -4363,22 +4552,210 @@ function renderBacklog() {
    BACKLOG — SUBTAB SWITCHER
 ══════════════════════════════════════════ */
 function switchBacklogTab(tab) {
-  const classic  = document.getElementById('backlog-classic-panel');
-  const coverage = document.getElementById('ai-coverage-panel');
-  const bstC     = document.getElementById('bst-classic');
-  const bstA     = document.getElementById('bst-coverage');
+  const classic    = document.getElementById('backlog-classic-panel');
+  const coverage   = document.getElementById('ai-coverage-panel');
+  const incomplete = document.getElementById('incomplete-tasks-panel');
+  const bstC  = document.getElementById('bst-classic');
+  const bstA  = document.getElementById('bst-coverage');
+  const bstI  = document.getElementById('bst-incomplete');
+  [classic, coverage, incomplete].forEach(el => { if (el) el.style.display = 'none'; });
+  [bstC, bstA, bstI].forEach(el => { if (el) el.classList.remove('active'); });
   if (tab === 'classic') {
     if (classic)  classic.style.display  = '';
-    if (coverage) coverage.style.display = 'none';
     if (bstC) bstC.classList.add('active');
-    if (bstA) bstA.classList.remove('active');
     renderBacklog();
-  } else {
-    if (classic)  classic.style.display  = 'none';
+  } else if (tab === 'coverage') {
     if (coverage) coverage.style.display = '';
-    if (bstC) bstC.classList.remove('active');
     if (bstA) bstA.classList.add('active');
+  } else {
+    if (incomplete) incomplete.style.display = '';
+    if (bstI) bstI.classList.add('active');
+    renderIncomplete();
   }
+}
+
+/* ══════════════════════════════════════════
+   INCOMPLETE TASKS — ENGINE
+══════════════════════════════════════════ */
+var _incDays  = 7;      // 0 = all time
+var _incSrc   = 'both'; // 'both' | 'day' | 'week'
+
+function incSetPreset(btn, preset) {
+  document.querySelectorAll('.inc-preset-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const rangeEl = document.getElementById('inc-custom-range');
+  if (preset === 'custom') {
+    _incDays = 'custom';
+    if (rangeEl) rangeEl.style.display = 'flex';
+    // Default dates if empty
+    const fromEl = document.getElementById('inc-from-date');
+    const toEl   = document.getElementById('inc-to-date');
+    if (fromEl && !fromEl.value) {
+      const d = new Date(); d.setDate(d.getDate()-30);
+      fromEl.value = d.toISOString().slice(0,10);
+    }
+    if (toEl && !toEl.value) {
+      toEl.value = new Date().toISOString().slice(0,10);
+    }
+  } else {
+    _incDays = parseInt(preset) || 0;
+    if (rangeEl) rangeEl.style.display = 'none';
+  }
+  renderIncomplete();
+}
+
+function incSetSrc(src) {
+  _incSrc = src;
+  ['inc-src-both','inc-src-day','inc-src-week'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', id === 'inc-src-' + src);
+  });
+  renderIncomplete();
+}
+
+function _incDateRange() {
+  const todayStr = new Date().toISOString().slice(0,10);
+  if (_incDays === 'custom') {
+    const from = document.getElementById('inc-from-date')?.value || '';
+    const to   = document.getElementById('inc-to-date')?.value   || todayStr;
+    return { from, to };
+  }
+  if (_incDays === 0) return { from: '2020-01-01', to: todayStr };
+  const d = new Date(); d.setDate(d.getDate() - _incDays);
+  return { from: d.toISOString().slice(0,10), to: todayStr };
+}
+
+function renderIncomplete() {
+  const listEl  = document.getElementById('inc-list');
+  const statsEl = document.getElementById('inc-stats-row');
+  if (!listEl) return;
+
+  const todayStr = new Date().toISOString().slice(0,10);
+  const { from, to } = _incDateRange();
+  const sortVal = document.getElementById('inc-sort-sel')?.value || 'date-desc';
+
+  // Scan all localStorage keys for cal_week_ entries
+  const tasks = []; // { text, dateStr, source:'day'|'week', weekKey }
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('cal_week_')) continue;
+    let data;
+    try { data = JSON.parse(localStorage.getItem(key)); } catch(e) { continue; }
+    if (!data) continue;
+
+    // ── Day goals ──
+    if (_incSrc !== 'week' && data.days) {
+      Object.entries(data.days).forEach(([ds, dayData]) => {
+        if (ds >= todayStr) return; // skip today and future
+        if (ds < from || ds > to) return;
+        (dayData.goals || []).forEach(g => {
+          if (!g.done) tasks.push({ text: g.text, dateStr: ds, source: 'day', weekKey: key });
+        });
+      });
+    }
+
+    // ── Week goals: find the Monday date of this week key ──
+    if (_incSrc !== 'day' && data.goals) {
+      // Parse week key: cal_week_YYYY_WW
+      const m = key.match(/cal_week_(\d{4})_(\d{2})/);
+      if (m) {
+        const weekMon = isoWeekToDate(parseInt(m[1]), parseInt(m[2]));
+        const weekSun = new Date(weekMon); weekSun.setDate(weekSun.getDate() + 6);
+        const weekMonStr = weekMon.toISOString().slice(0,10);
+        const weekSunStr = weekSun.toISOString().slice(0,10);
+        // Only include if the week has passed (week end < today) and overlaps range
+        if (weekSunStr < todayStr && weekSunStr >= from && weekMonStr <= to) {
+          (data.goals || []).forEach(g => {
+            if (!g.done) tasks.push({ text: g.text, dateStr: weekMonStr, source: 'week', weekKey: key, weekSunStr });
+          });
+        }
+      }
+    }
+  }
+
+  // Sort
+  tasks.sort((a, b) => {
+    const cmp = a.dateStr.localeCompare(b.dateStr);
+    return sortVal === 'date-asc' ? cmp : -cmp;
+  });
+
+  // Deduplicate same text+source within same week (week goals may repeat across week iterations)
+  const seen = new Set();
+  const unique = tasks.filter(t => {
+    const k = t.source + '|' + t.weekKey + '|' + t.text;
+    if (seen.has(k)) return false;
+    seen.add(k); return true;
+  });
+
+  // Stats
+  const dayCount  = unique.filter(t => t.source === 'day').length;
+  const weekCount = unique.filter(t => t.source === 'week').length;
+  if (statsEl) {
+    const chip = (label, val, color) =>
+      `<div style="background:var(--surface-1);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;flex-direction:column;gap:3px;">
+        <div style="font-size:1.3rem;font-weight:800;font-family:'Syne',sans-serif;color:${color};">${val}</div>
+        <div style="font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.09em;color:var(--text-3);">${label}</div>
+      </div>`;
+    statsEl.innerHTML =
+      chip('Total Incomplete', unique.length, '#ef4444') +
+      chip('Day Goals', dayCount, 'var(--accent)') +
+      chip('Week Goals', weekCount, '#34d399');
+  }
+
+  if (unique.length === 0) {
+    listEl.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-2);">
+      <div style="font-size:2.5rem;margin-bottom:12px;">🎉</div>
+      <div style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;">No incomplete tasks!</div>
+      <div style="font-size:0.82rem;">Everything in this range was completed. Great work!</div>
+    </div>`;
+    return;
+  }
+
+  // Group by date
+  const grouped = {};
+  unique.forEach(t => {
+    if (!grouped[t.dateStr]) grouped[t.dateStr] = [];
+    grouped[t.dateStr].push(t);
+  });
+
+  const today = new Date(todayStr + 'T00:00:00');
+  let html = '';
+  Object.keys(grouped).sort((a,b) => sortVal === 'date-asc' ? a.localeCompare(b) : b.localeCompare(a)).forEach(ds => {
+    const d       = new Date(ds + 'T00:00:00');
+    const diffDays = Math.round((today - d) / 86400000);
+    const label   = d.toLocaleDateString('en', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+    const ageStr  = diffDays === 1 ? 'Yesterday' : diffDays + ' days ago';
+    const ageClass = diffDays > 14 ? 'overdue-hot' : diffDays > 7 ? 'overdue-warn' : '';
+    html += `<div class="inc-group-header">
+      <span style="font-size:0.78rem;font-weight:800;color:var(--text-2);">${label}</span>
+      <span class="inc-task-age ${ageClass}">${ageStr}</span>
+      <span style="font-size:0.62rem;color:var(--text-3);margin-left:4px;">${grouped[ds].length} task${grouped[ds].length>1?'s':''}</span>
+    </div>`;
+    grouped[ds].forEach(t => {
+      const srcClass = t.source === 'day' ? 'day' : 'week';
+      const srcLabel = t.source === 'day' ? 'Day' : 'Week';
+      html += `<div class="inc-task-row">
+        <span class="inc-task-source-chip ${srcClass}">${srcLabel}</span>
+        <span style="font-size:0.88rem;font-weight:600;color:var(--text);flex:1;">${escHtml(t.text)}</span>
+        <button class="inc-copy-btn" onclick="incCopyToClipboard('${escHtml(t.text).replace(/'/g,"\\'")}')">Copy</button>
+      </div>`;
+    });
+  });
+  listEl.innerHTML = html;
+}
+
+function isoWeekToDate(year, week) {
+  // Returns the Monday of ISO week `week` in `year`
+  const jan4 = new Date(year, 0, 4);
+  const jan4Dow = (jan4.getDay() + 6) % 7; // Mon=0
+  const weekStart = new Date(jan4);
+  weekStart.setDate(jan4.getDate() - jan4Dow + (week - 1) * 7);
+  return weekStart;
+}
+
+function incCopyToClipboard(text) {
+  navigator.clipboard?.writeText(text).then(() => _calShowToast('✓ Copied to clipboard'));
 }
 
 /* ══════════════════════════════════════════
@@ -5835,6 +6212,21 @@ function calRenderWeek() {
     ).join('');
     const isLocked = !!g.lockedDone;
     const editBtn = isLocked ? '' : '<button class="cal-goal-edit" onclick="calWeekGoalEdit(\'' + key + '\',' + gi + ')" title="Edit goal">&#9998;</button>';
+    const subgoals = g.subgoals || [];
+    const subDone  = subgoals.filter(s=>s.done).length;
+    const sgPanelId = `sgp-${key}-${gi}`;
+    const expandBtn = `<button class="cal-goal-expand-btn" id="expbtn-${sgPanelId}" onclick="calToggleSubgoals('${sgPanelId}')" title="Sub-goals"><i class="exp-arrow">▶</i>${subgoals.length ? `<span class="cal-goal-sub-count">${subDone}/${subgoals.length}</span>` : '+'}</button>`;
+    const subgoalsHtml = subgoals.map((sg,sgi) => `
+      <div class="cal-subgoal-item" draggable="true"
+        ondragstart="calSubgoalDragStart(event,'${key}',${gi},${sgi})"
+        ondragend="calGoalDragEnd(event)">
+        <span class="cal-subgoal-drag">⠿</span>
+        <input type="checkbox" class="cal-subgoal-cb" ${sg.done?'checked':''}
+          onchange="calSubgoalToggle('${key}',${gi},${sgi},this.checked)">
+        <span class="cal-subgoal-text${sg.done?' done':''}"
+          onclick="this.previousElementSibling.click()">${escHtml(sg.text)}</span>
+        <button class="cal-subgoal-del" onclick="calSubgoalDel('${key}',${gi},${sgi})" title="Remove">✕</button>
+      </div>`).join('');
     return `
     <div class="cal-goal-item" id="wcg-${key}-${gi}" ${isLocked?'':'draggable="true"'}
       ${isLocked?'':`ondragstart="calGoalDragStart(event,'${key}',${gi})" ondragend="calGoalDragEnd(event)"`}>
@@ -5845,7 +6237,16 @@ function calRenderWeek() {
       ${assignedDays.length ? `<span class="cal-goal-day-chips">${dayChipsHtml}</span>` : ''}
       <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
       ${editBtn}
+      ${expandBtn}
       <button class="cal-goal-del${isLocked?' disabled-locked':''}" onclick="calWeekGoalDel('${key}',${gi})" title="${isLocked?'Locked goals cannot be deleted':'Remove'}">✕</button>
+    </div>
+    <div class="cal-subgoals-panel" id="${sgPanelId}">
+      ${subgoalsHtml}
+      <div class="cal-subgoal-add-row">
+        <input class="cal-subgoal-add-inp" id="sgi-${key}-${gi}" placeholder="Add sub-goal…"
+          onkeydown="if(event.key==='Enter')calSubgoalAdd('${key}',${gi})">
+        <button class="cal-subgoal-add-btn" onclick="calSubgoalAdd('${key}',${gi})">＋</button>
+      </div>
     </div>`;
   }).join('');
 
@@ -6146,6 +6547,204 @@ function calMonthGoalPaste(key) {
   _calShowToast('✓ Pasted ' + added + ' goal' + (added > 1 ? 's' : '') + ' to month');
 }
 
+// ── Drag-and-drop: month goals → week cards ──
+function calMonthGoalDragStart(e, mKey, gi) {
+  const data = calLoad(mKey);
+  const goal = data.goals?.[gi];
+  if (!goal) return;
+  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.setData('text/plain', JSON.stringify({ text: goal.text, fromMonth: true }));
+  e.currentTarget.classList.add('dragging');
+  // Highlight all week cards
+  document.querySelectorAll('.cal-week-card').forEach(c => c.classList.add('drop-ready'));
+  _calDragScrollStart();
+}
+
+function calMonthGoalDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.cal-week-card').forEach(c => c.classList.remove('drop-ready','drag-over'));
+  _calDragScrollStop();
+}
+
+function calMonthGoalDropToWeek(e, wOffset) {
+  e.preventDefault();
+  e.stopPropagation(); // prevent triggering onclick (calJumpToWeek)
+  document.querySelectorAll('.cal-week-card').forEach(c => c.classList.remove('drop-ready','drag-over'));
+  _calDragScrollStop();
+
+  let goalData;
+  try { goalData = JSON.parse(e.dataTransfer.getData('text/plain')); } catch(err) { return; }
+  if (!goalData?.text) return;
+
+  const wKey  = calWeekKey(wOffset);
+  const wData = calLoad(wKey);
+  if (!wData.goals) wData.goals = [];
+
+  if (wData.goals.some(g => g.text === goalData.text)) {
+    _calShowToast('⚠️ Goal already exists in this week');
+    return;
+  }
+  wData.goals.push({ text: goalData.text, done: false });
+  calSave(wKey, wData);
+  // Re-render month so week cards update their goal counts
+  calRenderMonth();
+  _calShowToast('✓ Goal added to week — open it to assign to a day');
+}
+
+/* ══════════════════════════════════════════
+   SUB-GOALS — toggle, CRUD, drag
+══════════════════════════════════════════ */
+function calToggleSubgoals(panelId) {
+  const panel = document.getElementById(panelId);
+  const btn   = document.getElementById('expbtn-' + panelId);
+  if (!panel) return;
+  const isOpen = panel.classList.toggle('open');
+  if (btn) btn.classList.toggle('open', isOpen);
+  // Focus the add input when opening
+  if (isOpen) {
+    const inp = panel.querySelector('.cal-subgoal-add-inp');
+    if (inp) setTimeout(() => inp.focus(), 50);
+  }
+}
+
+// ── Week sub-goals ──
+function calSubgoalAdd(key, gi) {
+  const inp = document.getElementById(`sgi-${key}-${gi}`);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  const data = calLoad(key);
+  if (!data.goals?.[gi]) return;
+  if (!data.goals[gi].subgoals) data.goals[gi].subgoals = [];
+  data.goals[gi].subgoals.push({ text, done: false });
+  calSave(key, data);
+  const panelId = `sgp-${key}-${gi}`;
+  calRenderWeek();
+  // Re-open panel after re-render
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel) { panel.classList.add('open'); }
+    if (btn)   { btn.classList.add('open'); }
+    const newInp = document.getElementById(`sgi-${key}-${gi}`);
+    if (newInp) newInp.focus();
+  });
+}
+
+function calSubgoalToggle(key, gi, sgi, done) {
+  const data = calLoad(key);
+  if (!data.goals?.[gi]?.subgoals?.[sgi]) return;
+  data.goals[gi].subgoals[sgi].done = done;
+  calSave(key, data);
+  const panelId = `sgp-${key}-${gi}`;
+  calRenderWeek();
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel) panel.classList.add('open');
+    if (btn)   btn.classList.add('open');
+  });
+}
+
+function calSubgoalDel(key, gi, sgi) {
+  const data = calLoad(key);
+  if (!data.goals?.[gi]?.subgoals) return;
+  const panelId = `sgp-${key}-${gi}`;
+  data.goals[gi].subgoals.splice(sgi, 1);
+  calSave(key, data);
+  calRenderWeek();
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel && data.goals[gi].subgoals.length > 0) { panel.classList.add('open'); }
+    if (btn && data.goals[gi].subgoals.length > 0)   { btn.classList.add('open'); }
+  });
+}
+
+// Sub-goal drag: drags as if it were a standalone goal text (drops into day zones)
+function calSubgoalDragStart(e, key, gi, sgi) {
+  e.stopPropagation(); // don't fire parent goal drag
+  const data = calLoad(key);
+  const sg   = data.goals?.[gi]?.subgoals?.[sgi];
+  if (!sg) return;
+  // Compose drag text as "ParentGoal — SubGoal" so day gets meaningful text
+  const parentText = data.goals[gi].text;
+  const dragText   = `${parentText} — ${sg.text}`;
+  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.setData('text/plain', JSON.stringify({ text: dragText }));
+  e.currentTarget.classList.add('dragging');
+  document.querySelectorAll('.cal-day-goals-zone').forEach(z => z.classList.add('drop-ready'));
+  _calDragScrollStart();
+}
+
+// ── Month sub-goals ──
+function calMonthSubgoalAdd(mKey, gi) {
+  const inp = document.getElementById(`msgi-${mKey}-${gi}`);
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+  const data = calLoad(mKey);
+  if (!data.goals?.[gi]) return;
+  if (!data.goals[gi].subgoals) data.goals[gi].subgoals = [];
+  data.goals[gi].subgoals.push({ text, done: false });
+  calSave(mKey, data);
+  const panelId = `sgpm-${mKey}-${gi}`;
+  calRenderMonth();
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel) panel.classList.add('open');
+    if (btn)   btn.classList.add('open');
+    const newInp = document.getElementById(`msgi-${mKey}-${gi}`);
+    if (newInp) newInp.focus();
+  });
+}
+
+function calMonthSubgoalToggle(mKey, gi, sgi, done) {
+  const data = calLoad(mKey);
+  if (!data.goals?.[gi]?.subgoals?.[sgi]) return;
+  data.goals[gi].subgoals[sgi].done = done;
+  calSave(mKey, data);
+  const panelId = `sgpm-${mKey}-${gi}`;
+  calRenderMonth();
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel) panel.classList.add('open');
+    if (btn)   btn.classList.add('open');
+  });
+}
+
+function calMonthSubgoalDel(mKey, gi, sgi) {
+  const data = calLoad(mKey);
+  if (!data.goals?.[gi]?.subgoals) return;
+  const panelId = `sgpm-${mKey}-${gi}`;
+  data.goals[gi].subgoals.splice(sgi, 1);
+  calSave(mKey, data);
+  calRenderMonth();
+  requestAnimationFrame(() => {
+    const panel = document.getElementById(panelId);
+    const btn   = document.getElementById('expbtn-' + panelId);
+    if (panel && data.goals[gi].subgoals.length > 0) { panel.classList.add('open'); }
+    if (btn && data.goals[gi].subgoals.length > 0)   { btn.classList.add('open'); }
+  });
+}
+
+// Month sub-goal drag → week card (drops as week goal)
+function calMonthSubgoalDragStart(e, mKey, gi, sgi) {
+  e.stopPropagation();
+  const data = calLoad(mKey);
+  const sg   = data.goals?.[gi]?.subgoals?.[sgi];
+  if (!sg) return;
+  const parentText = data.goals[gi].text;
+  const dragText   = `${parentText} — ${sg.text}`;
+  e.dataTransfer.effectAllowed = 'copy';
+  e.dataTransfer.setData('text/plain', JSON.stringify({ text: dragText, fromMonth: true }));
+  e.currentTarget.classList.add('dragging');
+  document.querySelectorAll('.cal-week-card').forEach(c => c.classList.add('drop-ready'));
+  _calDragScrollStart();
+}
+
 // ── Drag-and-drop: week goals → day columns ──
 function calGoalDragStart(e, key, gi) {
   const data = calLoad(key);
@@ -6326,21 +6925,56 @@ function calRenderMonth() {
     const wDone  = wGoals.filter(g=>g.done).length;
     const preview = wData.summary ? wData.summary.slice(0,80) + (wData.summary.length>80?'…':'') : (wGoals.length ? wGoals.slice(0,2).map(g=>g.text).join(' · ') : 'No entries yet');
     const fmtDate = d => d.toLocaleDateString('en',{day:'numeric',month:'short'});
-    return `<div class="cal-week-card" onclick="calJumpToWeek(${wOffset})">
+    const wCardId = 'wcard-' + wKey;
+    return `<div class="cal-week-card" id="${wCardId}"
+      ondragover="event.preventDefault();document.getElementById('${wCardId}').classList.add('drag-over')"
+      ondragleave="document.getElementById('${wCardId}').classList.remove('drag-over')"
+      ondrop="calMonthGoalDropToWeek(event,${wOffset})"
+      onclick="calJumpToWeek(${wOffset})">
       <div class="cal-week-card-label">Week ${wi+1}</div>
       <div class="cal-week-card-dates">${fmtDate(w.wStart)} – ${fmtDate(w.wEnd)}</div>
       <div class="cal-week-card-preview">${escHtml(preview)}</div>
       ${wGoals.length ? `<div class="cal-week-card-goals-chip">🎯 ${wDone}/${wGoals.length} goals</div>` : ''}
+      <div class="cal-week-card-drop-hint">＋ Drop goal here</div>
     </div>`;
   }).join('');
 
-  const goalsHtml = mGoals.map((g,gi) => `
-    <div class="cal-goal-item">
+  const goalsHtml = mGoals.map((g,gi) => {
+    const subgoals = g.subgoals || [];
+    const subDone  = subgoals.filter(s=>s.done).length;
+    const sgPanelId = `sgpm-${mKey}-${gi}`;
+    const expandBtn = `<button class="cal-goal-expand-btn" id="expbtn-${sgPanelId}" onclick="calToggleSubgoals('${sgPanelId}')" title="Sub-goals"><i class="exp-arrow">▶</i>${subgoals.length ? `<span class="cal-goal-sub-count">${subDone}/${subgoals.length}</span>` : '+'}</button>`;
+    const subgoalsHtml = subgoals.map((sg,sgi) => `
+      <div class="cal-subgoal-item" draggable="true"
+        ondragstart="calMonthSubgoalDragStart(event,'${mKey}',${gi},${sgi})"
+        ondragend="calMonthGoalDragEnd(event)">
+        <span class="cal-subgoal-drag">⠿</span>
+        <input type="checkbox" class="cal-subgoal-cb" ${sg.done?'checked':''}
+          onchange="calMonthSubgoalToggle('${mKey}',${gi},${sgi},this.checked)">
+        <span class="cal-subgoal-text${sg.done?' done':''}"
+          onclick="this.previousElementSibling.click()">${escHtml(sg.text)}</span>
+        <button class="cal-subgoal-del" onclick="calMonthSubgoalDel('${mKey}',${gi},${sgi})" title="Remove">✕</button>
+      </div>`).join('');
+    return `
+    <div class="cal-goal-item" draggable="true"
+      ondragstart="calMonthGoalDragStart(event,'${mKey}',${gi})"
+      ondragend="calMonthGoalDragEnd(event)">
+      <span class="cal-goal-drag-handle" title="Drag to assign to a week">⠿</span>
       <input type="checkbox" class="cal-goal-cb" ${g.done?'checked':''} onchange="calMonthGoalToggle('${mKey}',${gi},this.checked)">
       <span class="cal-goal-text${g.done?' done':''}" onclick="this.previousElementSibling.click()">${escHtml(g.text)}</span>
       <button class="cal-goal-copy${_goalClipboard.includes(g.text)?' in-clip':''}" onclick="calGoalToggleClip(this.dataset.t)" data-t="${escHtml(g.text)}" title="${_goalClipboard.includes(g.text)?'Remove from selection':'Add to clipboard'}">⎘</button>
+      ${expandBtn}
       <button class="cal-goal-del" onclick="calMonthGoalDel('${mKey}',${gi})" title="Remove">✕</button>
-    </div>`).join('');
+    </div>
+    <div class="cal-subgoals-panel" id="${sgPanelId}">
+      ${subgoalsHtml}
+      <div class="cal-subgoal-add-row">
+        <input class="cal-subgoal-add-inp" id="msgi-${mKey}-${gi}" placeholder="Add sub-goal…"
+          onkeydown="if(event.key==='Enter')calMonthSubgoalAdd('${mKey}',${gi})">
+        <button class="cal-subgoal-add-btn" onclick="calMonthSubgoalAdd('${mKey}',${gi})">＋</button>
+      </div>
+    </div>`;
+  }).join('');
 
   cnt.innerHTML = `
     <div class="cal-card" style="margin-bottom:1.2rem;">
@@ -6367,6 +7001,7 @@ function calRenderMonth() {
           <span class="cal-section-title" style="margin-bottom:0;">Month Goals</span>
           <span style="margin-left:auto;font-size:0.65rem;color:var(--text-3);">${mGoals.filter(g=>g.done).length}/${mGoals.length} done</span>
         </div>
+        ${mGoals.length ? `<div class="cal-month-drag-hint"><span>⠿</span> Drag any goal into a week card above to assign it</div>` : ''}
         <div class="cal-goals-list" id="mgl-${mKey}">${goalsHtml}</div>
         <div class="cal-clipboard-banner">
           <span class="cal-clipboard-count"></span>
